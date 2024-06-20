@@ -1,0 +1,87 @@
+<template>
+  <div class="wallet-box">
+    <div class="pos_fix">
+      <h2>Wallet</h2>
+      <v-divider class="my-divider"></v-divider>
+    </div>
+
+    <Loading v-if="isLoading" style="margin-top: 86px" />
+    <div v-else class="posbox">
+      <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+        <v-row align="start" no-gutters class="lin38">
+          <v-col class="my-flexaj fc9" :cols="4">
+            <v-icon class="ft18 my-mgr12">mdi-wallet-outline</v-icon>
+            Wallet</v-col
+          >
+          <v-col :cols="8" class="tea fc9">
+            {{ props.userInfo.address }}
+            <CopyInformation :address="props.userInfo.address" />
+          </v-col>
+        </v-row>
+        <v-row align="start" no-gutters class="lin38">
+          <v-col class="my-flexaj fc9">
+            <v-icon class="ft18 my-mgr12">mdi-ethereum</v-icon>
+            ETH</v-col
+          >
+          <v-col class="tea fc9"> {{ bigNumFormat(balance, 4) }} </v-col>
+        </v-row>
+      </v-card>
+      <WalletTable />
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import Loading from '@/components/Loading.vue'
+import WalletTable from './WalletTable.vue'
+import CopyInformation from '@/components/CopyInformation.vue'
+import { getBalance } from '@/common/web3service'
+import { bigNumFormat } from '@/utils'
+import { ref, onMounted } from 'vue'
+
+const props = defineProps({
+  userInfo: {
+    type: Object,
+    default: () => {},
+  },
+})
+
+const isLoading = ref(true)
+import useUserStore from '@/store'
+const store = useUserStore()
+const balance = ref(0)
+
+const getData = async () => {
+  console.log(store.UserInfo, '=-as=d-as=d-=as-d=as-d=as-d-=as-d')
+  balance.value = await getBalance()
+  isLoading.value = false
+}
+onMounted(() => {
+  isLoading.value = true
+  getData()
+  // setTimeout(() => {
+  //   isLoading.value = false
+  // }, 500)
+})
+</script>
+
+<style lang="scss" scoped>
+.wallet-box {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
+h2 {
+  color: #f3f3f3;
+  font-family: Inter;
+  font-size: 20px;
+  font-weight: 500;
+  height: 84px;
+  line-height: 84px;
+  text-align: center;
+}
+.v-card {
+  width: 100%;
+}
+</style>

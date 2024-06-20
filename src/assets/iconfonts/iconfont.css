@@ -1,0 +1,176 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 4417084 */
+  src: url('iconfont.woff2?t=1715073849956') format('woff2'),
+       url('iconfont.woff?t=1715073849956') format('woff'),
+       url('iconfont.ttf?t=1715073849956') format('truetype'),
+       url('iconfont.svg?t=1715073849956#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-more:before {
+  content: "\e867";
+}
+
+.icon-bianji:before {
+  content: "\e676";
+}
+
+.icon-lock:before {
+  content: "\e642";
+}
+
+.icon-lock1:before {
+  content: "\eccd";
+}
+
+.icon-dao:before {
+  content: "\e610";
+}
+
+.icon-add-work:before {
+  content: "\e611";
+}
+
+.icon-nft-minted:before {
+  content: "\e612";
+}
+
+.icon-nft-holder:before {
+  content: "\e614";
+}
+
+.icon-nft:before {
+  content: "\e615";
+}
+
+.icon-profile:before {
+  content: "\e616";
+}
+
+.icon-top-up-banlance:before {
+  content: "\e617";
+}
+
+.icon-log-out:before {
+  content: "\e618";
+}
+
+.icon-wallet1:before {
+  content: "\e61e";
+}
+
+.icon-tiaojian:before {
+  content: "\e63f";
+}
+
+.icon-seednodes:before {
+  content: "\e60a";
+}
+
+.icon-subnodes:before {
+  content: "\e604";
+}
+
+.icon-cuowu:before {
+  content: "\e605";
+}
+
+.icon-dui:before {
+  content: "\e68b";
+}
+
+.icon-link:before {
+  content: "\e609";
+}
+
+.icon-telegram:before {
+  content: "\e608";
+}
+
+.icon-twitter:before {
+  content: "\e607";
+}
+
+.icon-opensea:before {
+  content: "\e606";
+}
+
+.icon-copy:before {
+  content: "\e72f";
+}
+
+.icon-a-1:before {
+  content: "\e6d2";
+}
+
+.icon-a-2:before {
+  content: "\e6d3";
+}
+
+.icon-Token:before {
+  content: "\e6ce";
+}
+
+.icon-ETH:before {
+  content: "\e6cd";
+}
+
+.icon-icon3:before {
+  content: "\e62b";
+}
+
+.icon-shoucang:before {
+  content: "\e63b";
+}
+
+.icon-qiehuanliebiao2:before {
+  content: "\e664";
+}
+
+.icon-qiehuanliebiao1:before {
+  content: "\e613";
+}
+
+.icon-info:before {
+  content: "\e83d";
+}
+
+.icon-check:before {
+  content: "\e645";
+}
+
+.icon-guanbi:before {
+  content: "\e602";
+}
+
+.icon-qianbao:before {
+  content: "\e62c";
+}
+
+.icon-yonghu-fang-L:before {
+  content: "\e647";
+}
+
+.icon-tianjia:before {
+  content: "\e60e";
+}
+
+.icon-sousuo:before {
+  content: "\e62f";
+}
+
+.icon-a-SEMIOSlogodange:before {
+  content: "\e6bd";
+}
+
+.icon-a-SEMIOSlogozuhe:before {
+  content: "\e6bc";
+}
+

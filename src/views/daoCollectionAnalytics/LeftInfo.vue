@@ -1,0 +1,118 @@
+<template>
+  <div v-if="isLoading" class="card-loading mypage">
+    <v-skeleton-loader
+      elevation="12"
+      height="100%"
+      type="list-item,list-item,list-item,list-item,list-item"
+    ></v-skeleton-loader>
+  </div>
+  <v-row class="mypage" v-else>
+    <v-col>
+      <v-item v-slot="{ toggle }">
+        <v-card
+          :color="props.tab === 2 ? 'primary' : ''"
+          class="d-flex align-center mybg"
+          :style="{
+            'background-color': props.tab === 2 ? '#364159 !important' : '',
+            'border-color': props.tab === 2 ? '#6062aa  !important' : '',
+          }"
+          dark
+          @click="toggle"
+        >
+          <v-scroll-y-transition>
+            <div class="sc-box">
+              <h3>Seed Nodes ERC-20 Info</h3>
+              <p>
+                Total supply :
+                <span>{{
+                  bigNumFormat(daoToken.totalSupply, 5, 0.000001)
+                }}</span>
+              </p>
+              <p>
+                Circulating ERC-20 :
+                <span>{{
+                  bigNumFormat(daoToken.daoTokenBalance, 5, 0.000001)
+                }}</span>
+              </p>
+              <p>
+                ETH In Redeem Pool :
+                <span>{{
+                  bigNumFormat(daoToken.redeemAssetPoolEth, 5, 0.000001)
+                }}</span>
+              </p>
+              <p>
+                Redeemed :
+                <span>{{
+                  bigNumFormat(daoToken.redeemedErc20Amont, 5, 0.000001)
+                }}</span>
+              </p>
+            </div>
+          </v-scroll-y-transition>
+        </v-card>
+      </v-item>
+    </v-col>
+  </v-row>
+</template>
+<script setup lang="ts">
+import { bigNumFormat } from '@/utils'
+import { togetherDaoToken } from '@/api/daos'
+import { ref, onMounted } from 'vue'
+const props = defineProps({
+  tab: {
+    type: Number,
+    default: 0,
+  },
+})
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const isLoading = ref(true)
+const daoToken = ref() as any
+const getData = async () => {
+  isLoading.value = true
+  const query = {
+    daoId: route.query.id,
+  }
+  const daoTokenRes = await togetherDaoToken(query)
+  daoToken.value = daoTokenRes.data
+  isLoading.value = false
+}
+onMounted(() => {
+  getData()
+})
+</script>
+
+<style lang="scss" scoped>
+.mybg {
+  background: #282f41 !important;
+  border: 1px solid #282f41;
+  box-sizing: border-box;
+}
+.mypage {
+  margin-bottom: 24px;
+}
+.card-loading {
+  height: 134px;
+  :deep(.v-skeleton-loader__list-item) {
+    margin: 0 12px;
+  }
+}
+
+.sc-box {
+  padding: 12px;
+  box-sizing: border-box;
+  h3 {
+    color: #9e9e9e;
+    font-size: 16px;
+  }
+  p {
+    font-size: 14px;
+    color: #9e9e9e;
+    span {
+      color: #fff;
+    }
+  }
+  i {
+    font-size: 32px;
+  }
+}
+</style>

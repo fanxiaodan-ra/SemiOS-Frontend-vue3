@@ -1,5 +1,8 @@
 <template>
-  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+  <v-card
+    class="mx-auto my-pd24 max-w-[1200px] my-mgt24 my-mgb24"
+    elevation="12"
+  >
     <h3 class="node-name" v-if="store.addNodeType === 6">
       {{ $t('AddFormWork.title') }}
     </h3>
@@ -11,7 +14,8 @@
       >
         <v-switch
           v-model="formData.needMintableWork"
-          color="#745cd4"
+          inset
+          color="#8C91FF"
         ></v-switch>
       </FormRow>
       <v-expand-transition>
@@ -23,15 +27,10 @@
           <v-text-field
             :label="$t('AddFormWork.passesQuantityPlaceholder')"
             density="comfortable"
+            type="number"
             v-model="formData.passesQuantity"
             @update:modelValue="
-              setInput(
-                formData.passesQuantity,
-                'passesQuantity',
-                0,
-                1,
-                999999999
-              )
+              setInput(formData.passesQuantity, 'passesQuantity', 0, 1, 5000)
             "
           >
           </v-text-field>
@@ -44,7 +43,11 @@
           :input-name="$t('AddFormWork.daoTokenModeLabel')"
           :tooltip-text="$t('AddFormWork.daoTokenModeTip')"
         >
-          <v-switch v-model="formData.daoTokenMode" color="#745cd4"></v-switch>
+          <v-switch
+            v-model="formData.daoTokenMode"
+            color="#8C91FF"
+            inset
+          ></v-switch>
         </FormRow>
       </v-expand-transition>
       <FormRow
@@ -54,7 +57,8 @@
       >
         <v-switch
           v-model="formData.unifiedPriceMode"
-          color="#745cd4"
+          inset
+          color="#8C91FF"
         ></v-switch>
       </FormRow>
       <v-expand-transition>
@@ -64,19 +68,18 @@
           :tooltip-text="$t('AddFormWork.unifiedPriceTip')"
         >
           <v-text-field
+            type="number"
             :label="$t('AddFormWork.unifiedPricePlaceholder')"
             density="comfortable"
             v-model="formData.unifiedPrice"
             @update:modelValue="
               setInput(formData.unifiedPrice, 'unifiedPrice', 4, 0, 1000000000)
             "
-            :messages="
-              formData.unifiedPrice === 0
-                ? [$t('AddFormWork.unifiedPriceWarn')]
-                : undefined
-            "
           >
           </v-text-field>
+          <div class="poricemsg" v-if="formData.unifiedPrice === 0">
+            {{ $t('AddFormWork.unifiedPriceWarn') }}
+          </div>
         </FormRow>
       </v-expand-transition>
       <v-expand-transition>
@@ -88,7 +91,9 @@
             <v-text-field
               :label="$t('PleaseEnterLabel')"
               density="comfortable"
+              type="number"
               v-model="formData.daoFloorPrice"
+              :rules="[(v: any) => v >= 0.0001 || $t('common.dontLess', { num: '0.0001' })]"
               @update:modelValue="
                 setInput(
                   formData.daoFloorPrice,
@@ -121,7 +126,9 @@
             <v-text-field
               :label="$t('PleaseEnterLabel')"
               density="comfortable"
+              type="number"
               v-model="formData.doublingFactor"
+              :rules="[(v: any) => v >= 1 || $t('common.dontLess', { num: '1' })]"
               @update:modelValue="
                 setInput(
                   formData.doublingFactor,
@@ -142,6 +149,7 @@
             <v-text-field
               :label="$t('PleaseEnterLabel')"
               density="comfortable"
+              type="number"
               v-model="formData.growthFactor"
               @update:modelValue="
                 setInput(formData.growthFactor, 'growthFactor', 1, 0, 999999999)
@@ -152,19 +160,20 @@
         </div>
       </v-expand-transition>
     </v-form>
-    <div
-      class="dflex flex-jc my-mgb24 my-mgt24"
-      v-if="store.addNodeType !== 6"
-    >
+    <div class="dflex flex-jc my-mgb24 my-mgt24" v-if="store.addNodeType !== 6">
       <v-btn
         block
         class="btnb fc7 text-none mr-10"
         type="submit"
         @click="setAddType(2)"
-        >Back</v-btn
+        >{{ t('common.back') }}</v-btn
       >
-      <v-btn block class="btnz text-none" type="submit" @click="setAddType(4)"
-        >Next</v-btn
+      <v-btn
+        block
+        class="btnz text-none"
+        type="submit"
+        @click="setAddType(4)"
+        >{{ t('common.next') }}</v-btn
       >
     </div>
   </v-card>
@@ -172,8 +181,9 @@
 
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, watch } from 'vue'
 import useUserStore from '@/store'
+import { t } from '@/lang'
 const store = useUserStore()
 const props = defineProps({
   formDataProp: {
@@ -182,10 +192,10 @@ const props = defineProps({
   },
 })
 const fluctuationMethods = [
-  { label: 'Exponential Increase', value: 0 },
-  { label: 'Linear Increase', value: 1 },
+  { label: t('AddFormWork.exponentialIncrease'), value: 0 },
+  { label: t('AddFormWork.linearIncrease'), value: 1 },
 ]
-const formData = reactive({
+const formData = ref({
   needMintableWork: false,
   passesQuantity: 1000,
   daoTokenMode: false,
@@ -195,12 +205,24 @@ const formData = reactive({
   fluctuationMethod: 0,
   doublingFactor: 2,
   growthFactor: 0.1,
-})
+}) as any
 const emit = defineEmits(['setFormData'])
+
+const validateForm = async (value: any) => {
+  const { valid } = await formRef.value.validate()
+  emit('setFormData', {
+    formVal: value,
+    validVal: {
+      position: 2,
+      value: valid,
+    },
+  })
+}
+
 watch(
   () => formData,
   (value) => {
-    emit('setFormData', value)
+    validateForm(value)
   },
   { deep: true }
 )
@@ -214,7 +236,8 @@ const setInput = (
   max = Infinity
 ) => {
   const inputNum = oninputNum(val, position, min, max)
-  formData[type] = inputNum as never
+  console.log(inputNum, 'inputNuminputNuminputNum')
+  formData.value[type] = inputNum as never
 }
 
 const formRef = ref()
@@ -228,9 +251,10 @@ const setAddType = async (val: number) => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.v-messages__message) {
+.poricemsg {
   font-size: 0.75rem;
   color: #745cd4;
   margin-bottom: 0.375rem;
+  margin-top: -18px;
 }
 </style>

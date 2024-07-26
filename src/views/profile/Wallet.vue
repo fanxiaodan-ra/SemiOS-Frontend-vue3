@@ -1,18 +1,17 @@
 <template>
-  <div class="wallet-box">
-    <div class="pos_fix">
+  <div class="wallet-box items-center">
+    <div class="pos_fix min-w-[1225px]">
       <h2>Wallet</h2>
-      <v-divider class="my-divider"></v-divider>
+      <v-divider class="border-purple"></v-divider>
     </div>
 
     <Loading v-if="isLoading" style="margin-top: 86px" />
-    <div v-else class="posbox">
-      <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+    <div v-else class="w-full posbox flex flex-1 flex-col !justify-center">
+      <v-card class="my-pd24 my-mgt24 my-mgb24 bg-card-1 min-w-[1080px] max-w-[1200px] mx-auto" elevation="12">
         <v-row align="start" no-gutters class="lin38">
           <v-col class="my-flexaj fc9" :cols="4">
             <v-icon class="ft18 my-mgr12">mdi-wallet-outline</v-icon>
-            Wallet</v-col
-          >
+            Wallet</v-col>
           <v-col :cols="8" class="tea fc9">
             {{ props.userInfo.address }}
             <CopyInformation :address="props.userInfo.address" />
@@ -21,8 +20,7 @@
         <v-row align="start" no-gutters class="lin38">
           <v-col class="my-flexaj fc9">
             <v-icon class="ft18 my-mgr12">mdi-ethereum</v-icon>
-            ETH</v-col
-          >
+            ETH</v-col>
           <v-col class="tea fc9"> {{ bigNumFormat(balance, 4) }} </v-col>
         </v-row>
       </v-card>
@@ -46,22 +44,24 @@ const props = defineProps({
   },
 })
 
-const isLoading = ref(true)
+const isLoading = ref(false)
 import useUserStore from '@/store'
 const store = useUserStore()
 const balance = ref(0)
 
 const getData = async () => {
-  console.log(store.UserInfo, '=-as=d-as=d-=as-d=as-d=as-d-=as-d')
-  balance.value = await getBalance()
-  isLoading.value = false
+  isLoading.value = true
+  try {
+    console.log(store.UserInfo, '=-as=d-as=d-=as-d=as-d=as-d-=as-d')
+    balance.value = await getBalance()
+  } catch(e) {
+    console.error(e)
+  } finally {
+    isLoading.value = false
+  }
 }
 onMounted(() => {
-  isLoading.value = true
   getData()
-  // setTimeout(() => {
-  //   isLoading.value = false
-  // }, 500)
 })
 </script>
 

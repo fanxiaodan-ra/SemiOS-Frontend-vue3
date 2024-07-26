@@ -1,32 +1,25 @@
 <template>
   <div class="div-box">
-    <div class="pos_fix">
+    <div class="pos_fix !w-[calc(100%-55px)] min-w-[1225px]">
       <h2>Top-up Balance</h2>
-      <v-divider class="my-divider"></v-divider>
+      <v-divider class="border-purple"></v-divider>
       <v-tabs v-model="tab" fixed-tabs color="deep-purple-accent-4">
-        <v-tab selected-class="custom-tabs" :value="1" class="text-none"
-          >Available</v-tab
-        >
-        <v-tab selected-class="custom-tabs" :value="2" class="text-none"
-          >Pending</v-tab
-        >
+        <v-tab selected-class="custom-tabs" :value="1" class="text-none">Available</v-tab>
+        <v-tab selected-class="custom-tabs" :value="2" class="text-none">Pending</v-tab>
       </v-tabs>
     </div>
 
-    <v-container fluid class="container-box">
+    <v-container fluid class="container-box min-w-[1225px]">
       <component ref="childRef" :is="currentCopmonent[tab - 1]"></component>
     </v-container>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef, defineAsyncComponent } from 'vue'
-const TopUpBalanceAvailable = defineAsyncComponent(
-  () => import('./TopUpBalanceAvailable.vue')
-)
-const TopUpBalancePending = defineAsyncComponent(
-  () => import('./TopUpBalancePending.vue')
-)
+import { ref, shallowRef } from 'vue'
+import TopUpBalanceAvailable from './TopUpBalanceAvailable.vue';
+import TopUpBalancePending from './TopUpBalancePending.vue';
+
 const currentCopmonent = shallowRef([
   TopUpBalanceAvailable,
   TopUpBalancePending,
@@ -51,7 +44,7 @@ h2 {
   text-align: center;
 }
 .v-tabs {
-  border-bottom: 1px solid #6062aa;
+  border-bottom: 1px solid #2F305B;
 }
 .container-box {
   margin-top: 117px;

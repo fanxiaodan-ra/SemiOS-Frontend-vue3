@@ -62,7 +62,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: '#b3b5f2',
+    default: '#8C91FF',
   },
   size: {
     type: String,
@@ -89,6 +89,8 @@ const aPush = () => {
 
 <style lang="scss" scoped>
 .token-icon {
+  display: flex;
+  justify-content: center;
   text-decoration: none;
 }
 .text-none {

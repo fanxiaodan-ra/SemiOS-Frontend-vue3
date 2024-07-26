@@ -45,16 +45,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, watch, shallowRef, defineAsyncComponent } from 'vue'
-const SlotDialog = defineAsyncComponent(
-  () => import('@/components/SlotDialog.vue')
-)
-const SelectTopupBalaneceTab = defineAsyncComponent(
-  () => import('./SelectTopupBalaneceTab.vue')
-)
-const SelectWalletTab = defineAsyncComponent(
-  () => import('./SelectWalletTab.vue')
-)
+import { ref, watch, shallowRef } from 'vue'
+import SlotDialog from '@/components/SlotDialog.vue'
+import SelectTopupBalaneceTab from './SelectTopupBalaneceTab.vue'
+import SelectWalletTab from './SelectWalletTab.vue';
+
 const currentCopmonent = shallowRef([SelectTopupBalaneceTab, SelectWalletTab])
 const props = defineProps({
   isDialog: {
@@ -115,7 +110,7 @@ const setDialogMintData = async () => {
   // margin: 16px 0;
   width: 100%;
   padding-bottom: 0.5rem;
-  border-bottom: 0.0625rem solid #6062aa !important;
+  border-bottom: 0.0625rem solid #2F305B !important;
   :deep(.v-tabs) {
     height: 32px !important;
     .v-btn {

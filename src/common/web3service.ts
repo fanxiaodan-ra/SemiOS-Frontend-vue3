@@ -8,7 +8,7 @@ const getProvider = () => {
   if (provider) {
     return new ethers.providers.Web3Provider(provider, 'any')
   } else {
-    let providerURL = 'https://www.ankr.com/rpc/multichain/'
+    let providerURL = 'https://rpc.ankr.com/multichain'
     return new ethers.providers.JsonRpcProvider(providerURL)
   }
 }
@@ -30,6 +30,7 @@ const call = (contractAddress: string, abi: any) => {
 }
 //send
 const send = (contractAddress: string, abi: any) => {
+  console.log('111111')
   const signer = getProvider().getSigner()
   const contract = new ethers.Contract(contractAddress, abi, signer)
   return contract
@@ -46,7 +47,7 @@ const updateTopUpAccount = async (data: any) => {
   const store = useUserStore()
   const contract = send(
     store.PactAbi.protocol_contract,
-    JSON.parse(store.PactAbi.protocol_contract_abi)
+    JSON.parse(store.PactAbi.pd_plan_abi)
   )
   const bla = await contract.callStatic.updateTopUpAccount(
     data.projectId,
@@ -292,7 +293,7 @@ const claimMultiReward = async (data: any) => {
     store.PactAbi.claimer_contract,
     JSON.parse(store.PactAbi.claimer_contract_abi)
   )
-  const tx = await contract.claimMultiReward(data)
+  const tx = await contract.claimMultiReward(data[0])
   return tx
 }
 
@@ -382,7 +383,7 @@ const getAllowanceTreasury = async (address: string, metamask: string) => {
   )
   return bla.toString()
 }
-const approveAmount = async (daoErc20Address: string, amount: number) => {
+const approveAmount = async (daoErc20Address: string, amount: string) => {
   const store = useUserStore()
 
   const contract = send(
@@ -437,8 +438,74 @@ const getErc20Balance = async (address: string, metamask: string) => {
   const bla = await contract.balanceOf(metamask)
   return bla.toString()
 }
+
+const createPlan = async (data: any) => {
+  const store = useUserStore()
+
+  BigNumber.config({ EXPONENTIAL_AT: 38 })
+  const overrides = {
+    value: ethers.utils.parseEther(data.totalReward + ''),
+  }
+  const createPlanParam = {
+    daoId: data.projectId,
+    startBlock: data.startBlock,
+    duration: data.durationBlock,
+    totalRounds: data.totalRounds,
+    totalReward: new BigNumber(data.totalReward)
+      .times(`1e${data.decimalsNum}`)
+      .toString(),
+    rewardToken: data.rewardToken === "" ? ethers.constants.AddressZero : data.rewardToken,
+    useTreasury: data.useTreasury,
+    io: data.io,
+    uri: data.planUri,
+    planTemplateType: 0,
+
+  }
+  const protocolAddress = store.PactAbi.protocol_contract
+  const contract = send(
+    protocolAddress,
+    JSON.parse(store.PactAbi.pd_plan_abi)
+  )
+
+  console.log(createPlanParam, 'createPlanParam')
+  const tx = data.rewardToken === "" ? await contract.createPlan(createPlanParam, overrides) : await contract.createPlan(createPlanParam)
+  return tx
+}
+
+const addPlanTotalReward = async (data: any) => {
+  const store = useUserStore()
+
+  BigNumber.config({ EXPONENTIAL_AT: 38 })
+  const overrides = {
+    value: ethers.utils.parseEther(data.totalReward + ''),
+  }
+  const contract = send(
+    store.PactAbi.protocol_contract,
+    JSON.parse(store.PactAbi.pd_plan_abi)
+  )
+  console.log(contract, 'contract', data)
+  const tx = data.rewardTokenSymbol === 'ETH'
+    ? await contract.addPlanTotalReward(data.planId, data.amount, data.useTreasury, overrides)
+    : await contract.addPlanTotalReward(data.planId, data.amount, data.useTreasury)
+  return tx
+}
+
+const exchangeOutputToInput = async (project_id: string, amount: string, address: string) => {
+  const store = useUserStore()
+  const protocolAddress = store.PactAbi.protocol_contract
+  const contract = send(
+    protocolAddress,
+    JSON.parse(store.PactAbi.protocol_contract_proxy_abi)
+  )
+  console.log(contract, 'contract', project_id, amount, address)
+  const tx = await contract.exchangeOutputToInput(project_id, amount, address)
+  return tx
+}
+
+
 export {
   sig,
+  send,
   getProvider,
   decimals,
   createDaoForFunding,
@@ -465,5 +532,8 @@ export {
   grantTreasury,
   getAllowanceTreasury,
   grantDaoAssetPool,
-  getErc20Balance
+  getErc20Balance,
+  createPlan,
+  addPlanTotalReward,
+  exchangeOutputToInput,
 }

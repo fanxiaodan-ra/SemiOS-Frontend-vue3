@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "41190682",
+      "name": "My Permissions",
+      "font_class": "a-MyPermissions",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "41190528",
+      "name": "top_up_balance",
+      "font_class": "top_up_balance",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "41190642",
+      "name": "My Created nodes",
+      "font_class": "a-MyCreatednodes",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "40969849",
+      "name": "添加",
+      "font_class": "tianjia1",
+      "unicode": "e6e1",
+      "unicode_decimal": 59105
+    },
+    {
+      "icon_id": "5317390",
+      "name": "成功",
+      "font_class": "chenggong",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
       "icon_id": "18991683",
       "name": "more",
       "font_class": "more",
@@ -98,7 +133,7 @@
     },
     {
       "icon_id": "25608032",
-      "name": "条件",
+      "name": "筛选条件",
       "font_class": "tiaojian",
       "unicode": "e63f",
       "unicode_decimal": 58943

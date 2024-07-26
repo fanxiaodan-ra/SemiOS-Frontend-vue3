@@ -2,27 +2,28 @@
   <v-navigation-drawer v-model="drawer" temporary class="nav-box">
     <div class="n-top" :style="{ height: props.noTopHeight }"></div>
     <v-list-item class="nav-top">
-      <div class="icon-body">
-        <v-btn @click="setDrawer" size="40">
-          <i class="iconfont icon-tianjia ft24" @click.stop="setDrawer" />
-        </v-btn>
+      <div class="flex justify-between items-center">
+        <p class="text-base font-bold text-white">Filter criteria</p>
+        <i class="iconfont icon-guanbi !text-xs" @click="setDrawer"></i>
       </div>
     </v-list-item>
-    <v-divider></v-divider>
+    <v-divider class="border-purple"></v-divider>
     <h4>{{ $t('CardLeftFilter.priceRangeLabel') }}</h4>
     <v-list-item class="nav-price">
       <v-text-field
+        type="number"
         label="Min"
+        width="224"
         density="comfortable"
         v-model="formData.minPrice"
         @update:modelValue="
           setInput(formData.minPrice, 'minPrice', 5, 0, 999999999)
-        "
-      >
+        ">
       </v-text-field>
     </v-list-item>
     <v-list-item class="nav-price">
       <v-text-field
+        type="number"
         label="Max"
         density="comfortable"
         v-model="formData.maxPrice"
@@ -31,48 +32,38 @@
             formData.maxPrice,
             'maxPrice',
             5,
-            formData.minPrice,
+            0,
             999999999
           )
-        "
-      >
+        ">
       </v-text-field>
     </v-list-item>
-    <v-divider></v-divider>
+    <p v-show="rangeError" class="text-error text-xs px-4 -mt-4">
+      {{ $t('CardLeftFilter.priceError') }}
+    </p>
     <h4>{{ $t('CardLeftFilter.typeSaleLabel') }}</h4>
     <v-list-item class="nav-type">
-      <v-radio-group v-model="formData.sortCondition" inline>
-        <v-radio
-          v-for="item in sortConditionList"
-          :key="item.label"
-          :label="item.label"
-          :value="item.value"
-          color="#745cd4"
-        >
+      <v-radio-group v-model="formData.fixedPrice" inline>
+        <v-radio v-for="item in fixedPriceList" :key="item.label" :label="item.label" :value="item.value"
+          color="#8C91FF">
         </v-radio>
       </v-radio-group>
     </v-list-item>
-    <v-divider></v-divider>
     <v-list-item>
-      <v-btn
-        block
-        class="btnz text-none my-mgt16"
-        type="submit"
-        @click="apply"
-        >{{ $t('CardLeftFilter.applyBtn') }}</v-btn
-      >
+      <v-btn block class="btnz text-none my-mgt16" type="submit" @click="apply">{{ $t('CardLeftFilter.applyBtn')
+        }}</v-btn>
     </v-list-item>
   </v-navigation-drawer>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 const props = defineProps({
   noTopHeight: {
     type: String,
-    default: '114px',
+    default: '164px',
   },
 })
-const sortConditionList = [
+const fixedPriceList = [
   {
     label: 'All',
     value: 2,
@@ -89,9 +80,15 @@ const sortConditionList = [
 const formData = reactive({
   maxPrice: 9999,
   minPrice: 0,
-  sortCondition: 2,
+  fixedPrice: 2,
 })
 import { oninputNum } from '@/utils'
+
+const rangeError = computed(() => {
+  const minPrice = Number(formData.minPrice)
+  const maxPrice = Number(formData.maxPrice)
+  return minPrice >= maxPrice
+})
 
 const setInput = (
   val: string | number,
@@ -106,6 +103,9 @@ const setInput = (
 
 const emit = defineEmits(['getConditions'])
 const apply = () => {
+  if (formData.minPrice >= formData.maxPrice) {
+    return
+  }
   emit('getConditions', formData)
 }
 const drawer = ref(false)
@@ -119,7 +119,7 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .nav-box {
-  background-color: #1b2233;
+  background-color: #151925;
 
   h4 {
     padding: 0 16px;
@@ -131,8 +131,6 @@ defineExpose({
 }
 
 .nav-top {
-  height: 96px;
-
   i {
     cursor: pointer;
   }
@@ -146,13 +144,13 @@ defineExpose({
   color: #b3b5f2;
   width: 63px;
   height: 40px;
-  // background-color: #1b2233;
+  // background-color: #151925;
 }
 
 .v-navigation-drawer {
   position: fixed !important;
   z-index: 2;
-  background: #1b2233;
+  background: #151925;
 }
 
 .v-layout {

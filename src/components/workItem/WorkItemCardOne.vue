@@ -135,10 +135,10 @@ const setAmount = () => {}
 }
 .img-box-footer {
   height: 98px;
-  border: 0.5px solid #6062aa;
+  border: 0.5px solid #2F305B;
   box-sizing: border-box;
   border-top: none;
-  background-color: #1b2233;
+  background-color: #151925;
   padding: 0 12px;
   margin-top: -12px;
 

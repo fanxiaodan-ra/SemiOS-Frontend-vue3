@@ -25,7 +25,7 @@
       </v-col>
       <v-col>
         <p class="card-num">{{ props.dataObj.reserveRatio.daoMintFee }}%</p>
-        <p class="card-name">Sub Nodes Fee</p>
+        <p class="card-name">Subnodes Fee</p>
       </v-col>
       <v-col>
         <p class="card-num">
@@ -35,12 +35,6 @@
         <p class="card-name">Semios Fee</p>
       </v-col>
     </v-row>
-    <!-- <v-row align="start" no-gutters class="card-name">
-      <v-col> Builder Fee </v-col>
-      <v-col> Seed Nodes Fee</v-col>
-      <v-col> Sub Nodes Fee</v-col>
-      <v-col> Semios Fee</v-col>
-    </v-row> -->
   </v-card>
 </template>
 
@@ -54,7 +48,7 @@ const props = defineProps({
 </script>
 <style scoped lang="scss">
 .work-card {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
 }
 
 .card-num {

@@ -19,6 +19,7 @@
       <RightSeedNodesInfo v-if="tab === 2" :dataObj="dataObj" />
       <RightMaker v-if="tab === 3" />
       <RightTreasury v-if="tab === 4" />
+      <RightIncentivePlan v-if="tab === 5" />
     </div>
   </div>
 </template>
@@ -35,6 +36,7 @@ import RightSubNodesQuantity from './RightSubNodesQuantity.vue'
 import RightSeedNodesInfo from './RightSeedNodesInfo.vue'
 import RightMaker from './RightMaker.vue'
 import RightTreasury from './RightTreasury.vue'
+import RightIncentivePlan from './RightIncentivePlan/index.vue'
 
 import { ref, watch, onMounted } from 'vue'
 const tab = ref(0)

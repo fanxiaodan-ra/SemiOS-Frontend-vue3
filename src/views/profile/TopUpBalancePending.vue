@@ -1,11 +1,8 @@
 <template>
   <div class="card-box">
-    <div v-if="!isLoading">
-      <v-card
-        class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24"
-        v-for="(item, idx) in list"
-        :key="item.daoName + idx"
-      >
+    <div v-if="!isLoading" class="flex flex-col justify-center pl-[104px] xl:pl-[60px]">
+      <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24 bg-card-1 min-w-[1080px] max-w-[1200px]"
+        v-for="(item, idx) in list" :key="item.daoName + idx">
         <div class="card-top">
           <div class="t-img"><img :src="item.daoLogoUrl" alt="" /></div>
           <div class="t-box">
@@ -27,38 +24,21 @@
             </thead>
             <Loading v-if="item.isLoading" />
             <tbody v-else>
-              <tr
-                v-for="tableItem in (item.topUpBalanceList as any)"
-                :key="tableItem.name"
-              >
+              <tr v-for="tableItem in (item.topUpBalanceList as any)" :key="tableItem.name">
                 <td>
-                  <router-link
-                    :to="`/workDetails?id=${tableItem.mintedWorkId}`"
-                    class="a-style"
-                  >
-                    <v-btn
-                      class="text-none title-name"
-                      variant="text"
-                      size="small"
-                    >
+                  <router-link :to="`/workDetails?id=${tableItem.mintedWorkId}`" class="a-style">
+                    <v-btn class="text-none title-name" variant="text" size="small">
                       {{ tableItem.mintedDaoName }}.{{
-                        tableItem.mintedWorkNumber
+                      tableItem.mintedWorkNumber
                       }}
                     </v-btn>
                   </router-link>
                 </td>
                 <td>
-                  <router-link
-                    :to="`/workDetails?id=${tableItem.voucherWorkId}`"
-                    class="a-style"
-                  >
-                    <v-btn
-                      class="text-none title-name"
-                      variant="text"
-                      size="small"
-                    >
+                  <router-link :to="`/workDetails?id=${tableItem.voucherWorkId}`" class="a-style">
+                    <v-btn class="text-none title-name" variant="text" size="small">
                       {{ tableItem.voucherDaoName }}.{{
-                        tableItem.voucherWorkNumber
+                      tableItem.voucherWorkNumber
                       }}
                     </v-btn>
                   </router-link>
@@ -68,11 +48,8 @@
                 </td>
                 <td class="flexcen">
                   {{ bigNumFormat(tableItem.mintFee, 5, 0.000001) }}
-                  <TokenIcon
-                    size="14px"
-                    :payCurrencyType="tableItem.mintedDaoPayCurrencyType"
-                    :inputTokenAddress="tableItem.mintedDaoInputTokenAddress"
-                  />
+                  <TokenIcon size="14px" :payCurrencyType="tableItem.mintedDaoPayCurrencyType"
+                    :inputTokenAddress="tableItem.mintedDaoInputTokenAddress" />
                 </td>
                 <td>
                   {{ claimTime(tableItem.endBlockTime, 0) }}
@@ -133,7 +110,7 @@ onMounted(() => {
   flex: 1;
   height: 100%;
   :deep(.v-card) {
-    background-color: #252b3a !important;
+    background-color: #1A1F2E !important;
     padding: 20px;
     box-sizing: border-box;
     margin-bottom: 24px;
@@ -148,7 +125,7 @@ onMounted(() => {
 .t-img {
   width: 68px;
   height: 68px;
-  background-color: #252b3a;
+  background-color: #1A1F2E;
   margin-right: 24px;
   flex: 0 0 auto;
   img {

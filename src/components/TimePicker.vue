@@ -18,11 +18,12 @@
       <v-date-picker
         v-model="datetime"
         show-adjacent-months
-        max-height="400"
+        max-height="470"
         width="100%"
         :min="minDate"
       ></v-date-picker>
     </v-menu>
+    <p class="text-grey-1 text-xs">{{ $t('AddFormBlock.timeZoneTip') }}</p>
   </FormRow>
 </template>
 <script lang="ts" setup>
@@ -62,7 +63,6 @@ const formatDate = ref(date.format(new Date(), 'fullDateWithWeekday'))
 const menu = ref(false)
 watch([datetime, formatDate], (cur) => {
   console.log(cur, 'cur')
-  // formatDate.value = Dayjs(datetime.value).format('YYYY-MM-DD')
   formatDate.value = date.format(cur[0], 'fullDateWithWeekday')
 
   menu.value = false

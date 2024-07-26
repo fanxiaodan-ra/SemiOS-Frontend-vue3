@@ -9,6 +9,7 @@
         <v-text-field
           :label="$t('NodeDetail.amountPlaceholder')"
           density="comfortable"
+          type="number"
           v-model="formData.amount"
           @update:modelValue="setInput(formData.amount, 'amount', 0, 1)"
           :rules="amountRules"

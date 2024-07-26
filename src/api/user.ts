@@ -1,4 +1,5 @@
-import { service } from './request'
+// import { service } from './request'
+import service from './request'
 import { ConfigType } from '@/types/api/ConfigType'
 import { CookieInfoRes } from '@/types/api/CookieInfo'
 
@@ -146,6 +147,29 @@ const topupBalanceRewardDetail = async (data: any) => {
     data: data,
   })
 }
+const myPermissions = async (data: {
+  pageSize?: number
+  pageNo?: number
+  userAddress: string
+}) => {
+  return service({
+    url: `/api/user/permissions`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const userPermissionsNft = async (data: {
+  pageSize?: number
+  pageNo?: number
+  workId: number
+}) => {
+  return service({
+    url: `/api/user/permissions/nft`,
+    method: 'POST',
+    data: data,
+  })
+}
 export {
   loginAccount,
   cookieInfo,
@@ -161,5 +185,7 @@ export {
   userTopupBalanceDetails,
   topupNft,
   topupBalanceReward,
-  topupBalanceRewardDetail
+  topupBalanceRewardDetail,
+  myPermissions,
+  userPermissionsNft
 }

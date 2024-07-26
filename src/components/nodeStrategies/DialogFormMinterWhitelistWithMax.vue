@@ -17,6 +17,7 @@
           :label="$t('NodeDetail.amountPlaceholder')"
           density="comfortable"
           v-model="formData.amount"
+          type="number"
           @update:modelValue="setInput(formData.amount, 'amount', 0, 1)"
           :rules="amountRules"
         >

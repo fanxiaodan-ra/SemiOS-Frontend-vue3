@@ -1,9 +1,17 @@
 <template>
   <div class="wh100">
-    <h2 class="h2-title">Edit Information</h2>
-    <v-divider class="my-divider"></v-divider>
+    <h2 class="h2-title">{{ t('editInfo.title')}}</h2>
+    <v-divider class="border-purple"></v-divider>
     <loading v-if="isLoading" />
     <div v-else>
+      <p class="text-center text-neutral-500 text-lg font-medium font-['Inter'] tracking-tight mb-6 mt-8">
+        {{ t('editInfo.subTitle') }}
+        <router-link
+          :to="'/workDetails?id=' + userPermission.workId"
+          class="hover:text-primary-2 text-indigo-400 text-lg font-medium font-['Inter'] tracking-tight"
+          >{{ `${userPermission.daoNameNft}.${userPermission.workNumber}` }}</router-link
+        >
+      </p>
       <EditInformationBasic
         :dataObj="formData"
         @setFormData="setFormData"
@@ -20,18 +28,18 @@
           class="btnb fc7 text-none mr-10"
           type="submit"
           @click="goNode"
-          >Back</v-btn
+          >{{ t('common.back') }}</v-btn
         >
-        <v-btn block class="btnz text-none" type="submit" @click="submit"
-          >Submit</v-btn
+        <v-btn class="btnz text-none" type="submit" @click="submit"
+          >{{ t('common.save') }}</v-btn
         >
       </div>
     </div>
   </div>
   <DialogLoading
-    :title="'Loading'"
+    :title="t('common.loading')"
     :isLoading="isDialogLoading"
-    text="Your change is being processed, it should be finished immedately."
+    :text="t('common.processing')"
   />
 </template>
 
@@ -43,9 +51,11 @@ import Loading from '@/components/Loading.vue'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { daoEditDetail, daoEdit } from '@/api/daos'
-
+import usePermission from '@/hooks/useUserPermission'
+import { RouterLink } from 'vue-router'
+import { t } from '@/lang'
 const route = useRoute()
-
+const { userPermission, getPermission } = usePermission()
 const formData = ref({
   daoName: '',
   daoManitesto: '',
@@ -73,12 +83,17 @@ const setFormData = (data: any) => {
 const childRef = ref()
 const childSocialRef = ref()
 const router = useRouter()
+
 import useToastNotify from '@/hooks/useToastNotify'
 const { notifyErr, notifySuc } = useToastNotify()
 import useAccount from '@/hooks/useAccount'
 const { getSig } = useAccount()
 const isDialogLoading = ref(false)
 const submit = async () => {
+  if (!userPermission.value.isPermission) {
+    notifyErr(t('common.noPermissionTip'), true)
+    return
+  }
   const isNext = await childRef.value.setData()
   await childSocialRef.value.setData()
   if (!isNext) return
@@ -112,14 +127,19 @@ const submit = async () => {
 
 const goNode = () => {
   router.push({
-    path: '/nodeDetails',
+    path: route.query.type === '1' ? '/daoCollectionAnalytics' : '/nodeDetails',
     query: {
       id: route.query.id,
     },
   })
 }
+
 onMounted(() => {
   getData()
+  getPermission({
+    daoId: route.query.id as string,
+    permissionType: route.query.type === '1' ? 6 : 1,
+  })
 })
 </script>
 

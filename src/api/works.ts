@@ -1,8 +1,9 @@
-import { service } from './request'
+// import { service } from './request'
+import service from './request'
 
 const workExploreUnmitedWorks = async (data: any) => {
   return service({
-    url: `/api/work/explore/unmintedWorks`,
+    url: `/api/work/show/works/list`,
     method: 'POST',
     data: data,
   })
@@ -10,7 +11,7 @@ const workExploreUnmitedWorks = async (data: any) => {
 
 const workExploreNfts = async (data: any) => {
   return service({
-    url: `/api/work/explore/nfts`,
+    url: `/api/work/show/nft/list`,
     method: 'POST',
     data: data,
   })
@@ -119,7 +120,7 @@ const workCreate = async (data: any) => {
 }
 const daoUnmintedWorks = async (data: any) => {
   return service({
-    url: `/api/dao/unmintedWorks `,
+    url: `/api/work/show/works/list`,
     method: 'POST',
     data: data,
   })
@@ -127,7 +128,7 @@ const daoUnmintedWorks = async (data: any) => {
 
 const daoNfts = async (data: any) => {
   return service({
-    url: `/api/dao/nfts `,
+    url: `/api/work/show/nft/list`,
     method: 'POST',
     data: data,
   })
@@ -135,21 +136,26 @@ const daoNfts = async (data: any) => {
 
 const daoDrbNfts = async (data: any) => {
   return service({
-    url: `/api/dao/drbNfts `,
+    url: `/api/work/show/drb/nft/list`,
     method: 'POST',
     data: data,
   })
 }
-const searchWorks = async (query: any, num = null) => {
+const searchWorks = async (data: {
+  searchWord: string
+  pageNo: number
+  pageSize: number
+}) => {
   return service({
-    url: `/api/search/works`,
+    url: `/api/work/show/search`,
     method: 'POST',
-    data: { searchWord: query, number: num },
+    data,
   })
 }
+
 const workCreator = async (data: any) => {
   return service({
-    url: `/api/work/creator`,
+    url: `/api/work/show/creator`,
     method: 'POST',
     data: data,
   })
@@ -165,18 +171,71 @@ const favoriteWork = async (data: any) => {
 
 const workHold = async (data: any) => {
   return service({
-    url: `/api/work/hold`,
+    url: `/api/work/show/hold`,
     method: 'POST',
     data: data,
   })
 }
 const workMinted = async (data: any) => {
   return service({
-    url: `/api/work/minted`,
+    url: `/api/work/show/minted`,
     method: 'POST',
     data: data,
   })
 }
+
+const workShowWindow = async (data: { workId: string }) => {
+  return service({
+    url: `/api/work/show/window`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const inquireNft0AndDaoId = async (data: {
+  transactionHash: string
+}) => {
+  return service({
+    url: `/api/work/transaction/hash`,
+    method: 'POST',
+    data,
+  })
+}
+
+const workPermissionDetail = async (data: {
+  workId: number
+  pageSize?: number
+  pageNo?: number
+}) => {
+  return service({
+    url: `/api/permission/detail/work`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const workPermissionDetailNode = async (data: {
+  daoId: string
+  permissionType?: number
+}) => {
+  return service({
+    url: `/api/permission/detail/node`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const workPermissionDetailNodeInfo = async (data: {
+  daoId: string
+  permissionType?: number
+}) => {
+  return service({
+    url: `/api/permission/node/info`,
+    method: 'POST',
+    data: data,
+  })
+}
+
 export {
   workExploreUnmitedWorks,
   workExploreNfts,
@@ -195,5 +254,10 @@ export {
   workCreator,
   favoriteWork,
   workHold,
-  workMinted
+  workMinted,
+  workShowWindow,
+  inquireNft0AndDaoId,
+  workPermissionDetail,
+  workPermissionDetailNode,
+  workPermissionDetailNodeInfo
 }

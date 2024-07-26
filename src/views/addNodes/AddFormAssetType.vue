@@ -1,9 +1,9 @@
 <template>
-  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
-    <h3
-      class="node-name"
-      v-if="store.addNodeType === 6 && !route.query.id"
-    >
+  <v-card
+    class="mx-auto my-pd24 my-mgt24 my-mgb24 max-w-[1200px]"
+    elevation="12"
+  >
+    <h3 class="node-name" v-if="store.addNodeType === 6 && !route.query.id">
       {{ $t('AddFormAssetType.title') }}
     </h3>
     <v-form ref="formRef">
@@ -76,12 +76,13 @@
         </FormRow>
       </v-expand-transition>
     </v-form>
-    <div
-      class="dflex flex-jc my-mgb24 my-mgt24"
-      v-if="store.addNodeType !== 6"
-    >
-      <v-btn block class="btnz text-none" type="submit" @click="setAddType(2)"
-        >Next</v-btn
+    <div class="dflex flex-jc my-mgb24 my-mgt24" v-if="store.addNodeType !== 6">
+      <v-btn
+        block
+        class="btnz text-none"
+        type="submit"
+        @click="setAddType(2)"
+        >{{ t('common.next') }}</v-btn
       >
     </div>
   </v-card>
@@ -89,10 +90,15 @@
 
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-const route = useRoute()
 import useUserStore from '@/store'
+import { TOKENLIST } from '@/config'
+import { ethers } from 'ethers'
+import { getCode } from '@/common/web3service'
+import { filterHash } from '@/utils'
+import { t } from '@/lang'
+const route = useRoute()
 const store = useUserStore()
 const props = defineProps({
   formDataProp: {
@@ -108,86 +114,119 @@ const outputType = [
   { label: 'Generate', value: false },
   { label: 'Import', value: true },
 ]
-const inputTokenList: any = ref([])
-import { TOKENLIST } from '@/config'
-inputTokenList.value = [...TOKENLIST]
-import { ethers } from 'ethers'
-import { getCode } from '@/common/web3service'
-import { filterHash } from '@/utils'
-const formData = reactive({
+const inputTokenList: any = ref([...TOKENLIST])
+
+const formData = ref({
   inputToken: '0x0000000000000000000000000000000000000000',
   inputTokenErc20ContractAddress: '',
   thirdParty: false,
   erc20ContractAddress: '',
+  initData: {},
 })
+
+const formRef = ref()
 const rules = [
-  (value: any) => !!value || 'Field is required',
+  (value: any) => !!value || t('common.fieldRequired'),
   async (value: any) => {
     const strArr = value.match(/^(0x)?[0-9a-fA-F]{40}$/)
     const isAddress = ethers.utils.isAddress(value)
+
     if (!strArr || !isAddress) {
-      return 'Wrong address please modify and resubmit.'
+      return t('AddFormAssetType.wrongAddress')
     }
     const isCode = await getCode(value)
     if (!isCode) {
-      return 'Invalid ERC-20 Contract'
+      return t('AddFormAssetType.invalidERC20Contract')
     }
-    if (formData.inputToken !== '0x0000000000000000000000000000000000000000') {
-      const inputToken = filterHash(formData.inputTokenErc20ContractAddress)
-      const outputToken = filterHash(formData.erc20ContractAddress)
+    if (
+      formData.value.inputToken !== '0x0000000000000000000000000000000000000000'
+    ) {
+      const inputToken = filterHash(
+        formData.value.inputTokenErc20ContractAddress
+      )
+      const outputToken = filterHash(formData.value.erc20ContractAddress)
       if (
         inputToken !== '' &&
         outputToken !== '' &&
         inputToken === outputToken
       ) {
-        return 'Input token and Output token cannot be the same ERC-20 contract address.'
+        return t('AddFormAssetType.inTAndOutTBeTheSame')
       }
     }
     return true
   },
 ]
-
 const setSelect = (val: string) => {
   if (val === '0x0000000000000000000000000000000000000000' || val === 'Input') {
-    formData.inputTokenErc20ContractAddress = ''
+    formData.value.inputTokenErc20ContractAddress = ''
   } else {
-    formData.inputTokenErc20ContractAddress = val
+    formData.value.inputTokenErc20ContractAddress = val
   }
+  formRef.value.resetValidation()
 }
 
 const setGroup = () => {
-  formData.erc20ContractAddress = ''
+  formData.value.erc20ContractAddress = ''
+  formRef.value.resetValidation()
 }
 const emit = defineEmits(['setFormData'])
+
+const validateForm = async (value: any) => {
+  if (formRef.value) {
+    const { valid } = await formRef.value.validate()
+    emit('setFormData', {
+      formVal: value,
+      validVal: {
+        position: 0,
+        value: true,
+      },
+    })
+    if (!valid) return false
+  }
+}
 watch(
   () => formData,
   (value) => {
-    console.log(value, 'value')
-    emit('setFormData', value)
+    validateForm(value)
   },
   { deep: true }
 )
 watch(
   () => props.initData,
   (value) => {
-    if (value.payCurrencyType === 'ETH') {
-      formData.inputToken = '0x0000000000000000000000000000000000000000'
-      formData.inputTokenErc20ContractAddress = ''
-    } else {
-      formData.inputToken = 'Input'
-      formData.inputTokenErc20ContractAddress = value.inputTokenAddress
+    if (route.query.id) {
+      if (value.payCurrencyType === 'ETH') {
+        formData.value.inputToken = '0x0000000000000000000000000000000000000000'
+        formData.value.inputTokenErc20ContractAddress = ''
+      } else {
+        formData.value.inputToken = 'Input'
+        formData.value.inputTokenErc20ContractAddress = value.inputTokenAddress
+      }
+      formData.value.initData = value
+      validateForm(formData)
     }
-    emit('setFormData', formData)
   },
-  { deep: true }
+  { deep: true, immediate: true }
 )
-const formRef = ref()
+const validateNext = async () => {
+  if (formRef.value) {
+    const { valid } = await formRef.value.validate()
+    return valid
+  } else {
+    return true
+  }
+}
+defineExpose({
+  validateNext,
+})
 const setAddType = async (val: number) => {
-  const { valid } = await formRef.value.validate()
-  if (!valid) return false
-  emit('setFormData', formData)
-  store.setNodeType(val)
-  window.scrollTo(0, 0)
+  if (formRef.value) {
+    const { valid } = await formRef.value.validate()
+    if (!valid) return false
+    validateForm(formData)
+    store.setNodeType(val)
+    window.scrollTo(0, 0)
+  }
 }
 </script>
 

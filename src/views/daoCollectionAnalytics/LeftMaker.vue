@@ -1,43 +1,33 @@
 <template>
   <div v-if="isLoading" class="card-loading mypage">
-    <v-skeleton-loader
-      elevation="12"
-      height="100%"
-      type="list-item,list-item,list-item"
-    ></v-skeleton-loader>
+    <v-skeleton-loader elevation="12" height="100%" type="list-item,list-item,list-item"></v-skeleton-loader>
   </div>
   <v-row class="mypage" v-else>
     <v-col>
       <v-item v-slot="{ toggle }">
-        <v-card
-          :color="props.tab === 3 ? 'primary' : ''"
-          class="d-flex align-center mybg"
-          :style="{
+        <v-card :color="props.tab === 3 ? 'primary' : ''" class="d-flex align-center mybg" :style="{
             'background-color': props.tab === 3 ? '#364159 !important' : '',
-            'border-color': props.tab === 3 ? '#6062aa  !important' : '',
-          }"
-          dark
-          @click="toggle"
-        >
+            'border-color': props.tab === 3 ? '#2F305B  !important' : '',
+          }" dark @click="toggle">
           <v-scroll-y-transition>
             <div class="sc-box">
-              <p>
-                Maker :
+              <p class="!text-base">
+                {{ t('daoCollectionAnalytics.maker') }} :
                 <span>{{
                   bigNumFormat(daoMaker.makerTotalAmount, 5, 0.000001)
-                }}</span>
+                  }}</span>
               </p>
               <p>
-                Total Unspent ETH :
+                {{ t('daoCollectionAnalytics.totalUnspentETH') }} :
                 <span>{{
                   bigNumFormat(daoMaker.noSpendEthAmount, 5, 0.000001)
-                }}</span>
+                  }}</span>
               </p>
               <p>
-                Total Locked ERC-20 :
+                {{ t('daoCollectionAnalytics.totalLockedERC20') }} :
                 <span>{{
                   bigNumFormat(daoMaker.noSpendTokenAmount, 5, 0.000001)
-                }}</span>
+                  }}</span>
               </p>
             </div>
           </v-scroll-y-transition>
@@ -50,6 +40,7 @@
 import { bigNumFormat } from '@/utils'
 import { togetherDaoMaker } from '@/api/daos'
 import { ref, onMounted } from 'vue'
+import { t } from '@/lang'
 const props = defineProps({
   tab: {
     type: Number,

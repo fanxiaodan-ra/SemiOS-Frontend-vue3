@@ -1,61 +1,128 @@
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+} from 'axios';
+import axios from 'axios';
 import { APP_BASE_API } from '@/config'
-const router = useRouter();
-// An array for storing cancellation tokens
+import { t } from '@/lang'
+import useToastNotify from '@/hooks/useToastNotify'
+const { notifyErr } = useToastNotify()
+export interface FileBlobResult {
+  blob: Blob;
+  fileName: string;
+}
+
+
 let cancelTokens = [] as any
 
-const createService = () => {
-  const service = axios.create({
-    withCredentials: true,
-    baseURL:
-      import.meta.env.VITE_USER_NODE_ENV === 'development' ? '' : APP_BASE_API,
-    timeout: 60000
-  });
+/**
+ * 通用返回值类型
+ */
+export interface Result<T = any> {
+  resultCode: number;
+  resultDesc: string;
+  data: T;
+  page: {
+    pageNo: number;
+    pageSize: number;
+    orderBy: string;
+    order: 'ASC' | 'DESC';
+    count: number;
+    totalPage: number;
+  };
+}
+const serve: AxiosInstance = axios.create({
+  baseURL:
+    import.meta.env.VITE_USER_NODE_ENV === 'development' ? '' : APP_BASE_API,
+  withCredentials: true,
+  timeout: 1000 * 60,
+});
+// request interceptor
+serve.interceptors.request.use((config) => {
+  // Create a new cancel token
+  if (config.url !== '/api/contract/abi' && config.url !== '/api/user/logout') {
+    const source = axios.CancelToken.source();
+    config.cancelToken = source.token;
+    cancelTokens.push(source);
+  }
+  // Loading
+  return config;
+});
 
-  service.interceptors.request.use(
-    (config) => {
-      // Create a new cancel token
-      const source = axios.CancelToken.source();
-      config.cancelToken = source.token;
-      cancelTokens.push(source);
-
-      // Loading
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
-  service.interceptors.response.use(
-    (response) => {
-      if (response.data.resultCode === 402) {
-
-        router.push('/');
-        return false;
+// response interceptor
+serve.interceptors.response.use(
+  (res: AxiosResponse<Result>) => {
+    return new Promise((resolve, reject) => {
+      const { resultCode } = res.data;
+      if (resultCode === 100) {
+        return resolve(res);
+        // catch the error code
+      } else if ([402].includes(resultCode)) {
+        localStorage.clear();
+        notifyErr(t('common.loginExpired'), true)
+        setTimeout(() => {
+          window.location.replace('/')
+        }, 3000)
+        return reject(res.data);
       }
-      return response.data;
-    },
-    (error) => {
-      return Promise.reject(error);
+      notifyErr(res.data.resultDesc, true)
+      return reject(res.data);
+    });
+  },
+  (error) => {
+    // response error
+    const { code, message, response } = error || {};
+    console.error(error);
+    const err: string = error?.toString?.() ?? '';
+    let resultDesc = '';
+    try {
+      if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
+        resultDesc = 'Request timeout, please try again later';
+      }
+      if (err?.includes('Network Error')) {
+        resultDesc = 'Network Error, please try again later';
+      } else if (response && response.data && response.data.resultDesc) {
+        resultDesc = response.data.resultDesc;
+      }
+    } catch (e) {
+      throw new Error(e as unknown as string);
     }
-  );
-
-  return service;
+    error.resultDesc = resultDesc;
+    return Promise.reject(error);
+  },
+);
+/**
+ * common request function
+ * @param config axios config，type is AxiosRequestConfig
+ * @returns
+ */
+const request = <T = any>(config: AxiosRequestConfig): Promise<T> => {
+  return new Promise((resolve, reject) => {
+    const url = config.url;
+    // if (mock) {
+    //   mockRequest(serve, url as string, config.method as string, config?.data)
+    // }
+    serve
+      .request<any, AxiosResponse<Result>>({ ...config, url })
+      .then((res: AxiosResponse<Result>) => {
+        resolve(res.data as never as Promise<T>);
+      })
+      .catch((e: Error | AxiosError) => {
+        reject(e);
+      });
+  });
 };
 
-// Function to cancel the current request
-let service = createService();
-
-const cancelAllRequests = () => {
+export const cancelAllRequests = () => {
   console.log(cancelTokens, 'cancelTokens')
   cancelTokens.forEach((source: any) => {
     source.cancel('Request canceled');
   });
   cancelTokens = [];
 
-  console.log(cancelTokens, 'cancelTokens NUll')
 };
 
-export { service, cancelAllRequests };
+export default request;

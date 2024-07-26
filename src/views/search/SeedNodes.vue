@@ -1,47 +1,79 @@
 <template>
   <div class="tnode-card">
     <v-layout>
-      <v-main>
-        <div class="node-card-box">
-          <node-item-card
+      <v-main class="flex justify-center">
+        <div class="node-card-box" v-if="props.amountObj.seedNodesAmount > 0">
+          <SeedNodeItemCard
             :list="list"
             :isAll="isAll"
-            :isLoading="loading"
+            :isLoading="isLoading"
             :isSearch="true"
             :searchType="4"
+            :isFavorited="false"
+            @loadMore="continueLoadData"
           />
         </div>
+        <NoItem v-else path="/explore" :query="{ type: 4 }" />
       </v-main>
     </v-layout>
   </div>
 </template>
 <script setup lang="ts">
-import { searchSeedNodes } from '@/api/daos'
-import NodeItemCard from '@/components/nodeItem/NodeItemCard.vue'
-import { ref, onMounted } from 'vue'
+import useDaoStore from '@/store/dao';
+import SeedNodeItemCard from '@/components/nodeItem/seedNode/Index.vue'
+import NoItem from '@/components/NoItem.vue'
+
+import { ref, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
 const props = defineProps({
   amountObj: {
     type: Object,
     default: () => {},
   },
 })
-
-const list = ref<any>([])
-const isAll = ref(true)
-const loading = ref(false)
-import { useRoute } from 'vue-router'
 const route = useRoute()
-const getData = async () => {
-  loading.value = true
-  const data: any = await searchSeedNodes(route.query.query)
-  list.value = list.value.concat(data.dataList)
-  loading.value = false
+const daoStore = useDaoStore()
+
+const list = computed(() => daoStore.searchSeedNodes)
+const isAll = computed(() => daoStore.searchSeedNodesPageInfo?.isAll || false)
+const isLoading = ref(false)
+
+const getData = async (loadFunc: Function = () => { }) => {
+  isLoading.value = true
+  try {
+    await loadFunc()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoading.value = false
+  }
 }
 
-onMounted(() => {
-  if (props.amountObj.seedNodesAmount === 0) return
-  getData()
-})
+const continueLoadData = async ({
+  done,
+}: {
+  done: (val: string) => void
+}) => {
+  await getData(daoStore.getSearchSeedNodesLazyLoad)
+  done('ok')
+}
+
+daoStore.searchSeedNodesPageInfo.isAll = false
+
+watch(
+  () => route.query.query,
+  () => {
+    if (route.query.query) {
+      daoStore.searchSeedNodesPageQuery = {
+        searchWord: route.query.query as string,
+      }
+      daoStore.searchSeedNodes = []
+    }
+  }, {
+  immediate: true,
+}
+)
 </script>
 <style lang="scss" scoped>
 .tnode-card {
@@ -49,7 +81,7 @@ onMounted(() => {
   height: 100%;
 
   :deep(.v-input__control) {
-    width: 240px;
+    width: 100%;
     margin-left: auto;
   }
 }

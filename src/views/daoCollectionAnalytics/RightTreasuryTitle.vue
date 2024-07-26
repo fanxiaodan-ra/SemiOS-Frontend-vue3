@@ -4,20 +4,31 @@
       <v-skeleton-loader
         elevation="12"
         height="100%"
-        type="table-heading,table-heading"
+        type="heading,heading, heading"
       ></v-skeleton-loader>
     </div>
     <div class="card-title" v-else>
-      <h3>
-        Treasury Address :
-        <span class="title-text">
-          <a class="token-icon" :href="aPush()" target="_blank">
-            <v-btn class="text-none fc8" variant="text">
+      <p class="text-grey-3 text-lg font-medium font-['Inter'] tracking-tight my-6">
+        {{ t('treasury.subTitle') }}
+        <router-link :to="'/workDetails?id=' + userPermission.workId"
+          class="hover:text-primary-2 text-indigo-400 text-lg font-medium font-['Inter'] tracking-tight">
+          {{ `${userPermission.daoNameNft}.${userPermission.workNumber}` }}
+        </router-link>
+      </p>
+      <h3 class="flex items-center">
+        {{ t('treasury.address') }} :
+        <span class="title-text flex items-center">
+          <a
+            class="token-icon mx-2"
+            :href="aPush(props.initData.treasuryAddress)"
+            target="_blank"
+          >
+            <span class="text-none fc8 text-lg hover:text-primary-2" variant="text">
               {{ ellipsis(props.initData.treasuryAddress) }}
               <v-tooltip activator="parent" location="top">
                 {{ props.initData.treasuryAddress }}
               </v-tooltip>
-            </v-btn>
+            </span>
           </a>
           <CopyInformation
             size="24"
@@ -26,16 +37,20 @@
           />
         </span>
       </h3>
-      <h3>
-        ERC-20 Contract Address :
-        <span class="title-text">
-          <a class="token-icon" :href="aPush()" target="_blank">
-            <v-btn class="text-none fc8" variant="text">
+      <h3 class="flex">
+        {{ t('treasury.erc20ContractAddress') }} :
+        <span class="title-text flex items-center">
+          <a
+            class="token-icon mx-2"
+            :href="aPush(props.initData.erc20Address)"
+            target="_blank"
+          >
+            <span class="text-none fc8 text-lg hover:text-primary-2" variant="text">
               {{ ellipsis(props.initData.erc20Address) }}
               <v-tooltip activator="parent" location="top">
                 {{ props.initData.erc20Address }}
               </v-tooltip>
-            </v-btn>
+            </span>
           </a>
           <CopyInformation
             size="24"
@@ -49,8 +64,12 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps } from 'vue'
+import { t } from '@/lang'
 import CopyInformation from '@/components/CopyInformation.vue'
 import { ellipsis } from '@/utils'
+import { APP_OPEN_URL } from '@/config'
+
 const props = defineProps({
   initData: {
     type: Object,
@@ -60,16 +79,20 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  userPermission: {
+    type: Object,
+    default: () => {},
+  },
 })
-import { APP_OPEN_URL } from '@/config'
-const aPush = () => {
-  return `${APP_OPEN_URL}/address/${props.initData.subDaoAssetPool}`
+
+const aPush = (address: string) => {
+  return `${APP_OPEN_URL}/address/${address}`
 }
 </script>
 
 <style scoped lang="scss">
 .node-card {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   padding: 0 !important;
   margin: 0;
   margin-bottom: 24px;

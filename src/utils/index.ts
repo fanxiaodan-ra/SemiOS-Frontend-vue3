@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { toLower, orderBy, uniq, isEqual, sortBy, includes } from 'lodash'
 import { BigNumber } from 'bignumber.js'
 import { ethers } from 'ethers'
 import dayjs from 'dayjs'
@@ -66,16 +66,16 @@ const whitelistFiltre = (value: any, arr = []) => {
     ','
   )
   const maxArr = arr.map((item: any) => {
-    return item.slice(0, 2) === '0x' ? _.toLower(item) : '0x' + _.toLower(item)
+    return item.slice(0, 2) === '0x' ? toLower(item) : '0x' + toLower(item)
   })
-  const arrList = _.toLower(str)
+  const arrList = toLower(str)
     .split(',')
     .filter((item: any) => item !== '')
     .map((ele: any) => {
       return ele.slice(0, 2) === '0x' ? ele : '0x' + ele
     })
   const dataList = [...arrList, ...maxArr]
-  return _.orderBy(_.uniq(dataList))
+  return orderBy(uniq(dataList))
   // return _.uniq(arrList);
 }
 
@@ -93,17 +93,32 @@ const oninputNum = (
   position: number = 0,
   min: number = 0,
   max: number = Infinity
-): number => {
-  console.log(min, 'min')
-  let numberVal = typeof val === 'string' ? parseFloat(val) : val
-  numberVal = isNaN(numberVal) ? min : numberVal
-  numberVal = Math.max(min, Math.min(numberVal, max))
-  if (numberVal.toString().indexOf('.') > 0) {
-    const safePosition = Math.max(0, Math.floor(position))
-    const formattedVal = numberVal.toFixed(safePosition)
-    numberVal = parseFloat(formattedVal)
+): number | string => {
+  const reg = new RegExp(`^\\d+\\.{0,1}\\d{0,9}$`)
+  const process= (val: string) => {
+    const lastWord = val.toString().substring(val.toString().length - 1)
+    const afterPoint = val.split('.')?.[1] || ''
+    if (Number(val) > max) {
+      return max
+    }
+    if (lastWord === '.' || (afterPoint.length < position && lastWord === '0')) {
+      return val
+    }
+    if (Number(val) < min) {
+      return min
+    }
+    if (val.split('.')?.[1]?.length > position) {
+      return Number(val).toFixed(position)
+    }
+    return Number(val).toString()
   }
-  return numberVal
+  if (reg.test(val.toString())) {
+    return process(val.toString())
+  }
+  if (Number(val) < 0) {
+    return min
+  }
+  return val.toString().substring(0, val.toString().length - 1)
 }
 
 const minusOthers = (
@@ -211,7 +226,7 @@ const objListIsEqual = (
     value: itemVal,
   }
 
-  return processedList.some((obj) => _.isEqual(obj, processedData))
+  return processedList.some((obj) => isEqual(obj, processedData))
 }
 
 const keyListEqual = (dataList: any[], key: string, val: string) => {
@@ -223,21 +238,21 @@ const keyListEqual = (dataList: any[], key: string, val: string) => {
   const address = val.toLowerCase().startsWith('0x')
     ? val.toLowerCase()
     : '0x' + val.toLowerCase()
-  return _.includes(addressList, address)
+  return includes(addressList, address)
 }
 
 const isErcEq = (arr1: any[], arr2: any[]) => {
   const arr1toLower = arr1.map((item) =>
-    _.toLower(item).slice(0, 2) === '0x'
-      ? _.toLower(item)
-      : '0x' + _.toLower(item)
+    toLower(item).slice(0, 2) === '0x'
+      ? toLower(item)
+      : '0x' + toLower(item)
   )
   const arr2toLower = arr2.map((item) =>
-    _.toLower(item).slice(0, 2) === '0x'
-      ? _.toLower(item)
-      : '0x' + _.toLower(item)
+    toLower(item).slice(0, 2) === '0x'
+      ? toLower(item)
+      : '0x' + toLower(item)
   )
-  return _.isEqual(_.sortBy(arr1toLower), _.sortBy(arr2toLower))
+  return isEqual(sortBy(arr1toLower), sortBy(arr2toLower))
 }
 const isAddress = (address: string) => {
   const strArr = address.match(/^(0x)?[0-9a-fA-F]{40}$/)
@@ -305,7 +320,10 @@ const timeFormatting = (time: number, type = 0, ms = 0) => {
     }
   }
 }
-
+const workTimeFormat = (time: number) => {
+  if (!time) return ''
+  return dayjs(Number(time * 1000)).format('DD/MM/YYYY')
+}
 const claimTime = (time: number, type = 1) => {
   const timeNum = type === 1 ? time : Math.floor(time / 1000)
   const h = Math.floor(timeNum / 3600)
@@ -342,6 +360,71 @@ const roundToSignificantFigures = (num: number) => {
 
   return result;
 }
+
+const filterNum = (event: any) => {
+  const target = event.target as HTMLInputElement;
+  let expect = target.value.toString() + event.key.toString();
+
+  if (!/^[-+]?[0-9]*\.?[0-9]*$/.test(expect)) {
+    event.preventDefault();
+  } else {
+    return true;
+  }
+}
+
+const UNIT_CONFIG = [
+  { compareNum: 10 ** 24, unit: 'Y' },
+  { compareNum: 10 ** 21, unit: 'Z' },
+  { compareNum: 10 ** 18, unit: 'E' },
+  { compareNum: 10 ** 15, unit: 'P' },
+  { compareNum: 10 ** 12, unit: 'T' },
+  { compareNum: 10 ** 9, unit: 'B' },
+  { compareNum: 10 ** 6, unit: 'M' },
+  { compareNum: 10 ** 3, unit: 'K' },
+];
+
+export const is = (value:any, type: string) => {
+  return Object.prototype.toString.call(value) === `[object ${type}]`;
+};
+
+export const checkNumber = (num:Number) => {
+  const isValidNumber = is(num, 'Number') && !Number.isNaN(num);
+  const isValidString = is(num, 'String') && !Number.isNaN(Number(num));
+  return isValidNumber || isValidString;
+};
+
+const formatNumber = (
+  val: number | string,
+  precision = 2,
+  defaultText = '--'
+) => {
+  const value = Number(val);
+  if (!checkNumber(value) || !checkNumber(precision) || precision < 0) {
+    return defaultText;
+  }
+
+  if (value === 0) {
+    return '0';
+  }
+
+  if (value < 1) {
+    return value.toPrecision(precision).replace(/(\.\d*?[1-9])0+$/, '$1');
+  }
+
+  let res = value.toFixed(precision);
+
+  for (let i = 0; i < UNIT_CONFIG.length; i++) {
+    const { compareNum, unit } = UNIT_CONFIG[i];
+
+    if (value >= compareNum || value <= -1 * compareNum) {
+      res = `${(value / compareNum).toFixed(precision)}${unit}`;
+      break;
+    }
+  }
+
+  return res
+}
+
 export {
   randomCoding,
   aPush,
@@ -369,5 +452,8 @@ export {
   timeFormatting,
   claimTime,
   itemCompare,
-  roundToSignificantFigures
+  roundToSignificantFigures,
+  filterNum,
+  workTimeFormat,
+  formatNumber
 }

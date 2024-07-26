@@ -3,7 +3,7 @@
     <div :style="{ width: props.leftWidth }" class="input-name ft14">
       <span class="fc7" v-if="props.importance">*</span>
       {{ props.inputName }}
-      <i class="iconfont icon-info" v-if="props.isIcon">
+      <i class="iconfont icon-info align-[-1px]" v-if="props.isIcon">
         <v-tooltip activator="parent" location="top" max-width="300">
           {{ props.tooltipText }}
         </v-tooltip>

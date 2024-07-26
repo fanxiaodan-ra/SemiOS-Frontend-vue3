@@ -1,32 +1,28 @@
 <template>
-  <div class="t-card">
-    <v-card
-      v-for="(item, idx) in props.list"
-      :key="item.daoName + idx"
-      class="msg-grow"
-    >
+  <List 
+    :list="props.list" 
+    :isLoading="props.isLoading"
+    :isAll="isAll" 
+    @loadMore="handleLoadMore"
+  >
+    <template v-slot:work-item-title="{ dataObj }">
       <router-link
-        :to="`/daoCollectionAnalytics?id=${item.daoId}`"
+        :to="`/daoCollectionAnalytics?id=${dataObj.daoId}`"
         class="a-style"
       >
-        <node-item-title :data-obj="item" :isFavorited="props.isFavorited" />
+        <node-item-title :data-obj="dataObj" :isFavorited="props.isFavorited" />
       </router-link>
-      <SeedNodeItemDetails :data-obj="item" />
-    </v-card>
-    <table-loading
-      :is-loading="props.isLoading"
-      :list="props.list"
-      :isAll="props.isAll"
-      :isSearch="props.isSearch"
-      :searchType="props.searchType"
-    />
-  </div>
+      <SeedNodeItemDetails :data-obj="dataObj" />
+    </template>
+  </List>
 </template>
 
 <script setup lang="ts">
+import List from '../../List.vue'
 import NodeItemTitle from '../NodeItemTitle.vue'
 import SeedNodeItemDetails from './SeedNodeItemDetails.vue'
-import TableLoading from '../../TableLoading.vue'
+type InfiniteScrollStatus = 'ok' | 'empty' | 'loading' | 'error';
+
 const props = defineProps({
   list: <any>{
     type: Array,
@@ -53,13 +49,22 @@ const props = defineProps({
     default: 0,
   },
 })
+const emits = defineEmits(['loadMore'])
+
+const handleLoadMore = ({ done }: {
+  done: (status: InfiniteScrollStatus) => void
+}) => {
+  if (props.isAll) return
+  emits('loadMore', { done })
+}
+
 </script>
 
 <style scoped lang="scss">
 .t-card {
   padding: 0 48px;
   :deep(.v-card) {
-    background-color: #252b3a !important;
+    background-color: #1A1F2E !important;
     padding: 20px;
     box-sizing: border-box;
     margin-bottom: 24px;
@@ -69,7 +74,7 @@ const props = defineProps({
     .t-img {
       width: 68px;
       height: 68px;
-      background-color: #252b3a;
+      background-color: #1A1F2E;
       margin-right: 24px;
       img {
         width: 100%;

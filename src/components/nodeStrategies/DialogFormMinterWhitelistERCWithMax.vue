@@ -15,6 +15,7 @@
         </v-text-field>
         <v-text-field
           :label="$t('NodeDetail.nftMintCapPlaceholder')"
+          type="number"
           density="comfortable"
           v-model="formData.nftMintCap"
           @update:modelValue="setInput(formData.nftMintCap, 'nftMintCap', 0, 1)"

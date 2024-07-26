@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+  <v-card class="mx-auto my-pd24 max-w-[1200px] my-mgt24 my-mgb24 bg-card-1" elevation="12">
     <h3 class="node-name">
       {{ $t('AddFormBlock.title') }}
     </h3>
@@ -9,7 +9,7 @@
         :input-name="$t('AddFormBlock.infiniteModeLabel')"
         :tooltip-text="$t('AddFormBlock.infiniteModeTip')"
       >
-        <v-switch v-model="formData.infiniteMode" color="#745cd4"></v-switch>
+        <v-switch v-model="formData.infiniteMode" color="#8C91FF" inset></v-switch>
       </FormRow>
       <v-expand-transition>
         <FormRow
@@ -70,8 +70,9 @@
           :label="$t('PleaseEnterLabel')"
           density="comfortable"
           v-model="formData.dailyMintCap"
+          type="number"
           @update:modelValue="
-            setInput(formData.dailyMintCap, 'dailyMintCap', 1, 1)
+            setInput(formData.dailyMintCap, 'dailyMintCap', 0, 1, 10000)
           "
         >
         </v-text-field>

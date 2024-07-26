@@ -1,9 +1,9 @@
 <template>
   <Loading v-if="isLoading" />
   <div class="add-box" v-else>
-    <h2>Add Works</h2>
-    <v-divider class="my-divider"></v-divider>
-    <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+    <h2>{{ t('addwork.title') }}</h2>
+    <v-divider class="border-purple"></v-divider>
+    <v-card class="mx-auto my-pd24 my-mgt24 my-mgb24 max-w-[1200px] bg-card-1" elevation="12">
       <v-form ref="formRef">
         <FormRow input-name="Select Nodes" left-width="160px" :isIcon="false">
           <v-autocomplete
@@ -11,7 +11,7 @@
             :items="daos"
             item-title="daoName"
             item-value="daoId"
-            label="Please select Nodes."
+            :label="t('common.setNodeLabel')"
             :rules="daoIdRules"
             :disabled="btnLoading"
             @update:modelValue="setSelectData"
@@ -28,12 +28,12 @@
           <FormRow
             input-name="Mintable Works"
             left-width="160px"
-            tooltipText="Unminted works cannot exceed 500."
+            :tooltipText="t('addwork.worksLimitNotice')"
             :importance="false"
             v-if="formData.canId"
           >
             <div class="work-info" v-if="formData.unmintedWorkAmount === 0">
-              No works yet, please add
+              {{ t('addwork.noWorks') }}
             </div>
             <div class="mintable-imgs" v-else>
               <div v-for="item in formData.unmintedWorkUrls">
@@ -63,7 +63,7 @@
           <v-textarea
             v-model="formData.workDescription"
             counter
-            label="Please enter your work description，Markdown syntax is supported."
+            :label="t('addwork.workDescLabel')"
             :rules="descriptionRules"
           ></v-textarea>
         </FormRow>
@@ -84,7 +84,7 @@
         type="submit"
         @click="submit"
         :loading="btnLoading"
-        >Submit</v-btn
+        >{{ t('common.submit') }}</v-btn
       >
     </div>
   </div>
@@ -102,12 +102,13 @@
     <v-icon style="font-size: 64px; color: #533fa1; margin: 24px 0"
       >mdi-check-circle-outline</v-icon
     >
-    <span style="text-align: center"
-      >You have successfully uploaded your work. You can mint or invite others
-      to mint your work.</span
-    >
-    <v-btn block class="btnz text-none my-mgt16" type="submit" @click="goWork"
-      >Mint & Transfer NFT</v-btn
+    <span style="text-align: center">{{ t('addwork.uploadWorkSus') }}</span>
+    <v-btn
+      block
+      class="btnz text-none my-mgt16"
+      type="submit"
+      @click="goWork"
+      >{{ t('addwork.mintOrTransNft') }}</v-btn
     >
   </SlotDialog>
 </template>
@@ -122,8 +123,12 @@ import Loading from '@/components/Loading.vue'
 import { ref, onMounted } from 'vue'
 import { daoListProtodao, createWorkInfo } from '@/api/daos'
 import useAddWork from '@/hooks/useAddWork'
+import useAccount from '@/hooks/useAccount'
 const { addWork } = useAddWork()
+const { getTrading } = useAccount()
 import { useRouter } from 'vue-router'
+import { t } from '@/lang'
+
 const router = useRouter()
 
 const isLoading = ref(true)
@@ -192,10 +197,21 @@ const childRef = ref()
 const isDialogLoading = ref(false)
 const isSuccessDialog = ref(false)
 const submit = async () => {
+  console.log(formData.value.fixedPrice, 'formData.fixedPrice')
+  const isTrad = await getTrading()
+  if (!isTrad) return
   const isMsg = await childRef.value.setUrlMsg()
   const { valid } = await formRef.value.validate()
-  console.log(valid, 'valid')
-  if (isMsg || !valid) return
+  
+  // todo optimize
+  if (isMsg) return 
+  if (!valid) {
+    if (!formData.value.fixedPrice && formData.value.fixedPrice < 0.0001) {
+      return
+    } else if (!formData.value.fixedPrice) {
+      return
+    }
+  }
   console.log(formData.value, '=-=-=')
   isDialogLoading.value = true
   workId.value = await addWork(formData.value)

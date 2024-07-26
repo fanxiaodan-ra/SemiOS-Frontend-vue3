@@ -1,9 +1,8 @@
 <template>
   <div class="tnode-card">
     <v-layout>
-      <card-left-filter ref="RefChild" @getConditions="getConditions" />
-      <v-main>
-        <div class="box-top">
+      <v-main class="flex justify-center">
+        <div class="box-top w-[1200px]">
           <div class="box-icons">
             <v-btn-toggle v-model="workType" divided mandatory>
               <v-btn size="40">
@@ -21,7 +20,7 @@
             </v-btn-toggle>
           </div>
         </div>
-        <div class="work-card-box">
+        <div class="work-card-box w-full" v-if="props.amountObj.workAmount > 0">
           <work-item-box
             :list="list"
             :isAll="isAll"
@@ -29,6 +28,7 @@
             :isSearch="true"
             :searchType="1"
             v-if="workType === 0"
+            @loadMore="continueLoadData"
           />
           <work-item-card
             :list="list"
@@ -36,58 +36,105 @@
             :isLoading="isLoading"
             :isSearch="true"
             :searchType="1"
-            v-if="workType === 1"
+            @loadMore="continueLoadData"
+            v-else
           />
         </div>
+        <NoItem
+          v-else
+          path="/explore"
+          :query="{ type: 1 }"
+        />
       </v-main>
     </v-layout>
   </div>
 </template>
 <script setup lang="ts">
-import { searchWorks } from '@/api/works'
 import { cancelAllRequests } from '@/api/request'
 import WorkItemCard from '@/components/workItem/WorkItemCard.vue'
 import WorkItemBox from '@/components/workItem/WorkItemBox.vue'
-import CardLeftFilter from '@/components/CardLeftFilter.vue'
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import useWorkStore from '@/store/work'
+import NoItem from '@/components/NoItem.vue'
+import { useRoute } from 'vue-router'
 const props = defineProps({
   amountObj: {
     type: Object,
     default: () => {},
   },
 })
-import { useRoute } from 'vue-router'
+const isLoading = ref(true)
+const workStore = useWorkStore()
 const route = useRoute()
-const list = ref<any>([])
-const isAll = ref(true)
-const isLoading = ref(false)
-const getData = async () => {
+
+const list = computed(() => workStore.searchWorks)
+const isAll = computed(() => workStore.searchWorksPageInfo.isAll)
+
+const getData = async (loadFunc: Function = () => { }) => {
   isLoading.value = true
-  const data: any = await searchWorks(route.query.query)
-  list.value = list.value.concat(data.dataList)
-  isLoading.value = false
+  try {
+    await loadFunc(workType.value)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoading.value = false
+  }
 }
 
-const getConditions = () => {
-  cancelAllRequests()
-  list.value = []
-  getData()
+const init = async () => {
+  window.scrollTo(0, 0)
+  if (workStore.searchWorks.length > 5) {
+    workStore.searchWorks = [
+      ...workStore.searchWorks.slice(0, 5),
+    ]
+    workStore.searchWorksQuery.pageNo = 1
+    workStore.searchWorksPageInfo.isAll = false
+  } else {
+    workStore.searchWorksQuery.pageNo = 0
+    workStore.searchWorksPageInfo = {
+      isAll: false,
+      count: 0,
+    }
+    workStore.searchWorks = []
+  }
 }
-
 const workType = ref(0)
+
+const continueLoadData = async ({
+  done,
+}: {
+  done: (val: string) => void
+}) => {
+  workStore.searchWorksQuery.pageNo += 1
+  await getData(workStore.getWorksInSearchLazyLoad)
+  done('ok')
+}
+
+init()
 watch(
-  () => workType,
+  () => workType.value,
   () => {
-    list.value = []
     cancelAllRequests()
-    getData()
-  },
-  { deep: true }
+    init()
+  }
 )
-onMounted(() => {
-  if (props.amountObj.workAmount === 0) return
-  getData()
-})
+
+watch(
+  () => route.query.query,
+  () => {
+    if (route.query.query) {
+      workStore.searchWorksQuery = {
+        ...workStore.searchWorksQuery,
+        searchWord: route.query.query as string,
+        pageNo: 0,
+      }
+      workStore.searchWorks = []
+    }
+  }, {
+    immediate: true,
+  }
+)
+
 </script>
 <style lang="scss" scoped>
 .tnode-card {
@@ -95,7 +142,7 @@ onMounted(() => {
   height: 100%;
 
   :deep(.v-input__control) {
-    width: 240px;
+    width: 100%;
     margin-left: auto;
   }
 }
@@ -108,12 +155,9 @@ onMounted(() => {
   margin-top: 24px;
   display: flex;
   position: fixed;
-  width: 100%;
-  margin-top: 49px;
-  // padding: 0 48px;
+  margin-top: 93px;
   z-index: 4;
-  background: #1b2233;
-  padding: 0 48px;
+  background: #151925;
 
   :deep(.v-input) {
     flex: none;
@@ -161,7 +205,7 @@ onMounted(() => {
 }
 
 .work-card-box {
-  margin-top: 144px;
+  margin-top: 190px;
   padding-top: 6px;
 }
 </style>

@@ -13,12 +13,17 @@
     <div v-else>
       <div class="card-box">
         <v-form ref="formRef">
-          <FormRow input-name="Amount" leftWidth="160px" :isIcon="false">
+          <FormRow
+            input-name="Amount"
+            leftWidth="160px"
+            :isIcon="false"
+            class="flex"
+          >
             <v-text-field
               label="Please"
-              variant="outlined"
               density="comfortable"
               v-model="formData.amount"
+              type="number"
               @update:modelValue="
                 setInput(formData.amount, 'amount', 4, 0, 1000000000)
               "
@@ -49,6 +54,9 @@ import {
   approveAmount,
   grantTreasury,
 } from '@/common/web3service'
+import useAccount from '@/hooks/useAccount';
+
+const { getTrading } = useAccount()
 const props = defineProps({
   initData: {
     type: Object,
@@ -80,7 +88,7 @@ const isDialogLoading = ref(false)
 import useToastNotify from '@/hooks/useToastNotify'
 const { notifyErr, notifySuc } = useToastNotify()
 
-const setApprove = async (amount: number) => {
+const setApprove = async (amount: string) => {
   try {
     isDialogLoading.value = true
     const app = await approveAmount(props.initData.erc20Address, amount)
@@ -95,15 +103,18 @@ const setApprove = async (amount: number) => {
 import useUserStore from '@/store'
 const store = useUserStore()
 const pay = async () => {
+  const isTrad = await getTrading()
+  if (!isTrad) return
   const { valid } = await formRef.value.validate()
   if (!valid) return false
+  console.log('我进来了')
   isDialogLoading.value = true
   BigNumber.config({ EXPONENTIAL_AT: 38 })
   try {
     const decimalsNum = await decimals(props.initData.erc20Address)
     const amount = new BigNumber(formData.value.amount)
       .times(`1e${decimalsNum}`)
-      .toNumber()
+      .toString()
     const allowance = await getAllowanceTreasury(
       props.initData.erc20Address,
       store.UserInfo.address
@@ -133,7 +144,7 @@ const pay = async () => {
 
 <style scoped lang="scss">
 .node-card {
-  background-color: #252b3a !important;
+  background-color: #1a1f2e !important;
   padding: 0 !important;
   margin: 0px;
   margin-bottom: 24px;

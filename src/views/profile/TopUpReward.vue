@@ -1,17 +1,14 @@
 <template>
   <div class="div-box">
-    <div class="pos_fix">
+    <div class="pos_fix !w-[calc(100%-55px)] min-w-[1225px]">
       <h2>Top-up Reward</h2>
-      <v-divider class="my-divider"></v-divider>
+      <v-divider class="border-purple"></v-divider>
     </div>
 
     <div class="card-box">
-      <div class="reward-box" v-if="!isLoading">
-        <v-card
-          class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24"
-          v-for="(item, idx) in list"
-          :key="item.daoName + idx"
-        >
+      <div class="reward-box flex flex-col justify-center pl-[104px] xl:pl-[60px]" v-if="!isLoading">
+        <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24 bg-card-1 min-w-[1080px] max-w-[1200px]"
+          v-for="(item, idx) in list" :key="item.daoName + idx">
           <div class="card-top">
             <div class="t-img"><img :src="item.daoLogoUrl" alt="" /></div>
             <div class="t-box">
@@ -36,38 +33,28 @@
               </thead>
               <Loading v-if="item.isLoading" />
               <tbody v-else>
-                <tr
-                  v-for="tableItem in (item.topUpBalanceList as any)"
-                  :key="tableItem.name"
-                >
+                <tr v-for="tableItem in (item.topUpBalanceList as any)" :key="tableItem.name">
                   <td>
                     <v-tooltip activator="parent" location="top">
                       {{ item.daoName }} Top-Up Holders Incentive Plan #{{
-                        tableItem.planNumber
-                      }} </v-tooltip
-                    >{{
-                      truncateString(
-                        `${item.daoName} Top-Up Holders Incentive Plan #${tableItem.planNumber}`
-                      )
+                      tableItem.planNumber
+                      }} </v-tooltip>{{
+                    truncateString(
+                    `${item.daoName} Top-Up Holders Incentive Plan #${tableItem.planNumber}`
+                    )
                     }}
                   </td>
                   <td>
                     <div class="flexcen">
                       {{ bigNumFormat(tableItem.collectedAmount, 5, 0.00001) }}
-                      <TokenIcon
-                        size="14px"
-                        :payCurrencyType="tableItem.rewardTokenSymbol"
-                        :inputTokenAddress="tableItem.rewardToken"
-                      />
+                      <TokenIcon size="14px" :payCurrencyType="tableItem.rewardTokenSymbol"
+                        :inputTokenAddress="tableItem.rewardToken" />
                     </div>
                   </td>
                   <td class="flexcen">
                     {{ bigNumFormat(tableItem.collectableAmount, 5, 0.00001) }}
-                    <TokenIcon
-                      size="14px"
-                      :payCurrencyType="tableItem.rewardTokenSymbol"
-                      :inputTokenAddress="tableItem.rewardToken"
-                    />
+                    <TokenIcon size="14px" :payCurrencyType="tableItem.rewardTokenSymbol"
+                      :inputTokenAddress="tableItem.rewardToken" />
                   </td>
                 </tr>
               </tbody>
@@ -77,11 +64,8 @@
       </div>
       <table-loading :is-loading="isLoading" :list="list" :isAll="true" />
     </div>
-    <DialogLoading
-      title="Loading"
-      :isLoading="isDialogLoading"
-      text="Your transcation is being processed, it should be cofirmed on the blockchain shortly."
-    />
+    <DialogLoading title="Loading" :isLoading="isDialogLoading"
+      text="Your transcation is being processed, it should be cofirmed on the blockchain shortly." />
   </div>
 </template>
 
@@ -189,7 +173,7 @@ h2 {
 
   margin-top: 84px;
   :deep(.v-card) {
-    background-color: #252b3a !important;
+    background-color: #1A1F2E !important;
     padding: 20px;
     box-sizing: border-box;
     margin-bottom: 24px;
@@ -204,7 +188,7 @@ h2 {
 .t-img {
   width: 68px;
   height: 68px;
-  background-color: #252b3a;
+  background-color: #1A1F2E;
   margin-right: 24px;
   flex: 0 0 auto;
   img {

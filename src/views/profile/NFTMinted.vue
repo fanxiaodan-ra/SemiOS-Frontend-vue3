@@ -1,9 +1,9 @@
 <template>
   <div class="div-box">
-    <div class="pos_fix">
+    <div class="pos_fix !w-[calc(100%-55px)] min-w-[1225px]">
       <h2>NFT Minted</h2>
-      <v-divider class="my-divider"></v-divider>
-      <div class="box-top">
+      <v-divider class="border-purple"></v-divider>
+      <div class="box-top w-[1200px]">
         <div class="box-icons">
           <v-btn-toggle v-model="workType" divided mandatory>
             <v-btn size="40">
@@ -23,18 +23,20 @@
       </div>
     </div>
 
-    <div class="work-card-box">
+    <div class="work-card-box w-full">
       <work-item-box
         :list="list"
         :isAll="isAll"
         :isLoading="isLoading"
         v-if="workType === 0"
+        @loadMore="continueLoadData"
       />
       <work-item-card
         :list="list"
         :isAll="isAll"
         :isLoading="isLoading"
         v-if="workType === 1"
+        @loadMore="continueLoadData"
       />
     </div>
   </div>
@@ -43,76 +45,76 @@
 <script setup lang="ts">
 import WorkItemCard from '@/components/workItem/WorkItemCard.vue'
 import WorkItemBox from '@/components/workItem/WorkItemBox.vue'
-import { workMinted } from '@/api/works'
+import useNftsStore from '@/store/nfts'
 import { cancelAllRequests } from '@/api/request'
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-const pageSize = ref(10)
-const pageNo = ref(1)
-const count = ref(0)
-const list = ref<any>([])
-const isAll = ref(false)
+import { ref, watch, computed, onBeforeUnmount } from 'vue'
+
+const nftStore = useNftsStore()
+
+const list = computed(() => nftStore.nftMinted)
+const isAll = computed(() => nftStore.nftMintedPageInfo?.isAll || false)
+const pageSize = computed(() => workType.value === 0 ? 5 : 10)
+
 const isLoading = ref(false)
-const getData = async () => {
-  isLoading.value = true
-  const queryObj = {
-    pageSize: pageSize.value,
-    pageNo: pageNo.value,
-  }
-  const data: any = await workMinted(queryObj)
-  list.value = list.value.concat(data.dataList)
-  count.value = data.page.count
-  isAll.value = pageNo.value * pageSize.value >= count.value
-  isLoading.value = false
-  ifScrollHeight()
-}
-
-const ifScrollHeight = () => {
-  if (
-    window.scrollY > 0 &&
-    document.body.scrollHeight <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
-    !isAll.value
-  ) {
-    pageNo.value += 1
-    isLoading.value = true
-    getData()
-  }
-}
-const lazyLoading = () => {
-  const scrollTop =
-    document.documentElement.scrollTop || document.body.scrollTop
-  const clientHeight = document.documentElement.clientHeight
-  const scrollHeight = document.documentElement.scrollHeight
-  if (pageNo.value * pageSize.value < count.value) {
-    if (scrollHeight - clientHeight <= scrollTop + 560) {
-      if (isLoading.value) return
-      pageNo.value += 1
-      isLoading.value = true
-      getData()
-    }
-  }
-}
-
 const workType = ref(0)
+
+const getData = async (loadFunc: Function = () => { }, done: Function = () => { }) => {
+  isLoading.value = true
+  try {
+    await loadFunc(workType.value)
+    done('ok')
+  } catch (error) {
+    done('error')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const init = () => {
+  window.scrollTo(0, 0)
+  if (nftStore.nftMinted.length > pageSize.value) {
+    nftStore.nftMinted = [
+      ...nftStore.nftMinted.slice(0, pageSize.value),
+    ]
+    nftStore.nftMintedPageInfo.isAll = false
+    nftStore.nftMintedPageQuery.pageNo = 1
+  } else {
+    nftStore.nftMintedPageQuery.pageNo = 0
+    nftStore.nftMintedPageInfo = {
+      isAll: false,
+      count: 0,
+    }
+    nftStore.nftMinted = []
+  }
+}
+
+const continueLoadData = async ({
+  done,
+}: {
+  done: (val: string) => void
+}) => {
+  nftStore.nftMintedPageQuery.pageNo += 1
+  getData(nftStore.getNftMintedLazyLoad, done)
+}
+
+onBeforeUnmount(() => {
+  nftStore.nftMinted = []
+  nftStore.nftMintedPageQuery.pageNo = 0
+  nftStore.nftMintedPageInfo = {
+    isAll: false,
+    count: 0,
+  }
+})
+
+
 watch(
-  () => workType,
+  () => workType.value,
   () => {
-    list.value = []
-    pageNo.value = 1
-    isAll.value = false
     cancelAllRequests()
-    getData()
+    init()
   },
   { deep: true }
 )
-onMounted(() => {
-  window.addEventListener('scroll', lazyLoading, true)
-  getData()
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', lazyLoading, true)
-})
 </script>
 <style lang="scss" scoped>
 .div-box {
@@ -131,7 +133,6 @@ h2 {
   text-align: center;
 }
 .work-card-box {
-  width: 80%;
   margin: 0 auto;
   padding-top: 24px;
   margin-top: 150px;
@@ -143,7 +144,6 @@ h2 {
   :deep(.v-btn-group--density-default.v-btn-group) {
     height: 40px;
   }
-  width: 80%;
   margin: 24px auto;
   .box-icons {
     text-align: end;

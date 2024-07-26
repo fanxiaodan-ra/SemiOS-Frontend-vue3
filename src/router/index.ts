@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { cancelAllRequests } from '@/api/request'
 import Page from '@/views/Index.vue'
 import useAccount from '@/hooks/useAccount'
-const { login, getLoginStatus } = useAccount()
+const { getLoginStatus } = useAccount()
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -48,7 +48,7 @@ export const routes: RouteRecordRaw[] = [
         path: '/profile',
         name: 'profile',
         component: () => import('@/views/profile/Index.vue'),
-        beforeEnter: (to, from, next) => {
+        beforeEnter: (_, __, next) => {
           if (getLoginStatus()) {
             next()
           } else {
@@ -85,6 +85,11 @@ export const routes: RouteRecordRaw[] = [
         path: '/dex',
         name: 'dex',
         component: () => import('@/views/dex/Index.vue'),
+      },
+      {
+        path: '/setupPlan',
+        name: 'setupPlan',
+        component: () => import('@/views/setupPlan/Index.vue'),
       }
     ],
   },
@@ -95,9 +100,24 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((_, __, next) => {
   cancelAllRequests()
   next();
+});
+
+router.onError((error) => {
+  console.error('Router error:', error);
+
+  const isChunkLoadFailed = error.message.startsWith('Failed to fetch dynamically imported module');
+  const targetPath = router.currentRoute.value.fullPath;
+
+  if (isChunkLoadFailed) {
+    window.location.reload();
+    // 可选的延时处理确保资源加载完成
+    setTimeout(() => {
+      router.push(targetPath);
+    }, 1000);
+  }
 });
 
 export default router

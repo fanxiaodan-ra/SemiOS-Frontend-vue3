@@ -1,47 +1,27 @@
 <template>
   <div class="other-nodes">
-    <SlotDialog
-      :title="`${$t('AddFormTokenomicsStructure.allocatableRatioLabel')}: ${
-        props.titleNum
-      }%`"
-      :isDialog="props.isDialog"
-      @cancelDialog="cancelDialog"
-    >
+    <SlotDialog :title="`${$t('AddFormTokenomicsStructure.allocatableRatioLabel')}: ${props.titleNum
+      }%`" :isDialog="props.isDialog" @cancelDialog="cancelDialog">
       <v-form ref="formRef">
-        <v-select
-          v-model="selectData"
-          label="Select"
-          :items="daos"
-          item-title="daoName"
-          item-value="projectId"
-          :rules="selectRules"
-          return-object
-        ></v-select>
+        <v-select v-model="selectData" label="Select" :items="daos" item-title="daoName" item-value="projectId"
+          :rules="selectRules" return-object></v-select>
 
-        <v-text-field
-          :label="$t('AddFormTokenomicsStructure.PleaseEnterLabel')"
-          density="comfortable"
-          v-model="formData.value"
-          @update:modelValue="
-            setInput(formData.value, 'value', 1, 0.1, props.titleNum)
-          "
-          :rules="valueRules"
-        >
+        <v-text-field :label="$t('AddFormTokenomicsStructure.PleaseEnterLabel')" density="comfortable"
+          type="number"
+          v-model="formData.value" @update:modelValue="
+      setInput(formData.value, 'value', 1, 0.1, props.titleNum)
+      " :rules="valueRules">
         </v-text-field>
       </v-form>
-      <v-btn
-        block
-        class="btnz text-none my-mgt16"
-        type="submit"
-        @click="addData()"
-        >Add</v-btn
-      >
+      <v-btn block class="btnz text-none my-mgt16" type="submit" @click="addData()">{{ t('common.add') }}</v-btn>
     </SlotDialog>
   </div>
 </template>
 <script lang="ts" setup>
 import SlotDialog from '@/components/SlotDialog.vue'
 import { ref, reactive, watch } from 'vue'
+import { t } from '@/lang'
+
 const props = defineProps({
   isDialog: {
     type: Boolean,
@@ -73,23 +53,20 @@ watch(
 )
 
 const selectRules = [
-  (v: any) => !!v || 'Item is required',
+  (v: any) => !!v || t('common.required'),
   (val: any) => {
     const list = props.ETHOtherNodesList.map((item: any) => item.projectId)
     if (list.indexOf(val.projectId) > -1) {
-      return 'This DAO is already in the list'
+      return t('common.daoExisted')
     }
     return true
   },
 ]
 const valueRules = [
-  (v: any) => !!v || 'Item is required',
+  (v: any) => !!v || t('common.required'),
   (val: any) => {
-    //   if (val < 0.1) {
-    //     return 'Item is required'
-    //   }
     if (val > props.titleNum) {
-      return 'The sum cannot exceed 100%'
+      return t('common.sumMustEqual100')
     }
     return true
   },
@@ -137,6 +114,7 @@ const addData = async () => {
 :deep(.v-card-actions .v-form) {
   width: 100%;
 }
+
 .other-nodes {
   :deep(.v-form) {
     width: 100%;

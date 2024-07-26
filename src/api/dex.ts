@@ -1,4 +1,5 @@
-import { service } from './request'
+// import { service } from './request'
+import service from './request'
 
 const erc20Owners = async (data: any) => {
   return service({
@@ -55,6 +56,20 @@ const assetPoolInfo = async (data: any) => {
     data: data,
   });
 };
+const liquidityErc20Token = async (data: any) => {
+  return service({
+    url: `/dex-api/liquidity/erc20_token`,
+    method: "POST",
+    data: data,
+  });
+};
+const getApy = async (data: any) => {
+  return service({
+    url: `/dex-api/liquidity/price/apy`,
+    method: "POST",
+    data: data,
+  });
+};
 export {
   erc20Owners,
   assetPool,
@@ -64,4 +79,6 @@ export {
   liquidityPrice,
   liquidityDefault,
   assetPoolInfo,
+  liquidityErc20Token,
+  getApy,
 }

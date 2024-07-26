@@ -9,6 +9,7 @@
         <v-text-field
           label="Lock Duration"
           density="comfortable"
+          type="number"
           v-model="lockTime"
           :rules="valueRules"
           append-inner-icon="mdi-hours-24"

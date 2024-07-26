@@ -1,10 +1,5 @@
 <template>
-  <v-dialog
-    v-model="props.isModeSelection"
-    :persistent="true"
-    :no-click-animation="true"
-    width="420"
-  >
+  <v-dialog v-model="props.isModeSelection" :persistent="true" :no-click-animation="true" width="420">
     <v-card>
       <div class="mode-title fw4 fti">
         {{ $t('ModeSelection.dialogTitle') }}
@@ -13,63 +8,18 @@
         </v-btn>
       </div>
       <v-card-actions>
-        <v-btn
-          border
-          class="text-none btnmo btnb my-mgb12 ftr"
-          prepend-icon="mdi-plus"
-          variant="text"
-          block
-          size="large"
-          @click="basicMode"
-        >
+        <v-btn border class="text-none btnmo btnb my-mgb12 ftr" prepend-icon="mdi-plus" variant="text" block
+          size="large" @click="basicMode">
           {{ $t('ModeSelection.btnText', 0) }}
         </v-btn>
-        <v-btn
-          border
-          class="text-none btnmo btnb my-mgb12 ftr"
-          prepend-icon="mdi-plus"
-          variant="text"
-          block
-          size="large"
-          @click="instructionMode"
-        >
+        <v-btn border class="text-none btnmo btnb my-mgb12 ftr" prepend-icon="mdi-plus" variant="text" block
+          size="large" @click="instructionMode">
           {{ $t('ModeSelection.btnText', 1) }}
         </v-btn>
-        <v-btn
-          border
-          class="text-none btnmo btnb my-mgb12 ftr"
-          prepend-icon="mdi-plus"
-          variant="text"
-          block
-          size="large"
-          @click="professionalMode"
-        >
+        <v-btn border class="text-none btnmo btnb my-mgb12 ftr" prepend-icon="mdi-plus" variant="text" block
+          size="large" @click="professionalMode">
           {{ $t('ModeSelection.btnText', 2) }}
         </v-btn>
-        <!-- <v-btn
-          color="#fff"
-          class="btnmo btnz text-none my-mgb12 ftr"
-          size="large"
-          block
-          @click="basicMode"
-          >Basic Mode</v-btn
-        > -->
-        <!-- <v-btn
-          color="#fff"
-          class="btnmo btnz text-none my-mgb12 ftr"
-          size="large"
-          block
-          @click="instructionMode"
-          >Instruction Mode</v-btn
-        > -->
-        <!-- <v-btn
-          color="#fff"
-          class="btnmo btnz text-none ftr"
-          size="large"
-          block
-          @click="professionalMode"
-          >Professional Mode</v-btn
-        > -->
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -77,8 +27,11 @@
 
 <script lang="ts" setup>
 import useAddNodes from '@/hooks/useAddNodes'
+
+import dayjs from 'dayjs'
+
 const { addNode, getDaoTime } = useAddNodes()
-const emit = defineEmits(['cancelDialog', 'setLoading', 'setAddType'])
+const emit = defineEmits(['cancelDialog', 'setLoading', 'setAddType', 'showSucDialog'])
 const props = defineProps({
   isModeSelection: {
     type: Boolean,
@@ -90,7 +43,7 @@ const props = defineProps({
   },
   initData: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
 })
 
@@ -98,13 +51,17 @@ const cloceMode = () => {
   emit('cancelDialog', false)
 }
 import { ethers } from 'ethers'
+
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const basicMode = async () => {
+  console.log(props.initData, 'initDatainitDatainitData')
   emit('setLoading', true)
   emit('cancelDialog', false)
   const tiem = await getDaoTime()
   const formData = {
     daoName: props.daoName,
-    daoStartDate: tiem,
+    daoStartDate: dayjs(new Date(tiem)).format('YYYY-MM-DD'),
     lotteryMode: true,
     infiniteMode: false,
     thirdParty: false,
@@ -163,22 +120,25 @@ const basicMode = async () => {
     redeemPoolRatioETH: 100,
     selfRewardRatioETH: 0,
     //1.7
-    inputToken: '0x0000000000000000000000000000000000000000',
+    inputToken: !route.query.id ? '0x0000000000000000000000000000000000000000' : props.initData.payCurrencyType === 'ETH' ? '0x0000000000000000000000000000000000000000' : props.initData.inputTokenAddress,
     workNftlistAddress: [],
     mintingNftWithUnlimitedlistAddress: [],
     mintingNftWithMaxlistAddress: [],
     initData: { ...props.initData },
   }
-  console.log(formData, 'formDataformDataformDataformDataformDataformData')
-  await addNode(formData)
+  const result = await addNode(formData)
   emit('setLoading', false)
-}
 
+  if (result) {
+    emit('showSucDialog', true)
+  }
+}
 // import useToastNotify from '@/hooks/useToastNotify'
 // const { notifyErr, notifyInfo, notifySuc } = useToastNotify()
 const instructionMode = () => {
   emit('cancelDialog', false)
-  emit('setAddType', 1)
+  const type = route.query.id ? 2 : 1
+  emit('setAddType', type)
   // setTimeout(() => {
   //   emit("setAddType", 1);
   // }, 500);
@@ -204,6 +164,7 @@ const professionalMode = () => {
   align-items: center;
   justify-content: center;
 }
+
 :deep(.v-btn) {
   padding: 0;
   margin-inline-start: 0 !important;

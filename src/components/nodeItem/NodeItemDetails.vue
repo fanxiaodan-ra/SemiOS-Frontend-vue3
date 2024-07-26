@@ -1,88 +1,59 @@
 <template>
   <div class="card-det">
     <div class="tab-hedar">
-      <v-tabs
-        v-model="tab"
-        fixed-tabs
-        color="deep-purple-accent-4"
-        @click.stop.prevent
-      >
+      <v-tabs v-model="tab" fixed-tabs color="deep-purple-accent-4" @click.stop.prevent>
         <v-tab selected-class="custom-tabs" :value="1" class="text-none">{{
           $t('NodeDetail.currentBlockWindowInformationLabel')
-        }}</v-tab>
+          }}</v-tab>
         <v-tab selected-class="custom-tabs" :value="2" class="text-none">{{
           $t('NodeDetail.basicInformationLabel')
-        }}</v-tab>
+          }}</v-tab>
         <v-tab selected-class="custom-tabs" :value="3" class="text-none">{{
           $t('NodeDetail.modeStatusLabel')
-        }}</v-tab>
+          }}</v-tab>
         <v-tab selected-class="custom-tabs" :value="4" class="text-none">{{
           $t('NodeDetail.ethlabel')
-        }}</v-tab>
+          }}</v-tab>
         <v-tab selected-class="custom-tabs" :value="5" class="text-none">{{
           $t('NodeDetail.erc20TokenLabel')
-        }}</v-tab>
+          }}</v-tab>
       </v-tabs>
+      <v-divider class="border-purple mt-2"></v-divider>
     </div>
-    <v-window v-model="tab" class="det-box">
-      <v-window-item v-for="n in 5" :key="n" :value="n">
-        <v-container fluid class="container-box">
-          <component
-            ref="childRef"
-            :is="currentCopmonent[tab - 1]"
-            :data-obj="computedObj"
-            :topupMode="props.dataObj.modeStatusVo.topupMode"
-          ></component>
-        </v-container>
-      </v-window-item>
-    </v-window>
+    <v-tabs-window v-model="tab" class="det-box min-h-[114px]">
+      <v-tabs-window-item :value="1">
+        <item-current :data-obj="dataObj" />
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="2">
+        <item-basic :data-obj="dataObj" />
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="3">
+        <item-mode :data-obj="dataObj" />
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="4">
+        <item-eth-info :data-obj="dataObj" />
+      </v-tabs-window-item>
+      <v-tabs-window-item :value="5">
+        <item-erc20-token :data-obj="dataObj" />
+      </v-tabs-window-item>
+    </v-tabs-window>
   </div>
 </template>
-
+            <!-- :topupMode="props.dataObj.modeStatusVo.topupMode" -->
 <script setup lang="ts">
-import { ref, shallowRef, computed, defineAsyncComponent } from 'vue'
-const ItemCurrent = defineAsyncComponent(() => import('./ItemCurrent.vue'))
-const ItemBasic = defineAsyncComponent(() => import('./ItemBasic.vue'))
-const ItemMode = defineAsyncComponent(() => import('./ItemMode.vue'))
-const ItemEthInfo = defineAsyncComponent(() => import('./ItemEthInfo.vue'))
-const ItemErc20Token = defineAsyncComponent(
-  () => import('./ItemErc20Token.vue')
-)
-const props = defineProps({
+import { ref } from 'vue'
+import ItemCurrent from './ItemCurrent.vue';
+import ItemBasic from './ItemBasic.vue';
+import ItemMode from './ItemMode.vue';
+import ItemEthInfo from './ItemEthInfo.vue';
+import ItemErc20Token from './ItemErc20Token.vue';
+defineProps({
   dataObj: {
     type: Object,
     default: () => {},
   },
 })
 const tab = ref(1)
-const currentCopmonent = shallowRef([
-  ItemCurrent,
-  ItemBasic,
-  ItemMode,
-  ItemEthInfo,
-  ItemErc20Token,
-])
-const computedObj = computed(() => {
-  if (tab.value === 1) {
-    return {
-      ...props.dataObj,
-      ...props.dataObj.mintWindowInfoVo,
-    }
-  }
-  if (tab.value === 2) {
-    return {
-      ...props.dataObj,
-      ...props.dataObj.basicInformationVo,
-    }
-  }
-  if (tab.value === 3) {
-    return {
-      ...props.dataObj,
-      ...props.dataObj.modeStatusVo,
-    }
-  }
-  return { ...props.dataObj }
-})
 </script>
 
 <style scoped lang="scss">

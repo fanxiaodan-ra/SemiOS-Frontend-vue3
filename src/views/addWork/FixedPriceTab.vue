@@ -1,23 +1,28 @@
 <template>
   <div class="tab-box">
-    <h5>Work is listed for sale at the price you set.</h5>
+    <h5>{{ t('fixedPriceTab.title') }}</h5>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Current Price </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.curPrice') }}</v-col>
       <v-col cols="6" class="font-felx flexend">
         <v-text-field
-          label="Please set a price"
+          :label="t('common.setPriceLabel')"
           variant="outlined"
           density="compact"
-          v-model="formData.fixedPrice"
+          v-model="fixedPrice"
+          :rules="[
+            (v:any) => !!v || t('common.required'),
+            (v:any) => v >= 0.0001 || t('common.greaterThanZeroOne'),
+          ]"
+          type="number"
           @update:modelValue="
-            setInput(formData.fixedPrice, 'fixedPrice', 4, 0, 1000000000)
+            setInput(fixedPrice, 4, 0.0001, 1000000000)
           "
         >
         </v-text-field>
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Floor Price </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.floorPrice') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.daoFloorPrice }}
         <TokenIcon
@@ -32,19 +37,21 @@
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Sub Nodes Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.subNodesFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.fixedDaoReserveRatio.daoMintFee }}%
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Builder Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.builderFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.fixedDaoReserveRatio.canvasMintFee }}%
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Semios Fee </v-col>
+      <v-col cols="6" class="text-font">
+        {{t('common.semiosFee')}}
+      </v-col>
       <v-col cols="6" class="text-font flexend">
         <span class="old-fee">2.5 </span>
         {{ props.dataObj.fixedDaoReserveRatio.d4aMintFee }}%
@@ -54,41 +61,37 @@
 </template>
 <script lang="ts" setup>
 import TokenIcon from '@/components/TokenIcon.vue'
-import { reactive, onMounted, watch } from 'vue'
+import { t } from '@/lang'
+import { watch, ref } from 'vue'
 const props = defineProps({
   dataObj: {
     type: Object,
     default: () => {},
   },
 })
-const formData = reactive({
-  fixedPrice: 0,
-})
+const fixedPrice = ref(0)
+
 import { oninputNum } from '@/utils'
 
 const setInput = (
   val: string | number,
-  type: keyof typeof formData,
   position = 0,
   min = 0,
   max = Infinity
 ) => {
   const inputNum = oninputNum(val, position, min, max)
-  formData[type] = inputNum as never
+  fixedPrice.value = inputNum as number
 }
 
 const emit = defineEmits(['setFixedPrice'])
 watch(
-  () => formData.fixedPrice,
+  () => fixedPrice.value,
   (val) => {
-    // isLoading.value = cur;
-    emit('setFixedPrice', val)
+    emit('setFixedPrice', Number(val))
   },
   { immediate: true }
 )
-onMounted(() => {
-  // emit('setFixedPrice', formData.fixedPrice)
-})
+
 </script>
 
 <style lang="scss" scoped>
@@ -117,9 +120,6 @@ onMounted(() => {
   }
   .flexend {
     justify-content: flex-end;
-  }
-  :deep(.v-input__details) {
-    display: none;
   }
 }
 </style>

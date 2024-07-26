@@ -23,7 +23,7 @@
           <v-row no-gutters>
             <v-col cols="10">
               <p>{{ item.nftAddress }}</p>
-              <p>Amount : {{ item.nftMintCap }}</p>
+              <p>{{ t('common.amount') }} : {{ item.nftMintCap }}</p>
             </v-col>
             <v-col cols="2">
               <v-icon color="#745cd4" @click="deleteItem(idx)" class="">
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import DialogFormMinterWhitelistERCWithMax from '@/components/nodeStrategies/DialogFormMinterWhitelistERCWithMax.vue'
-
+import { t } from '@/lang'
 import { ref, onMounted } from 'vue'
 const props = defineProps({
   isEdit: {

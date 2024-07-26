@@ -148,7 +148,7 @@ const newEcharts = () => {
         axisLine: {
           onZero: false,
           lineStyle: {
-            color: '#6062AA',
+            color: '#2F305B',
           },
         },
       },
@@ -162,7 +162,7 @@ const newEcharts = () => {
         // interval: maxprice / 5,
         splitLine: {
           lineStyle: {
-            color: '#6062AA',
+            color: '#2F305B',
           },
         },
         min: 0,
@@ -191,7 +191,7 @@ const newEcharts = () => {
         show: false,
         splitLine: {
           lineStyle: {
-            color: '#6062AA',
+            color: '#2F305B',
           },
         },
         max: maxvolume * 5,
@@ -253,7 +253,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .node-card {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   padding: 0 !important;
   margin: 0px;
   margin-right: 12px;

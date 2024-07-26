@@ -50,16 +50,10 @@
 </template>
 <script lang="ts" setup>
 import SlotDialog from '@/components/SlotDialog.vue'
-import { ref, watch, shallowRef, defineAsyncComponent } from 'vue'
-const BindingTopupBalanceTab = defineAsyncComponent(
-  () => import('./BindingTopupBalanceTab.vue')
-)
-const BindingExternalNftTab = defineAsyncComponent(
-  () => import('./BindingExternalNftTab.vue')
-)
-const BindingUpcomingNftTab = defineAsyncComponent(
-  () => import('./BindingUpcomingNftTab.vue')
-)
+import { ref, watch, shallowRef } from 'vue'
+import BindingTopupBalanceTab from './BindingTopupBalanceTab.vue'
+import BindingExternalNftTab from './BindingExternalNftTab.vue'
+import BindingUpcomingNftTab from './BindingUpcomingNftTab.vue'
 
 const currentCopmonent = shallowRef([
   BindingTopupBalanceTab,
@@ -130,7 +124,7 @@ const setDialogBindData = async () => {
   // margin: 16px 0;
   width: 100%;
   padding-bottom: 0.5rem;
-  border-bottom: 0.0625rem solid #6062aa !important;
+  border-bottom: 0.0625rem solid #2F305B !important;
   :deep(.v-tabs) {
     height: 32px !important;
     .v-btn {

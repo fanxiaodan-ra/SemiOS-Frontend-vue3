@@ -7,10 +7,10 @@
         noTopHeight="64px"
       />
       <v-main>
-        <div class="box-top">
+        <div class="box-top w-[1200px] mx-auto">
           <div class="top-icon">
             <v-btn @click="callChildMethod" size="40">
-              <i class="iconfont icon-tianjia ft24" />
+              <i class="iconfont icon-tiaojian ft18" />
             </v-btn>
           </div>
           <div class="box-icons">
@@ -90,7 +90,7 @@ const query = reactive({
   minPrice: 0,
   maxPrice: 999999999,
 })
-const pageSize = ref(10)
+const pageSize = ref(5)
 const pageNo = ref(1)
 const count = ref(0)
 const list = ref<any>([])
@@ -98,7 +98,7 @@ const isAll = ref(false)
 const isLoading = ref(false)
 import { useRoute } from 'vue-router'
 const route = useRoute()
-const getData = async () => {
+const getData = async (type?:string) => {
   isLoading.value = true
   const queryObj = {
     daoId: route.query.id,
@@ -106,11 +106,12 @@ const getData = async () => {
     fixedPrice: query.fixedPrice,
     minPrice: query.minPrice,
     maxPrice: query.maxPrice,
-    pageSize: pageSize.value,
     pageNo: pageNo.value,
   }
+  workType.value === 0 && Object.assign(queryObj, { pageSize: pageSize.value })
   const data: any = await daoUnmintedWorks(queryObj)
-  list.value = list.value.concat(data.dataList)
+  const initList = type === 'initial ' ? [] : [...list.value]
+  list.value = initList.concat(data.dataList)
   count.value = data.page.count
   isAll.value = pageNo.value * pageSize.value >= count.value
   isLoading.value = false
@@ -171,7 +172,7 @@ watch(
     pageNo.value = 1
     isAll.value = false
     cancelAllRequests()
-    getData()
+    getData('initial')
   },
   { deep: true }
 )
@@ -190,7 +191,7 @@ onBeforeUnmount(() => {
   height: 100%;
 
   :deep(.v-input__control) {
-    width: 240px;
+    width: 100%;
     margin-left: auto;
   }
 }
@@ -201,10 +202,8 @@ onBeforeUnmount(() => {
   align-items: center;
   margin-left: auto;
   display: flex;
-  width: 100%;
   z-index: 4;
-  background: #1b2233;
-  padding: 0 48px;
+  background: #151925;
 
   .top-icon {
     height: 40px;
@@ -233,7 +232,7 @@ onBeforeUnmount(() => {
 }
 
 .nav-box {
-  background-color: #1b2233;
+  background-color: #151925;
 
   h4 {
     padding: 0 16px;
@@ -260,7 +259,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   color: #b3b5f2;
-  // background-color: #1b2233;
+  // background-color: #151925;
 }
 
 .box-icons {

@@ -16,6 +16,7 @@
           >
             <v-col cols="10">
               <router-link
+                v-if="props.dataObj.daoId !== item.daoId"
                 :to="`/nodeDetails?type=2&id=${item.daoId}`"
                 class="a-style"
               >
@@ -23,6 +24,9 @@
                   {{ item.daoName }}
                 </v-btn>
               </router-link>
+              <v-btn class="text-none" variant="text" v-else>
+                {{ item.daoName }}
+              </v-btn>
             </v-col>
             <v-col cols="2" class="text-r init-font">
               {{ item.royaltyProportion }}%</v-col
@@ -46,6 +50,7 @@
             >
               <v-col cols="10">
                 <router-link
+                  v-if="props.dataObj.daoId !== item.daoId"
                   :to="`/nodeDetails?type=2&id=${item.daoId}`"
                   class="a-style"
                 >
@@ -53,6 +58,9 @@
                     {{ item.daoName }}
                   </v-btn>
                 </router-link>
+                <v-btn class="text-none" variant="text" v-else>
+                  {{ item.daoName }}
+                </v-btn>
               </v-col>
               <v-col cols="2" class="text-r init-font">
                 {{ item.royaltyProportion }}%</v-col

@@ -1,9 +1,9 @@
 <template>
   <v-card
-    class="mx-auto my-8"
-    max-width="500"
+    class="mx-auto my-8 !bg-transparent"
+    width="500"
     min-height="360"
-    elevation="16"
+    elevation="12"
     v-show="props.addType === 0"
   >
     <v-card-item>
@@ -59,7 +59,7 @@ const { t } = useI18n()
 const rules = [
   (value: any) => !!value || t('AddNodeName.err.name_no'),
   (value: any) =>
-    (value && value.length < 45) ||
+    (value && value.length <= 45) ||
     t('AddNodeName.err.name_len', [value.length]),
   // `Ensure this value has at most 45 characters ( it has ${value.length} ).`,
 ]
@@ -82,29 +82,33 @@ const submit = async () => {
     name: formData.daoName,
     type: 0,
   }
-  const res = await checkName(data)
-  if (res.resultCode === 100) {
+  try {
+    await checkName(data)
     emit('setDaoName', formData.daoName)
     emit('setIsModeSelection', true)
-  } else {
-    errorMessage.value = [res.resultDesc]
+    errorMessage.value = []
+  } catch (e: any) {
+    errorMessage.value = [e.resultDesc]
   }
   btnLoading.value = false
 }
 </script>
 <style lang="scss" scoped>
 .v-card {
-  background-color: #1b2233 !important;
+  /* background-color: #151925 !important; */
   box-shadow: none !important;
 }
 :deep(.v-field__input) {
   font-size: 2.25rem !important;
 }
 :deep(.v-field__field) {
-  background-color: #1b2233 !important;
+  background-color: #1A1F2E !important;
 }
 :deep(.v-card-subtitle) {
   opacity: 1;
+}
+:deep(.v-messages__message) {
+  line-height: 16px;
 }
 :deep(.v-form) {
   min-height: 6.5rem !important;

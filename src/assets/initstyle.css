@@ -15,19 +15,67 @@
   .btn-linear-disabled {
     @apply cursor-no-drop rounded-[2px] w-full mt-7 text-lg !bg-btn-linear-disabled !text-grey-1 !bg-transparent hover:bg-none hover:text-grey-1;
   }
+  .no-list {
+    @apply text-center text-grey-3 text-lg my-[42px] mx-0;
+
+    .xian {
+      height: 1px;
+      width: 45px;
+      background-color: #d9d9d9;
+      margin: 0 15px;
+    }
+  }
+  .link {
+    @apply text-primary-1 inline w-auto max-w-[100px] text-ellipsis overflow-hidden text-sm font-medium;
+  }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 html {
   overflow: auto;
+  @apply bg-[#1A1D26]
 }
 a {
   text-decoration: none;
 }
+#app {
+  overflow: hidden;
+}
+.v-divider {
+  opacity: 1;
+}
+/*滚动条整体部分，其中的属性有width,height,background,border（就和一个块级元素一样）等。*/
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: #151925;
+}
+
+/*定义滚动条轨道 内阴影+圆角  外层轨道。可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果。*/
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 4px #1A1F2E;
+  background-color: #1A1F2E
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 4px #2F305B;
+  background-color: #2F305B;
+}
 .initbgc {
-  background-color: #1b2233 !important;
+  background-color: #151925 !important;
 }
 .init-hader {
-  border-bottom: 0.0625rem solid #6062aa !important;
+  border-bottom: 0.0625rem solid #2F305B !important;
   box-sizing: border-box !important;
   /* // min-width: 1240px !important; */
 }
@@ -143,7 +191,7 @@ a {
   border: 1px solid #533fa1;
 }
 .btnz {
-  background-color: #533fa1 !important;
+  background-color: #8C91FF !important;
   /* // border-color: #533fa1 !important; */
 }
 .btnb {
@@ -215,11 +263,11 @@ a {
   font-size: 18px;
   padding: 20px;
   text-align: center;
-  border-bottom: 1px solid #6062aa !important;
+  border-bottom: 1px solid #2F305B !important;
 }
 
 .my-divider {
-  color: #6062aa !important;
+  color: #2F305B !important;
   opacity: 1;
 }
 
@@ -259,7 +307,7 @@ a {
   font-style: normal;
   font-weight: 500;
   height: 58px;
-  border-bottom: 1px solid #6062aa;
+  border-bottom: 1px solid #2F305B;
   box-sizing: border-box;
   margin-bottom: 14px;
   line-height: 58px;
@@ -283,7 +331,7 @@ a {
   flex-direction: column;
 }
 .node-bg {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
 }
 
 .old-fee {
@@ -371,7 +419,7 @@ a {
 
 .work-card {
   margin: 24px 48px;
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   padding: 24px;
   box-sizing: border-box;
 }
@@ -430,7 +478,7 @@ a {
   position: fixed;
   width: 100%;
   z-index: 1;
-  background: #1b2233;
+  background: #151925;
 }
 .posbox {
   margin-top: 86px;

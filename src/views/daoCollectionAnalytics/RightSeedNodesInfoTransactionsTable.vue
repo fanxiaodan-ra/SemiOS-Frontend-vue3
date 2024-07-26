@@ -17,7 +17,7 @@
           {{ item.tradeTypeDesc }}
         </td>
         <td>
-          <a class="token-icon" :href="aPush(item, 'tx')" target="_blank">
+          <a class="token-icon" :href="`${APP_OPEN_URL}/tx/${item.transactionHash}`" target="_blank">
             <v-btn class="text-none" variant="text">
               <v-tooltip activator="parent" location="top" max-width="300">
                 {{ item.transactionHash }}
@@ -39,7 +39,7 @@
           {{ item.swappedRateUnit }}
         </td>
         <td>
-          <a class="token-icon" :href="aPush(item)" target="_blank">
+          <a class="token-icon" :href="`${APP_OPEN_URL}/address/${item.account}`" target="_blank">
             <v-btn class="text-none" variant="text">
               <v-tooltip activator="parent" location="top" max-width="300">
                 {{ item.account }}
@@ -66,9 +66,6 @@ const props = defineProps({
 })
 
 import { APP_OPEN_URL } from '@/config'
-const aPush = (item: any, type = 'address') => {
-  return `${APP_OPEN_URL}/${type}/${item.userAddress}`
-}
 </script>
 
 <style scoped lang="scss">

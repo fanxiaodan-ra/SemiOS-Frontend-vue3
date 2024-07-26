@@ -1,18 +1,13 @@
 <template>
-  <v-dialog
-    v-model="props.isDialog"
-    :persistent="true"
-    :no-click-animation="true"
-    :width="props.width"
-  >
-    <v-card>
+  <v-dialog v-model="props.isDialog" :persistent="true" :no-click-animation="true" :width="props.width">
+    <v-card class="bg-card-1">
       <div class="mode-title fw4 fti">
         {{ props.title }}
         <v-btn class="cancel-btn" variant="text" @click="cancelDialog">
           <i class="iconfont icon-guanbi ft12"></i>
         </v-btn>
       </div>
-      <v-card-actions>
+      <v-card-actions :class="cardActionsClass">
         <slot></slot>
       </v-card-actions>
     </v-card>
@@ -31,6 +26,10 @@ const props = defineProps({
   width: {
     type: String,
     default: '400',
+  },
+  cardActionsClass: {
+    type: String,
+    default: '',
   },
 })
 

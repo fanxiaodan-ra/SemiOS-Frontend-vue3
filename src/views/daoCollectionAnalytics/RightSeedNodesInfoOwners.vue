@@ -1,8 +1,8 @@
 <template>
   <v-card class="node-card">
     <div class="chat-title">
-      <h3>ERC20 Owners</h3>
-      <h5>Top 100</h5>
+      <h3>{{ t('RightSeedNodesInfoOwners.title') }}</h3>
+      <h5>{{ t('RightSeedNodesInfoOwners.top100') }}</h5>
     </div>
     <div v-if="isLoading" class="chart-body">
       <v-skeleton-loader
@@ -20,8 +20,8 @@
       </div>
       <chart-no-data
         v-else
-        title="No events have occurred yet"
-        text="Check again later."
+        :title="t('RightSeedNodesInfoOwners.noEvent')"
+        :text="t('RightSeedNodesInfoOwners.noEventDesc')"
         class="chat-box"
       />
     </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { t } from '@/lang'
 import { erc20Owners } from '@/api/dex'
 import ChartNoData from '@/components/ChartNoData.vue'
 import RightSeedNodesInfoOwnedTable from './RightSeedNodesInfoOwnedTable.vue'
@@ -63,7 +64,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .node-card {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   padding: 0 !important;
   margin: 0;
   height: 955px;

@@ -24,6 +24,7 @@
               density="comfortable"
               append-inner-icon="mdi-percent-outline"
               v-model="formData.redeemPoolRatioETH"
+              type="number"
               @update:modelValue="
                 setETHInput(
                   formData.redeemPoolRatioETH,
@@ -45,6 +46,7 @@
               density="comfortable"
               append-inner-icon="mdi-percent-outline"
               v-model="formData.selfRewardRatioETH"
+              type="number"
               @update:modelValue="
                 setETHInput(
                   formData.selfRewardRatioETH,
@@ -101,6 +103,7 @@
               density="comfortable"
               append-inner-icon="mdi-percent-outline"
               v-model="formData.selfRewardRatioETH"
+              type="number"
               @update:modelValue="
                 setETHInput(
                   formData.selfRewardRatioETH,
@@ -154,6 +157,7 @@
                 $t('AddFormTokenomicsStructure.selfRewardRatioERC20Placeholder')
               "
               density="comfortable"
+              type="number"
               append-inner-icon="mdi-percent-outline"
               v-model="formData.selfRewardRatioERC20"
               @update:modelValue="
@@ -227,7 +231,6 @@ import { oninputNum, minusOthers } from '@/utils'
 watch(
   () => props.formDataProp.thirdParty,
   (value) => {
-    console.log('我发生变化了啊——————————————————————————————————', value)
     formData.redeemPoolRatioETH = value ? 0 : 100
     formData.nodesReservesRatioETH = value ? 100 : 0
   }
@@ -279,8 +282,8 @@ const setERCInput = (
     formData.selfRewardRatioERC20 = letNum
     formData.nodesReservesRatioERC20 = 0
   } else {
-    formData.selfRewardRatioERC20 = inputNum
-    formData.nodesReservesRatioERC20 = minusOthers(letNum, inputNum)
+    formData.selfRewardRatioERC20 = Number(inputNum)
+    formData.nodesReservesRatioERC20 = minusOthers(letNum, Number(inputNum))
   }
 }
 const setETHInput = (
@@ -301,8 +304,8 @@ const setETHInput = (
       formData.redeemPoolRatioETH = letNum
       formData.nodesReservesRatioETH = 0
     } else {
-      formData.redeemPoolRatioETH = inputNum
-      formData.nodesReservesRatioETH = minusOthers(letNum, inputNum)
+      formData.redeemPoolRatioETH = Number(inputNum)
+      formData.nodesReservesRatioETH = minusOthers(letNum, Number(inputNum))
     }
   }
 
@@ -316,14 +319,13 @@ const setETHInput = (
       formData.selfRewardRatioETH = letNum
       formData.nodesReservesRatioETH = 0
     } else {
-      formData.selfRewardRatioETH = inputNum
-      formData.nodesReservesRatioETH = minusOthers(letNum, inputNum)
+      formData.selfRewardRatioETH = Number(inputNum)
+      formData.nodesReservesRatioETH = minusOthers(letNum, Number(inputNum))
     }
   }
 }
 const emit = defineEmits(['setFormData'])
 onMounted(() => {
-  console.log(props.formDataProp, '我是编辑的时候+++++++++++++++++')
   if (!props.isEdit) {
     formData.redeemPoolRatioETH = props.formDataProp.thirdParty ? 0 : 100
     formData.nodesReservesRatioETH = props.formDataProp.thirdParty ? 100 : 0

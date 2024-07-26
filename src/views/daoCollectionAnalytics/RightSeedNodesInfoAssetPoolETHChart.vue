@@ -1,7 +1,7 @@
 <template>
   <v-card class="node-card">
     <div class="chat-title">
-      <h3>SubNodes Asset Pool ETH</h3>
+      <h3>{{ t('RightSeedNodesInfoAssetPoolETHChart.title') }}</h3>
     </div>
     <div v-if="isLoading" class="chart-body">
       <v-skeleton-loader
@@ -16,8 +16,8 @@
       </div>
       <chart-no-data
         v-else
-        title="No data in this time range"
-        text="Try a different time range or check again later."
+        :title="t('common.noDataInThisRange')"
+        :text="t('common.noDataInThisRangeDesc')"
         class="chat-box"
       />
     </div>
@@ -29,6 +29,7 @@ import { assetPoolEth } from '@/api/dex'
 import ChartNoData from '@/components/ChartNoData.vue'
 import { bigNumFormat, roundToSignificantFigures } from '@/utils'
 import { ref, inject, onMounted, markRaw } from 'vue'
+import { t } from '@/lang'
 import dayjs from 'dayjs'
 const props = defineProps({
   dataObj: {
@@ -183,7 +184,7 @@ const newEcharts = () => {
         axisLine: {
           onZero: false,
           lineStyle: {
-            color: '#6062AA',
+            color: '#2F305B',
           },
         },
       },
@@ -213,7 +214,7 @@ const newEcharts = () => {
         },
         splitLine: {
           lineStyle: {
-            color: '#6062AA',
+            color: '#2F305B',
           },
         },
       },
@@ -225,23 +226,10 @@ const newEcharts = () => {
         max: maxvolume * 4,
         interval: maxvolume,
         min: Number(`-${maxvolume}`),
-        max: maxvolume * 4,
-        interval: maxvolume,
-        min: Number(`-${maxvolume}`),
         nameLocation: 'middle',
         nameGap: 50,
         nameRotate: 270,
         show: false,
-
-        // axisTick: {
-        //   show: false,
-        // },
-        // axisLine: {
-        //   show: false,
-        // },
-        // axisLabel: {
-        //   show: false,
-        // },
       },
     ],
     series: [
@@ -250,7 +238,6 @@ const newEcharts = () => {
         type: 'line',
         symbol: 'circle',
         symbolSize: 1,
-        // yAxisIndex: 1,
         itemStyle: {
           color: '#87D3DE',
           borderColor: '#87D3DE',
@@ -319,7 +306,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .node-card {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   padding: 0 !important;
   margin: 0px;
   margin-left: 12px;

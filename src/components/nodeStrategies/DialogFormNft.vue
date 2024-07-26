@@ -16,6 +16,7 @@
         <v-text-field
           :label="$t('NodeDetail.tokenIdPlaceholder')"
           density="comfortable"
+          type="number"
           v-model="formData.tokenId"
           @update:modelValue="setInput(formData.tokenId, 'tokenId')"
           :rules="tokenIdRules"

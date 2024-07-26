@@ -43,7 +43,7 @@
 .timer-card {
   height: 220px;
   margin: 24px 48px;
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   display: flex;
   padding: 24px;
   box-sizing: border-box;

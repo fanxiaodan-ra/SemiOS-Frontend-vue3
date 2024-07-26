@@ -14,34 +14,34 @@
           class="d-flex align-center mybg"
           :style="{
             'background-color': props.tab === 0 ? '#364159 !important' : '',
-            'border-color': props.tab === 0 ? '#6062aa  !important' : '',
+            'border-color': props.tab === 0 ? '#2F305B  !important' : '',
           }"
           dark
           @click="toggle"
         >
           <v-scroll-y-transition>
             <div class="sc-box">
-              <h3>Members Of Seed Nodes</h3>
+              <h3>{{ t('daoCollectionAnalytics.membersOfSeedNodes') }}</h3>
               <p>
-                Starter :
+                {{ t('daoCollectionAnalytics.starter') }} :
                 <span> {{ bigNumFormat(daoMember.starter, 5, 0.000001) }}</span>
               </p>
               <p>
-                Builder :
+                {{ t('daoCollectionAnalytics.builder') }} :
                 <span> {{ bigNumFormat(daoMember.builder, 5, 0.000001) }}</span>
               </p>
               <p>
-                Minter :
+                {{ t('daoCollectionAnalytics.minter') }} :
                 <span> {{ bigNumFormat(daoMember.mintter, 5, 0.000001) }}</span>
               </p>
               <p>
-                NFT Holders :
+                {{ t('daoCollectionAnalytics.nftHolders') }} :
                 <span>
                   {{ bigNumFormat(daoMember.nftHolders, 5, 0.000001) }}</span
                 >
               </p>
               <p>
-                ERC-20 Holders :
+                {{ t('daoCollectionAnalytics.erc20Holders') }} :
                 <span>
                   {{ bigNumFormat(daoMember.erc20Holders, 5, 0.000001) }}</span
                 >
@@ -57,6 +57,8 @@
 import { bigNumFormat } from '@/utils'
 import { togetherDaoMember } from '@/api/daos'
 import { ref, onMounted } from 'vue'
+import { t } from '@/lang'
+
 const props = defineProps({
   tab: {
     type: Number,

@@ -25,79 +25,32 @@
           >{{ truncateString(props.dataObj.daoName, 24) }}</span
         >
 
-        <div class="icon-body my-mgl24" v-if="store.UserInfo.address">
-          <v-menu
-            open-on-hover
-            v-if="props.dataObj.modifiable || props.dataObj.isMainDaoCreator"
-          >
+        <div class="icon-body my-mgl24">
+          <v-menu open-on-click>
             <template v-slot:activator="{ props }">
-              <v-btn size="36" class="text-none" variant="text" v-bind="props">
+              <v-btn size="36" class="text-none" variant="text" v-bind="props" @click="verifyLogin">
                 <i class="iconfont icon-more ft24" style="color: #8c91ff" />
               </v-btn>
             </template>
-            <v-list>
+            <v-list v-show="isLogin">
               <router-link
-                :to="'/editInformation?id=' + props.dataObj.daoId"
+                :to="'/editInformation?id=' + props.dataObj.daoId + '&type=1'"
                 class="a-style"
               >
-                <v-list-item
-                  v-if="
-                    store.UserInfo.address ===
-                    props.dataObj.creatorAddress
-                  "
-                  value="editInformation"
-                >
-                  Edit Information
-                </v-list-item>
-              </router-link>
-              <router-link
-                :to="'/editOnChainParameters?id=' + props.dataObj.daoId"
-                class="a-style"
-              >
-                <v-list-item value="editParameter">
-                  Edit On-chain Parameter
-                </v-list-item>
-              </router-link>
-              <router-link
-                :to="'/editNodesStrategies?id=' + props.dataObj.daoId"
-                class="a-style"
-              >
-                <v-list-item value="editNodesStrategies">
-                  Edit Strategy
+                <v-list-item value="editInformation">
+                  {{ $t('rightMemberTitle.editInfo') }}
                 </v-list-item>
               </router-link>
             </v-list>
           </v-menu>
         </div>
       </h4>
-      <p>
-        {{ $t('NodeTitle.creatorLabel') }} :
-        <a
-          class="token-icon"
-          :href="aPush(props.dataObj.creatorAddress)"
-          target="_blank"
-        >
-          <v-btn class="text-none" variant="text">
-            <span v-if="props.dataObj.userName"
-              >{{ truncateString(props.dataObj.userName) }}
-              <v-tooltip activator="parent" location="top">
-                {{ props.dataObj.userName }}
-              </v-tooltip></span
-            >
-            <span v-else>
-              {{ ellipsis(props.dataObj.creatorAddress) }}
-              <v-tooltip activator="parent" location="top">
-                {{ props.dataObj.creatorAddress }}
-              </v-tooltip>
-            </span>
-          </v-btn>
+      <p class="flex !items-center">
+        {{ $t('NodeTitle.permissionsNftLabel') }} :
+        <a class="ml-2 text-indigo-400 text-sm font-medium font-['Inter'] tracking-tight cursor-pointer"
+          @click="viewAll">
+          {{ $t('NodeTitle.viewAll') }}
         </a>
-
-        <CopyInformation
-          size="24"
-          fontSize="14"
-          :address="props.dataObj.creatorAddress"
-        />
       </p>
       <p>
         {{ $t('NodeTitle.feePoolLabel') }} :
@@ -193,26 +146,24 @@
       </p>
     </div>
     <div class="card-right">
-      <!-- <v-btn block class="btnz text-none" type="submit">{{
-        $t('NodeTitle.seedNodesBtn')
-      }}</v-btn> -->
-      <p>
-        {{ $t('NodeTitle.relatedNodesLabel') }}:
-        {{ props.dataObj.totalDaoNumber }}
-      </p>
       <div class="icons">
         <IconsTab :dataObj="props.dataObj" :isName="true" />
       </div>
     </div>
+    <PermissionList :isDialog="openPermissionsDialog" @cancelDialog="openPermissionsDialog = false" />
   </v-card>
 </template>
 
 <script setup lang="ts">
 import IconsTab from '@/components/IconsTab.vue'
 import CopyInformation from '@/components/CopyInformation.vue'
+import PermissionList from '../components/PermissionList.vue'
 import { truncateString, ellipsis } from '@/utils'
-import useUserStore from '@/store'
-const store = useUserStore()
+import { ref } from 'vue'
+import useAccount from '@/hooks/useAccount'
+
+const { getTrading } = useAccount()
+
 const props = defineProps({
   dataObj: {
     type: Object,
@@ -224,6 +175,20 @@ const props = defineProps({
   },
 })
 import { APP_OPEN_URL } from '@/config'
+
+const isLogin = ref(false)
+const openPermissionsDialog = ref(false)
+
+const verifyLogin = async () => {
+  const isTrad = await getTrading()
+  if (!isTrad) {
+    return
+  }
+  isLogin.value = isTrad
+}
+const viewAll = () => {
+  openPermissionsDialog.value = true
+}
 const aPush = (address: string) => {
   return `${APP_OPEN_URL}/address/${address}`
 }
@@ -232,30 +197,36 @@ const aPush = (address: string) => {
 <style scoped lang="scss">
 .title-card {
   margin-bottom: 24px;
+
   .iconfont {
     font-size: 12px;
     cursor: pointer;
     color: #fff;
   }
+
   height: 220px;
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   display: flex;
   padding: 24px;
   box-sizing: border-box;
   min-width: 780px;
+
   .card-left {
     width: 172px;
     height: 172px;
     flex: 0 0 auto;
     margin-right: 24px;
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
   }
+
   .card-center {
     flex: 1;
+
     // width: 300px;
     h4 {
       color: #bbbaba;
@@ -265,6 +236,7 @@ const aPush = (address: string) => {
       font-weight: 500;
       line-height: 36px;
       display: flex;
+      align-items: center;
       span {
         display: block;
         overflow: hidden;
@@ -272,6 +244,7 @@ const aPush = (address: string) => {
         text-overflow: ellipsis;
       }
     }
+
     p {
       margin: 0;
       margin-top: 2px;
@@ -283,6 +256,7 @@ const aPush = (address: string) => {
       line-height: 24px;
       display: flex;
       align-items: flex-end;
+
       span {
         color: #8c91ff;
         cursor: pointer;
@@ -297,10 +271,12 @@ const aPush = (address: string) => {
       }
     }
   }
+
   .card-right {
     margin-left: auto;
     width: 200px;
     flex: 0 0 auto;
+
     p {
       color: #9e9e9e;
       text-align: center;
@@ -311,19 +287,23 @@ const aPush = (address: string) => {
     }
   }
 }
+
 .icons {
   // line-height: 28px !important;
   display: flex;
   justify-content: center;
+
   i {
     font-size: 24px !important;
     color: #9e9e9e !important;
     margin-right: 12px;
   }
+
   .isClick {
     color: #8c91ff !important;
   }
 }
+
 .token-icon {
   :deep(.v-btn) {
     height: 24px;
@@ -331,23 +311,28 @@ const aPush = (address: string) => {
     padding: 0;
   }
 }
+
 .loading-loader {
   :deep(.v-skeleton-loader__image) {
     height: 100%;
     width: 172px;
     flex: none;
   }
+
   :deep(.v-skeleton-loader) {
     display: contents;
   }
+
   :deep(.v-skeleton-loader__text) {
     max-width: 100%;
   }
 }
+
 .loading-text {
   width: 100%;
   box-shadow: none !important;
   background-color: transparent;
+
   :deep(.v-skeleton-loader__list-item) {
     margin: 6px 16px;
     box-shadow: none !important;

@@ -36,7 +36,7 @@
               </p>
               <span class="name-span">ETH Balance</span>
             </div>
-            <v-divider inset vertical color="#6062aa"></v-divider>
+            <v-divider inset vertical color="#2F305B"></v-divider>
             <div class="item-right">
               <p>
                 {{ item.erc20Amount }}
@@ -82,7 +82,7 @@ const setItem = (item: any) => {
   padding: 0 6px;
 }
 .item-card {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   border: 1px solid #0000;
   box-sizing: border-box;
   display: flex;

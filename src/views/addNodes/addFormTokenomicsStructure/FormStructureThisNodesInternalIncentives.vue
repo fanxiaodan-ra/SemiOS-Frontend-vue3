@@ -8,16 +8,13 @@
         </v-tooltip>
       </i>
     </h4>
-    <v-form ref="form721Ref">
-      <FormRow
-        :importance="false"
-        :input-name="$t('AddFormTokenomicsStructure.erc721MintFeeLabel')"
-        :tooltip-text="$t('AddFormTokenomicsStructure.erc721MintFeeTip')"
-      >
-        <div v-if="!props.formDataProp.unifiedPriceMode">
+    <v-form ref="formRef">
+      <FormRow :importance="false" :input-name="$t('AddFormTokenomicsStructure.erc721MintFeeLabel')"
+        :tooltip-text="$t('AddFormTokenomicsStructure.erc721MintFeeTip')">
+        <!-- unifiedPriceMode is used in setupdao, unifiedPriceSet is used in edit onchain params -->
+        <div v-if="!props.formDataProp.unifiedPriceMode && !props.formDataProp.unifiedPriceSet">
           <v-row no-gutters class="mint-price">
-            {{ $t('AddFormTokenomicsStructure.floatingMintPriceLabel') }}</v-row
-          >
+            {{ $t('AddFormTokenomicsStructure.floatingMintPriceLabel') }}</v-row>
           <v-row no-gutters>
             <v-col class="my-mgr12">
               <v-text-field
@@ -25,6 +22,8 @@
                 density="comfortable"
                 append-inner-icon="mdi-percent-outline"
                 v-model="formData.daoPriceReserveRatio.builder"
+                :error-messages="errorFloatingMessage"
+                type="number"
                 @update:modelValue="
                   setFloatingInput(
                     formData.daoPriceReserveRatio.builder,
@@ -33,82 +32,60 @@
                     0,
                     100
                   )
-                "
-                :error-messages="errorFloatingMessage"
-                @change="inputFloatingErr"
-              >
+                  "
+                 @change="inputFloatingErr">
               </v-text-field>
             </v-col>
             <v-col class="my-mgl12">
-              <v-text-field
-                class="color-input-a"
-                :label="$t('AddFormTokenomicsStructure.subNodesFeeLabel')"
-                density="comfortable"
-                append-inner-icon="mdi-percent-outline"
-                v-model="formData.daoPriceReserveRatio.subDAO"
+              <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.subNodesFeeLabel')"
+                density="comfortable" append-inner-icon="mdi-percent-outline"
+                v-model="formData.daoPriceReserveRatio.subDAO" 
+                :rules="[
+                  (v:number) => v >= 0.1 || $t('common.dontLess', { num: 0.1 }),
+                ]"
+                type="number"
                 @update:modelValue="
                   setFloatingInput(
                     formData.daoPriceReserveRatio.subDAO,
                     'subDAO',
                     1,
-                    0,
+                    0.1,
                     100
-                  )
-                "
+                  )"
                 :error-messages="errorFloatingMessage"
-                @change="inputFloatingErr"
-              >
+                @change="inputFloatingErr">
               </v-text-field>
             </v-col>
           </v-row>
 
-          <v-row
-            no-gutters
-            v-if="!formDataProp.daoTokenMode && !formDataProp.thirdParty"
-          >
+          <v-row no-gutters v-if="!formDataProp.daoTokenMode && !formDataProp.thirdParty">
             <v-col class="my-mgr12">
-              <v-text-field
-                class="color-input-a"
-                :label="$t('AddFormTokenomicsStructure.seedNodesFeeLabel')"
-                density="comfortable"
-                append-inner-icon="mdi-percent-outline"
-                v-model="formData.daoPriceReserveRatio.mainDAO"
-                @update:modelValue="
-                  setFloatingInput(
-                    formData.daoPriceReserveRatio.mainDAO,
-                    'mainDAO',
-                    1,
-                    0,
-                    100
-                  )
-                "
-                :error-messages="errorFloatingMessage"
-                @change="inputFloatingErr"
-              >
+              <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.seedNodesFeeLabel')"
+                density="comfortable" append-inner-icon="mdi-percent-outline"
+                type="number"
+                v-model="formData.daoPriceReserveRatio.mainDAO" @update:modelValue="
+        setFloatingInput(
+          formData.daoPriceReserveRatio.mainDAO,
+          'mainDAO',
+          1,
+          0,
+          100
+        )
+        " :error-messages="errorFloatingMessage" @change="inputFloatingErr">
               </v-text-field>
             </v-col>
             <v-col class="my-mgl12">
-              <v-text-field
-                :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')"
-                density="comfortable"
-                append-inner-icon="mdi-percent-outline"
-                v-model="formData.daoPriceReserveRatio.pDao"
-                disabled
-              >
-                <span class="old-fee">2.5</span>
+              <v-text-field :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')" density="comfortable"
+                append-inner-icon="mdi-percent-outline" v-model="formData.daoPriceReserveRatio.pDao" disabled>
+                <span class="old-fee">{{ t('AddFormTokenomicsStructure.oldFee') }}</span>
               </v-text-field>
             </v-col>
           </v-row>
           <v-row no-gutters v-else>
             <v-col class="my-mgr12">
-              <v-text-field
-                :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')"
-                density="comfortable"
-                append-inner-icon="mdi-percent-outline"
-                v-model="formData.daoPriceReserveRatio.pDao"
-                disabled
-              >
-                <span class="old-fee">2.5</span>
+              <v-text-field :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')" density="comfortable"
+                append-inner-icon="mdi-percent-outline" v-model="formData.daoPriceReserveRatio.pDao" disabled>
+                <span class="old-fee">{{ t('AddFormTokenomicsStructure.oldFee') }}</span>
               </v-text-field>
             </v-col>
             <v-col class="my-mgl12"> </v-col>
@@ -116,98 +93,73 @@
         </div>
 
         <v-row no-gutters class="mint-price">
-          {{ $t('AddFormTokenomicsStructure.fixedMintPriceLabel') }}</v-row
-        >
+          {{ $t('AddFormTokenomicsStructure.fixedMintPriceLabel') }}</v-row>
         <v-row no-gutters>
           <v-col class="my-mgr12">
-            <v-text-field
-              :label="$t('AddFormTokenomicsStructure.builderFeeLabel')"
-              density="comfortable"
-              append-inner-icon="mdi-percent-outline"
-              v-model="formData.fixedPriceReserveRatio.builder"
+            <v-text-field :label="$t('AddFormTokenomicsStructure.builderFeeLabel')" density="comfortable"
+              append-inner-icon="mdi-percent-outline" v-model="formData.fixedPriceReserveRatio.builder"
+              type="number"
               @update:modelValue="
-                setFixedInput(
-                  formData.fixedPriceReserveRatio.builder,
-                  'builder',
-                  1,
-                  0,
-                  100
-                )
-              "
-              :error-messages="errorFixedMessage"
-              @change="inputFixedErr"
-            >
+        setFixedInput(
+          formData.fixedPriceReserveRatio.builder,
+          'builder',
+          1,
+          0,
+          100
+        )
+        " :error-messages="errorFixedMessage" @change="inputFixedErr">
             </v-text-field>
           </v-col>
           <v-col class="my-mgl12">
-            <v-text-field
-              class="color-input-a"
-              :label="$t('AddFormTokenomicsStructure.subNodesFeeLabel')"
-              density="comfortable"
-              append-inner-icon="mdi-percent-outline"
+            <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.subNodesFeeLabel')"
+              density="comfortable" append-inner-icon="mdi-percent-outline"
               v-model="formData.fixedPriceReserveRatio.subDAO"
+              :rules="[
+                  (v:number) => v >= 0.1 || $t('common.dontLess', { num: 0.1 }),
+                ]"
+              type="number"
               @update:modelValue="
-                setFixedInput(
-                  formData.fixedPriceReserveRatio.subDAO,
-                  'subDAO',
-                  1,
-                  0,
-                  100
-                )
-              "
+              setFixedInput(
+                formData.fixedPriceReserveRatio.subDAO,
+                'subDAO',
+                1,
+                0.1,
+                100
+              )"
               :error-messages="errorFixedMessage"
               @change="inputFixedErr"
             >
             </v-text-field>
           </v-col>
         </v-row>
-        <v-row
-          no-gutters
-          v-if="!formDataProp.daoTokenMode && !formDataProp.thirdParty"
-        >
+        <v-row no-gutters v-if="!formDataProp.daoTokenMode && !formDataProp.thirdParty">
           <v-col class="my-mgr12">
-            <v-text-field
-              class="color-input-a"
-              :label="$t('AddFormTokenomicsStructure.seedNodesFeeLabel')"
-              density="comfortable"
-              append-inner-icon="mdi-percent-outline"
-              v-model="formData.fixedPriceReserveRatio.mainDAO"
-              @update:modelValue="
-                setFixedInput(
-                  formData.fixedPriceReserveRatio.mainDAO,
-                  'mainDAO',
-                  1,
-                  0,
-                  100
-                )
-              "
-              :error-messages="errorFixedMessage"
-              @change="inputFixedErr"
-            >
+            <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.seedNodesFeeLabel')"
+              density="comfortable" append-inner-icon="mdi-percent-outline"
+              type="number"
+              v-model="formData.fixedPriceReserveRatio.mainDAO" @update:modelValue="
+        setFixedInput(
+          formData.fixedPriceReserveRatio.mainDAO,
+          'mainDAO',
+          1,
+          0,
+          100
+        )
+        " :error-messages="errorFixedMessage" @change="inputFixedErr">
             </v-text-field>
           </v-col>
           <v-col class="my-mgl12">
-            <v-text-field
-              :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')"
-              density="comfortable"
-              append-inner-icon="mdi-percent-outline"
-              v-model="formData.fixedPriceReserveRatio.pDao"
-              disabled
-            >
-              <span class="old-fee">2.5</span>
+            <v-text-field :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')" density="comfortable"
+              append-inner-icon="mdi-percent-outline" v-model="formData.fixedPriceReserveRatio.pDao" disabled>
+              <span class="old-fee">{{ t('AddFormTokenomicsStructure.oldFee') }}</span>
             </v-text-field>
           </v-col>
         </v-row>
         <v-row no-gutters v-else>
           <v-col class="my-mgr12">
-            <v-text-field
-              :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')"
-              density="comfortable"
-              append-inner-icon="mdi-percent-outline"
-              v-model="formData.fixedPriceReserveRatio.pDao"
-              disabled
-            >
-              <span class="old-fee">2.5</span>
+            <v-text-field :label="$t('AddFormTokenomicsStructure.semiosFeeLabel')" density="comfortable"
+              append-inner-icon="mdi-percent-outline" v-model="formData.fixedPriceReserveRatio.pDao" disabled>
+              <span class="old-fee">{{ t('AddFormTokenomicsStructure.oldFee') }}</span>
             </v-text-field>
           </v-col>
           <v-col class="my-mgl12"> </v-col>
@@ -220,55 +172,37 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import { reactive, ref, onMounted, watch } from 'vue'
+import { t } from '@/lang'
 const props = defineProps({
   formDataProp: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
   isEdit: {
     type: Boolean,
     default: false,
   },
 })
-// watch(
-//   () => [props.formDataProp.thirdParty, props.formDataProp.daoTokenMode],
-//   (cur, old) => {
-//     if (cur[0] !== old[0] || cur[1] !== old[1]) {
 
-//     }
-//     console.log(cur, old, 'value', cur === old)
-//     // if (value.includes(true)) {
-
-//     // }
-//     // formData.daoPriceReserveRatio.mainDAO = value.includes(true) ? 0 : 95
-//     // formData.daoPriceReserveRatio.subDAO = value.includes(true) ? 97.5 : 2.5
-//     // formData.fixedPriceReserveRatio.mainDAO = value.includes(true) ? 0 : 95
-//     // formData.fixedPriceReserveRatio.subDAO = value.includes(true) ? 97.5 : 2.5
-//     console.log(formData, 'formDataformDataformData')
-//   }
-// )
+const setMainDaoAndBuilder = (cur: boolean, old: boolean) => {
+  if (cur !== old) {
+    formData.fixedPriceReserveRatio.mainDAO = cur ? 0 : 97.5
+    formData.fixedPriceReserveRatio.builder = cur ? 97.5 : 0
+    formData.daoPriceReserveRatio.mainDAO = cur ? 0 : 97.5
+    formData.daoPriceReserveRatio.builder = cur ? 97.5 : 0
+  }
+}
 watch(
   () => props.formDataProp.thirdParty,
-  (cur, old) => {
-    if (cur !== old) {
-      formData.daoPriceReserveRatio.mainDAO = cur ? 0 : 100
-      formData.daoPriceReserveRatio.subDAO = cur ? 100 : 0
-      formData.fixedPriceReserveRatio.mainDAO = cur ? 0 : 100
-      formData.fixedPriceReserveRatio.subDAO = cur ? 100 : 0
-    }
-  }
+  setMainDaoAndBuilder
 )
-// watch(
-//   () => props.formDataProp.daoTokenMode,
-//   (cur, old) => {
-//     if (cur !== old) {
-//       formData.daoPriceReserveRatio.mainDAO = cur ? 0 : 95
-//       formData.daoPriceReserveRatio.subDAO = cur ? 97.5 : 2.5
-//       formData.fixedPriceReserveRatio.mainDAO = cur ? 0 : 95
-//       formData.fixedPriceReserveRatio.subDAO = cur ? 97.5 : 2.5
-//     }
-//   }
-// )
+
+watch(
+  () => props.formDataProp.daoTokenMode,
+  setMainDaoAndBuilder
+)
+
+const formRef = ref()
 const formData = reactive({
   daoPriceReserveRatio: {
     builder: 0,
@@ -301,7 +235,7 @@ const setFloatingInput = (
   max = Infinity
 ) => {
   const inputNum = oninputNum(val, position, min, max)
-  formData.daoPriceReserveRatio[type] = inputNum
+  Object.assign(formData.daoPriceReserveRatio, { [type]: inputNum })
 }
 
 const errorFloatingMessage = ref<string[]>([])
@@ -314,7 +248,7 @@ const inputFloatingErr = () => {
   )
   console.log(num, 'num')
   if (num !== 100) {
-    errorFloatingMessage.value = ['The sum cannot exceed 100%']
+    errorFloatingMessage.value = ['The sum must equal 100%']
     return false
   } else {
     errorFloatingMessage.value = []
@@ -331,12 +265,7 @@ const setFixedInput = (
 ) => {
   const inputNum = oninputNum(val, position, min, max)
   console.log(inputNum, 'inputNum')
-  formData.fixedPriceReserveRatio[type] = inputNum
-  console.log(
-    formData.fixedPriceReserveRatio[type],
-    'formData.fixedPriceReserveRatio[type]',
-    type
-  )
+  Object.assign(formData.fixedPriceReserveRatio, { [type]: inputNum })
 }
 
 const errorFixedMessage = ref<string[]>([])
@@ -347,9 +276,8 @@ const inputFixedErr = () => {
     formData.fixedPriceReserveRatio.pDao,
     formData.fixedPriceReserveRatio.subDAO
   )
-  console.log(num, 'num')
   if (num !== 100) {
-    errorFixedMessage.value = ['The sum cannot exceed 100%']
+    errorFixedMessage.value = [t('common.sumMustEqual100')]
     return false
   } else {
     errorFixedMessage.value = []
@@ -384,8 +312,9 @@ onMounted(() => {
       props.formDataProp.fixedReserveRatio.daoMintFee
   }
 })
-const inputErr = () => {
-  return inputFloatingErr() && inputFixedErr()
+const inputErr = async () => {
+  const { valid } = await formRef.value.validate()
+  return inputFloatingErr() && inputFixedErr() && valid
 }
 defineExpose({
   inputErr,
@@ -396,6 +325,7 @@ defineExpose({
 h4 {
   text-align: center;
 }
+
 .mint-price {
   height: 56px;
   display: flex;

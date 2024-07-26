@@ -1,14 +1,22 @@
 <template>
-  <v-card class="page-card node-card">
-    <div class="page-hedar">
+  <v-card class="page-card node-card !bg-transparent">
+    <div class="page-hedar py-4">
       <v-tabs v-model="tab" fixed-tabs color="deep-purple-accent-4">
-        <v-tab :value="1" class="text-none" selected-class="custom-tabs"
+        <v-tab
+          :value="1"
+          class="text-none"
+          selected-class="custom-tabs"
+          v-if="props.dataObj.daoStatus !== 3"
           >{{ $t('NodeDetail.mintableWorksLabel') }}
         </v-tab>
         <v-tab :value="2" class="text-none" selected-class="custom-tabs"
           >{{ $t('NodeDetail.nftsLabel') }}
         </v-tab>
-        <v-tab :value="3" class="text-none" selected-class="custom-tabs"
+        <v-tab
+          :value="3"
+          class="text-none"
+          selected-class="custom-tabs"
+          v-if="props.dataObj.daoStatus !== 3"
           >{{ $t('NodeDetail.drbNFTsLabel') }}
         </v-tab>
         <v-tab :value="4" class="text-none" selected-class="custom-tabs"
@@ -34,19 +42,14 @@
 </template>
 <script setup lang="ts">
 import { cancelAllRequests } from '@/api/request'
-import { ref, onMounted, shallowRef, defineAsyncComponent, watch } from 'vue'
-const PageWorks = defineAsyncComponent(() => import('./PageWorks.vue'))
-const PageNfts = defineAsyncComponent(() => import('./PageNfts.vue'))
-const PageDrbNfts = defineAsyncComponent(() => import('./PageDrbNfts.vue'))
-const PageRelatedNodes = defineAsyncComponent(
-  () => import('./PageRelatedNodes.vue')
-)
-const PageAnalytics = defineAsyncComponent(
-  () => import('./pageAnalytics/Index.vue')
-)
-const PageAssetAllocationOverview = defineAsyncComponent(
-  () => import('./pageAssetAllocationOverview/Index.vue')
-)
+import { ref, onMounted, shallowRef, watch } from 'vue'
+import PageWorks from './PageWorks.vue'
+import PageNfts from './PageNfts.vue'
+import PageDrbNfts from './PageDrbNfts.vue'
+import PageRelatedNodes from './PageRelatedNodes.vue'
+import PageAnalytics from './PageAnalytic/Index.vue'
+import PageAssetAllocationOverview from './PageAstAllocationOverview/Index.vue'
+
 const currentCopmonent = shallowRef([
   PageWorks,
   PageNfts,
@@ -82,8 +85,8 @@ onMounted(() => {
 }
 
 .page-hedar {
-  // border-top: 0.0625rem solid #6062aa !important;
-  border-bottom: 0.0625rem solid #6062aa !important;
+  // border-top: 0.0625rem solid #2F305B !important;
+  border-bottom: 0.0625rem solid #2f305b !important;
   font-size: 12px;
   :deep(.v-tabs) {
     height: 40px !important;

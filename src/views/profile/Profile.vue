@@ -1,12 +1,15 @@
 <template>
-  <div class="pro-box">
-    <div class="pos_fix">
+  <div class="pro-box items-center">
+    <div class="pos_fix min-w-[1225px]">
       <h2>Profile</h2>
-      <v-divider class="my-divider"></v-divider>
+      <v-divider class="border-purple"></v-divider>
     </div>
     <Loading v-if="isLoading" style="margin-top: 86px" />
-    <div v-else class="posbox">
-      <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+    <div v-else class="posbox justify-center w-full">
+      <v-card
+        class="my-pd24 my-mgt24 my-mgb24 bg-card-1 min-w-[1080px] max-w-[1200px] mx-auto"
+        elevation="12"
+      >
         <v-form ref="formRef">
           <FormRow
             input-name="User Name"
@@ -129,7 +132,10 @@ import useUserStore from '@/store'
 const store = useUserStore()
 const getData = async () => {
   const res = await userProfileInfo()
-  formData.value = res.data
+  formData.value = {
+    ...res.data,
+    introduction: res.data.introduction.replace(/\r\n/g, '\n'),
+  }
   store.setUserInfo({
     ...store.UserInfo,
     avatar: res.data.avatarLink,
@@ -168,9 +174,8 @@ const save = async () => {
         notifyErr(res.resultDesc, true)
         btnLoading.value = false
       }
-    } catch (error) {
-      const err = JSON.stringify(error)
-      notifyErr(err)
+    } catch (error: any) {
+      notifyErr(error.resultDesc, true)
       btnLoading.value = false
     }
   } else {

@@ -23,7 +23,7 @@
           <v-row no-gutters>
             <v-col cols="10">
               <p>{{ item.erc721Address }}</p>
-              <p>Token ID:{{ item.tokenId }}</p>
+              <p>{{ t('common.tokenId') }}:{{ item.tokenId }}</p>
             </v-col>
             <v-col cols="2">
               <v-icon color="#745cd4" @click="deleteItem(idx)" class="">
@@ -61,6 +61,7 @@
 import FormRow from '@/components/FormRow.vue'
 import DialogFormNft from '@/components/nodeStrategies/DialogFormNft.vue'
 import { ref, onMounted } from 'vue'
+import { t } from '@/lang'
 const props = defineProps({
   isEdit: {
     type: Boolean,

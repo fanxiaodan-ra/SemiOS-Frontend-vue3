@@ -1,4 +1,5 @@
-import { service } from './request'
+// import { service } from './request'
+import service from './request'
 import { ConfigType } from '@/types/api/ConfigType'
 
 const checkName = (data: any): ConfigType => {
@@ -47,14 +48,43 @@ const allcationList = async (data: any) => {
     data: data,
   })
 }
-
-const daoCollections = async (data: any) => {
+type DaoCollectionParams = {
+  pageNo: number
+  pageSize: number
+  sortCondition: number
+}
+const daoCollections = async (data: DaoCollectionParams) => {
   return service({
-    url: `/api/dao/collections`,
+    url: `/api/dao/show/info`,
     method: 'POST',
     data: data,
   })
 }
+
+const daoCollectionsCurWindow = async (data: { daoId: string }) => {
+  return service({
+    url: `/api/dao/show/window`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const daoCollectionsBasicInfo = async (data: { daoId: string }) => {
+  return service({
+    url: `/api/dao/show/basic`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const daoCollectionsModeStatus = async (data: { daoId: string }) => {
+  return service({
+    url: `/api/dao/show/modeStatus`,
+    method: 'POST',
+    data: data,
+  })
+}
+
 const analyticsDetail = async (data: any) => {
   return service({
     url: `/api/dao/analytics/detail/v2`,
@@ -199,7 +229,7 @@ const seedNodesCollections = async (data: any) => {
 }
 const protodaoRelated = async (data: any) => {
   return service({
-    url: `/api/protodao/related`,
+    url: `/api/dao/show/related`,
     method: 'POST',
     data: data,
   })
@@ -211,23 +241,27 @@ const searchAmount = async (query: any) => {
     data: { searchWord: query },
   })
 }
-const searchDaos = async (query: any, num = null) => {
+const searchDaos = async (data: {
+  searchWord: string
+  pageSize: number
+  pageNo: number
+}) => {
   return service({
-    url: `/api/search/daos`,
+    url: `/api/dao/show/search`,
     method: 'POST',
-    data: { searchWord: query, number: num },
+    data,
   })
 }
-const searchSeedNodes = async (query: any, num = null) => {
+const searchSeedNodes = async (data:any) => {
   return service({
     url: `/api/search/seedNodes`,
     method: 'POST',
-    data: { searchWord: query, number: num },
+    data,
   })
 }
 const myDaoList = async (data: any) => {
   return service({
-    url: `/api/dao/mydao`,
+    url: `/api/dao/show/mydao`,
     method: 'POST',
     data: data,
   })
@@ -376,7 +410,8 @@ const togetherDaoInfo = async (data: any) => {
 
 const togetherDaoList = async (data: any) => {
   return service({
-    url: `/api/dao/analytics/togetherDao/list`,
+    // url: `/api/dao/analytics/togetherDao/list`,
+    url: '/api/dao/show/togetherDao/list',
     method: 'POST',
     data: data,
   })
@@ -403,6 +438,31 @@ const treasuryList = async (data: any) => {
     data: data,
   })
 }
+
+const treasuryTransaction = async (data: any) => {
+  return service({
+    url: `/api/dao/analytics/togetherDao/treasury/transaction`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const togetherPlanList = async (data: any) => {
+  return service({
+    url: `/api/plan/together/list`,
+    method: 'POST',
+    data: data,
+  })
+}
+
+const togetherPlanBasicInfo = async (data: any) => {
+  return service({
+    url: `/api/plan/basic/info`,
+    method: 'POST',
+    data: data,
+  })
+}
+
 export {
   checkName,
   whitelistProof,
@@ -411,6 +471,9 @@ export {
   maincreator,
   allcationList,
   daoCollections,
+  daoCollectionsCurWindow,
+  daoCollectionsBasicInfo,
+  daoCollectionsModeStatus,
   analyticsDetail,
   workAuthority,
   userAuthority,
@@ -451,5 +514,8 @@ export {
   togetherDaoList,
   togetherDaoMakerList,
   treasuryInfo,
-  treasuryList
+  treasuryList,
+  treasuryTransaction,
+  togetherPlanList,
+  togetherPlanBasicInfo
 }

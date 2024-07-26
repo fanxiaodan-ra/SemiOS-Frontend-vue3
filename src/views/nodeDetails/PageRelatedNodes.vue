@@ -2,7 +2,7 @@
   <div class="tnode-card">
     <v-layout>
       <v-main>
-        <div class="box-top">
+        <div class="box-top w-[1200px] mx-auto">
           <div class="box-top-right">
             <v-select
               v-model="qvalue"
@@ -15,7 +15,7 @@
             ></v-select>
           </div>
         </div>
-        <div class="node-card-box">
+        <div class="node-card-box  w-[1200px] mx-auto">
           <div class="top-btn" v-show="!loading">
             <v-btn
               block
@@ -26,7 +26,7 @@
             >
               <div class="icon-md"><v-icon>mdi-plus</v-icon></div>
               <div>
-                Click here to Launch Sub Nodes for this series of Nodes, Only
+                Click here to Launch Subnodes for this series of Nodes, Only
                 Seed Nodes Starter can set ERC- 20 Tokens Allocation.
               </div>
             </v-btn>
@@ -71,7 +71,7 @@ watch(
     }
   }
 )
-const pageSize = ref(10)
+const pageSize = ref(5)
 const pageNo = ref(1)
 const count = ref(0)
 const list = ref<any>([])
@@ -156,10 +156,8 @@ onBeforeUnmount(() => {
   align-items: center;
   margin-left: auto;
   display: flex;
-  width: 100%;
   z-index: 4;
-  background: #1b2233;
-  padding: 0 48px;
+  background: #151925;
 
   :deep(.v-input) {
     flex: none;
@@ -175,7 +173,7 @@ onBeforeUnmount(() => {
 }
 
 .nav-box {
-  background-color: #1b2233;
+  background-color: #151925;
 
   h4 {
     padding: 0 16px;
@@ -202,12 +200,9 @@ onBeforeUnmount(() => {
   width: 100%;
   justify-content: flex-end;
 }
-.top-btn {
-  padding: 0 48px;
-}
 .xbtn {
   height: 90px;
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   margin-bottom: 24px;
   :deep(.v-btn__content) {
     display: flex;

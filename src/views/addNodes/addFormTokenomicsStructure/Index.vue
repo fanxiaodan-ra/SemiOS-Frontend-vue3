@@ -1,15 +1,22 @@
 <template>
-  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+  <v-card
+    class="mx-auto my-pd24 max-w-[1200px] my-mgt24 my-mgb24"
+    elevation="12"
+  >
     <h3 class="node-name" v-if="store.addNodeType === 6">
       {{ $t('AddFormTokenomicsStructure.title') }}
     </h3>
     <v-form ref="formRef">
       <FormRow
         :input-name="$t('AddFormTokenomicsStructure.lotteryModeLabel')"
-        tooltip-text="$t('AddFormTokenomicsStructure.lotteryModeTip')"
+        :tooltip-text="$t('AddFormTokenomicsStructure.lotteryModeTip')"
         :importance="false"
       >
-        <v-switch v-model="formData.lotteryMode" color="#745cd4"></v-switch>
+        <v-switch
+          v-model="formData.lotteryMode"
+          color="#8C91FF"
+          inset
+        ></v-switch>
       </FormRow>
       <div v-if="!props.formDataProp.topUpMode">
         <FormStructureNodesLevelAssetAllocation
@@ -37,19 +44,20 @@
         />
       </div>
     </v-form>
-    <div
-      class="dflex flex-jc my-mgb24 my-mgt24"
-      v-if="store.addNodeType !== 6"
-    >
+    <div class="dflex flex-jc my-mgb24 my-mgt24" v-if="store.addNodeType !== 6">
       <v-btn
         block
         class="btnb fc7 text-none mr-10"
         type="submit"
         @click="setAddType(3)"
-        >Back</v-btn
+        >{{ t('common.back') }}</v-btn
       >
-      <v-btn block class="btnz text-none" type="submit" @click="setAddType(5)"
-        >Next</v-btn
+      <v-btn
+        block
+        class="btnz text-none"
+        type="submit"
+        @click="setAddType(5)"
+        >{{ t('common.next') }}</v-btn
       >
     </div>
   </v-card>
@@ -64,6 +72,7 @@ import FormStructureThisNodesERCIncentives from './FormStructureThisNodesERCInce
 import FormStructureThisNodesETHIncentives from './FormStructureThisNodesETHIncentives.vue'
 import { ref, watch, onMounted } from 'vue'
 import useUserStore from '@/store'
+import { t } from '@/lang'
 const store = useUserStore()
 const props = defineProps({
   formDataProp: {
@@ -106,12 +115,30 @@ const formData = ref<any>({
   },
   eth: { pDao: 0, subDao: 50, builder: 25, minter: 25 },
 })
+
 const emit = defineEmits(['setFormData'])
+const formRef = ref()
+const FormStructureThisNodesInternalIncentivesRef = ref()
+
+const validateForm = async (value: any) => {
+  const { valid } = await formRef.value.validate()
+  const childValid = FormStructureThisNodesInternalIncentivesRef.value
+    ? await FormStructureThisNodesInternalIncentivesRef.value.inputErr()
+    : true
+  console.log(value, 'valuevaluevalue')
+  emit('setFormData', {
+    formVal: value,
+    validVal: {
+      position: 3,
+      value: valid && childValid,
+    },
+  })
+}
+
 watch(
   () => formData,
   (value) => {
-    console.log(value, 'AddFormTokenomicsStructure Watch')
-    emit('setFormData', value.value)
+    validateForm(value)
   },
   { deep: true }
 )
@@ -124,7 +151,6 @@ const setFormData = (val: any) => {
 }
 
 const setETHOtherFormData = (val: any) => {
-  console.log(val, 'setETHOtherFormData')
   formData.value.ETHOtherNodesList = val
   formData.value.ETHOtherNodes = val.reduce(
     (a: number, item: any) => new BigNumber(a).plus(item.value).toNumber(),
@@ -138,9 +164,6 @@ const setERCOtherFormData = (val: any) => {
     0
   )
 }
-
-const formRef = ref()
-const FormStructureThisNodesInternalIncentivesRef = ref()
 
 const setAddType = async (val: number) => {
   let isErr = true
@@ -157,9 +180,3 @@ onMounted(() => {
   emit('setFormData', formData.value)
 })
 </script>
-
-<style lang="scss" scoped>
-h4 {
-  text-align: center;
-}
-</style>

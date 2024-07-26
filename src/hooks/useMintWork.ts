@@ -1,4 +1,3 @@
-import { keyListEqual, objListIsEqual, isAddress } from '@/utils'
 import useUserStore from '@/store'
 import useAccount from '@/hooks/useAccount'
 import {
@@ -254,8 +253,8 @@ export default function useMintWork() {
             store.UserInfo.address
           )
           console.log(allowance, 'allowanceallowance')
-          const appNum = new BigNumber(num).minus(allowance).toNumber()
-          if (appNum > 0) {
+          const appNum = new BigNumber(num).minus(allowance).toString()
+          if (Number(appNum) > 0) {
             await setApprove(erc20Address, num)
             return false
           }

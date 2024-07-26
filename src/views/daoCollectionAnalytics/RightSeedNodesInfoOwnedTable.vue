@@ -3,10 +3,10 @@
     <thead>
       <tr>
         <th class="table-title"></th>
-        <th class="table-title">Name</th>
-        <th class="table-title">Wallet</th>
-        <th class="table-title">Owned</th>
-        <th class="table-title">%Owned</th>
+        <th class="table-title">{{ t('common.name') }}</th>
+        <th class="table-title">{{ t('common.wallet') }}</th>
+        <th class="table-title">{{ t('common.owned') }}</th>
+        <th class="table-title">%{{ t('common.owned') }}</th>
       </tr>
     </thead>
     <tbody>
@@ -57,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import { t } from '@/lang'
 import { ellipsis, truncateString, bigNumFormat } from '@/utils'
 import CopyInformation from '@/components/CopyInformation.vue'
 const props = defineProps({

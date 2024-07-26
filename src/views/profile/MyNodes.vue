@@ -1,15 +1,16 @@
 <template>
   <div class="div-box">
-    <div class="pos_fix">
-      <h2>My Nodes</h2>
-      <v-divider class="my-divider"></v-divider>
+    <div class="pos_fix !w-[calc(100%-55px)] min-w-[1225px]">
+      <h2>{{ $t('myCreatedNodes.title') }}</h2>
+      <v-divider class="border-purple"></v-divider>
     </div>
-    <div class="node-card-box">
+    <div class="node-card-box w-full">
       <node-item-card
         :list="list"
         :isAll="isAll"
-        :isLoading="loading"
+        :isLoading="isLoading"
         :is-favorited="true"
+        @loadMore="continueLoadData"
       />
     </div>
   </div>
@@ -17,62 +18,55 @@
 
 <script setup lang="ts">
 import NodeItemCard from '@/components/nodeItem/NodeItemCard.vue'
-import { myDaoList } from '@/api/daos'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-const pageSize = ref(10)
-const pageNo = ref(1)
-const count = ref(0)
-const list = ref<any>([])
-const isAll = ref(false)
-const loading = ref(false)
-const getData = async () => {
-  loading.value = true
-  const query = {
-    pageSize: pageSize.value,
-    pageNo: pageNo.value,
+import useDaoStore from '@/store/dao';
+import { ref, onMounted, computed } from 'vue'
+
+const daoStore = useDaoStore()
+
+const list = computed(() => daoStore.createNodes)
+const isAll = computed(() => daoStore.createNodesPageInfo?.isAll || false)
+const isLoading = ref(false)
+
+const getData = async (loadFunc: Function = () => { }, done: Function = () => {}) => {
+  isLoading.value = true
+  try {
+    await loadFunc()
+    done('ok')
+  } catch (error) {
+    done('error')
+  } finally {
+    isLoading.value = false
   }
-  const data: any = await myDaoList(query)
-  list.value = list.value.concat(data.dataList)
-  count.value = data.page.count
-  isAll.value = pageNo.value * pageSize.value >= count.value
-  loading.value = false
-  ifScrollHeight()
 }
 
-const ifScrollHeight = () => {
-  if (
-    window.scrollY > 0 &&
-    document.body.scrollHeight <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
-    !isAll.value
-  ) {
-    pageNo.value += 1
-    loading.value = true
-    getData()
+if (daoStore.createNodes.length > 5) {
+  daoStore.createNodes = [
+    ...daoStore.createNodes.slice(0, 5),
+  ]
+  daoStore.createNodesPageQuery.pageNo = 1
+  daoStore.createNodesPageInfo.isAll = false
+} else {
+  daoStore.createNodesPageQuery.pageNo = 0
+  daoStore.createNodesPageInfo = {
+    isAll: false,
+    count: 0,
   }
+  daoStore.createNodes = []
 }
-const lazyLoading = () => {
-  const scrollTop =
-    document.documentElement.scrollTop || document.body.scrollTop
-  const clientHeight = document.documentElement.clientHeight
-  const scrollHeight = document.documentElement.scrollHeight
-  if (pageNo.value * pageSize.value < count.value) {
-    if (scrollHeight - clientHeight <= scrollTop + 560) {
-      if (loading.value) return
-      pageNo.value += 1
-      loading.value = true
-      getData()
-    }
-  }
-}
+
+
 onMounted(() => {
-  window.addEventListener('scroll', lazyLoading, true)
-  getData()
+  window.scrollTo(0, 0)
 })
 
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', lazyLoading, true)
-})
+const continueLoadData = async ({
+  done,
+}: {
+  done: (val: string) => void
+}) => {
+  daoStore.createNodesPageQuery.pageNo += 1
+  getData(daoStore.getCreateNodesLazyLoad, done)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -92,8 +86,6 @@ h2 {
   text-align: center;
 }
 .node-card-box {
-  max-width: 80%;
-  margin: 0 auto;
   margin-top: 86px;
   padding-top: 24px;
 }

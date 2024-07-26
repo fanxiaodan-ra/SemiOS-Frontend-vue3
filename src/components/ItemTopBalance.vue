@@ -12,7 +12,7 @@
       <tr v-for="item in (props.dataList as any)" :key="item.name">
         <td>
           <router-link
-            :to="`/collectionAnalytics?id=${item.togetherDaoId}`"
+            :to="`/daoCollectionAnalytics?id=${item.togetherDaoId}`"
             class="a-style"
             v-if="!props.isTop"
             ><span class="title-name">
@@ -64,6 +64,7 @@
 <script setup lang="ts">
 import { bigNumFormat } from '@/utils'
 import TokenIcon from '@/components/TokenIcon.vue'
+
 const props = defineProps({
   dataList: {
     type: Array,

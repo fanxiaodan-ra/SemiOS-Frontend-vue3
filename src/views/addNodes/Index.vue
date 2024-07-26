@@ -8,7 +8,7 @@
     @setAddType="setAddType"
     :initData="initData"
     :daoName="daoName"
-    v-show="store.addNodeType !== 0"
+    v-if="store.addNodeType !== 0"
   />
   <ModeSelection
     :isModeSelection="isModeSelection"
@@ -17,8 +17,11 @@
     @cancelDialog="setIsModeSelection"
     @setLoading="setLoading"
     @setAddType="setAddType"
+    @show-suc-dialog="setShowSucDialog"
   />
   <DialogLoading :title="'Setup Nodes'" :isLoading="isDialogLoading" />
+  <SucDialog v-model="showSucDialog" />
+
 </template>
 <script setup lang="ts">
 import DialogLoading from '@/components/DialogLoading.vue'
@@ -27,17 +30,19 @@ import { ref, onMounted } from 'vue'
 import ModeSelection from './ModeSelection.vue'
 import AddNodeName from './AddNodeName.vue'
 import AddNodeFrom from './AddNodeFrom.vue'
+import SucDialog from './components/SucDialog.vue'
 import useUserStore from '@/store'
+import { useRoute } from 'vue-router'
+
 const store = useUserStore()
-// import { onMounted, watch } from "vue";
 const isDialogLoading = ref(false)
 const setLoading = (val: boolean) => {
   isDialogLoading.value = val
 }
-import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const daoName = ref('')
+const showSucDialog = ref(false)
 const setDaoName = (val: string) => {
   daoName.value = val
 }
@@ -55,6 +60,10 @@ const getInitData = async () => {
 
 const setAddType = (val: number) => {
   store.setNodeType(val)
+}
+
+const setShowSucDialog = (val: boolean) => {
+  showSucDialog.value = val
 }
 
 onMounted(() => {

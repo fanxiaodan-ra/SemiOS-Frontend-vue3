@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+  <v-card class="mx-auto my-pd24 max-w-[1200px] my-mgt24 my-mgb24 bg-card-1" elevation="12">
     <h3 class="node-name">Community Parameter</h3>
     <v-form ref="formRef">
       <FormRow

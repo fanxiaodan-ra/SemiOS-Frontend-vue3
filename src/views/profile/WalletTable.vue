@@ -1,13 +1,13 @@
 <template>
   <div class="wallet-box">
-    <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+      <v-card class="my-pd24  my-mgb24 bg-card-1 min-w-[1080px] max-w-[1200px] mx-auto" elevation="12">
       <v-row align="start" no-gutters class="lin38">
         <v-col class="my-flexaj fc9" :cols="4">
           <v-icon class="ft18 my-mgr12">mdi-wallet-outline</v-icon>
           Income</v-col
         >
         <v-col :cols="8" class="tea fc9 flexbtn">
-          <v-btn class="text-none" variant="text" @click="collectAll"
+          <v-btn class="text-none font-bold" variant="text" @click="collectAll"
             >Collect All
           </v-btn>
         </v-col>
@@ -22,24 +22,18 @@
         No items to display
       </div>
       <div v-else>
-        <v-card v-for="(item, idx) in list" :key="idx" class="wallet-card">
+        <v-card v-for="(item, idx) in list" :key="idx" class="wallet-card bg-card-2">
           <v-row align="start" no-gutters>
-            <v-col class="my-flexaj fc9" :cols="12">
+            <v-col class="my-flexaj fc9 !items-center" :cols="12">
               <span class="my-mgr24 fw6">{{ item.daoName }}</span>
-              <TokenIcon
-                :daoToken="item.erc20PaymentMode"
-                :daoSymbol="item.daoSymbol"
-                :daoErc20Address="item.daoErc20Address"
-                :payCurrencyType="item.payCurrencyType"
-                :inputTokenAddress="item.inputTokenAddress"
-              />
+              <span class="text-sm text-grey-1">{{ item.daoSymbol }}</span>
             </v-col>
           </v-row>
-          <v-row align="start" no-gutters class="row14">
+          <v-row align="start" no-gutters class="row14 flex items-center">
             <v-col class="my-flexaj fc9" :cols="6">
               Minting Earning (ETH)
             </v-col>
-            <v-col :cols="6" class="tea fc9">
+            <v-col :cols="6" class="tea fc9 flex justify-end items-center">
               {{ item.mintReward }}
               <TokenIcon
                 size="14px"
@@ -47,11 +41,11 @@
                 :inputTokenAddress="item.inputTokenAddress"
             /></v-col>
           </v-row>
-          <v-row align="start" no-gutters class="row14">
+          <v-row align="start" no-gutters class="row14 flex items-center">
             <v-col class="my-flexaj fc9" :cols="6">
               Minting Earning (DAO Token)
             </v-col>
-            <v-col :cols="6" class="tea fc9">
+            <v-col :cols="6" class="tea fc9 flex justify-end items-center">
               {{ item.mintRewardToken }}
               <TokenIcon
                 size="14px"
@@ -61,15 +55,15 @@
               />
             </v-col>
           </v-row>
-          <v-row align="start" no-gutters class="row14">
+          <v-row align="start" no-gutters class="row14 flex items-center">
             <v-col class="my-flexaj fc9" :cols="6"> ERC20 Collectable </v-col>
-            <v-col :cols="6" class="tea fc9">
+            <v-col :cols="6" class="tea fc9 flex justify-end items-center">
               {{ item.erc20Collectable }}
             </v-col>
           </v-row>
-          <v-row align="start" no-gutters class="row14">
+          <v-row align="start" no-gutters class="row14 flex items-center">
             <v-col class="my-flexaj fc9" :cols="6"> ETH Collectable </v-col>
-            <v-col :cols="6" class="tea fc9">
+            <v-col :cols="6" class="tea fc9 flex justify-end items-center">
               {{ item.ethCollectable }}
               <TokenIcon
                 size="14px"
@@ -77,13 +71,13 @@
                 :inputTokenAddress="item.inputTokenAddress"
             /></v-col>
           </v-row>
-          <v-row align="start" no-gutters class="row14">
+          <v-row align="start" no-gutters class="row14 flex items-center">
             <v-col class="my-flexaj fc9" :cols="6"> ERC20 Collected </v-col>
-            <v-col :cols="6" class="tea fc9"> {{ item.erc20Collected }} </v-col>
+            <v-col :cols="6" class="tea fc9 flex justify-end items-center"> {{ item.erc20Collected }} </v-col>
           </v-row>
-          <v-row align="start" no-gutters class="row14">
+          <v-row align="start" no-gutters class="row14 flex items-center">
             <v-col class="my-flexaj fc9" :cols="6"> ETH Collected </v-col>
-            <v-col :cols="6" class="tea fc9">
+            <v-col :cols="6" class="tea fc9 flex justify-end items-center">
               {{ item.ethCollected }}
               <TokenIcon
                 size="14px"
@@ -155,6 +149,7 @@ const getData = async () => {
   const res = await walletDao()
   list.value = res.data.daoIncomeVos
   daoCollect.value = res.data
+  console.log('daoCollect', daoCollect.value)
   isLoading.value = false
 }
 
@@ -191,11 +186,9 @@ h2 {
   margin: 42px 0;
 }
 .wallet-card {
-  background-color: #252b3a !important;
   padding: 20px;
   box-sizing: border-box;
   margin-bottom: 24px;
-  margin-top: 12px;
 }
 .flexbtn {
   display: flex;

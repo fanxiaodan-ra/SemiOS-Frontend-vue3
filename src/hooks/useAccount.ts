@@ -6,6 +6,7 @@ import { APP_NETWORK, APP_LOCAL_NAME } from '@/config'
 import { sig } from '@/common/web3service'
 import { initWeb3 } from '@/common/walletService/wallet'
 import { useRouter } from 'vue-router'
+import useToastNotify from '@/hooks/useToastNotify'
 declare global {
   const $onboard: typeof initWeb3
   interface Window {
@@ -13,6 +14,7 @@ declare global {
   }
 }
 window.$onboard = initWeb3
+const { notifyErr } = useToastNotify()
 
 export default function useAccount() {
   const router = useRouter()
@@ -53,6 +55,8 @@ export default function useAccount() {
           // const currentState = onboard.state.get().wallets
           // console.log(currentState, 'currentState')
         }
+      } else {
+        setLogOut()
       }
     })
   }
@@ -140,7 +144,6 @@ export default function useAccount() {
       getCookieUser()
       await setUser()
     } else {
-      setLogOut()
       isLoading.value = false
     }
   }
@@ -176,13 +179,18 @@ export default function useAccount() {
       randomCoding(4) +
       '-' +
       randomCoding(12)
-    return `Welcome to ProtoDAO!\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nYour authentication status will reset after 24 hours.\n\nWallet address:\n${adress}\n\nNonce:\n${nonce}`
+    return `Welcome to Semios!\n\nThis request will not trigger a blockchain transaction or cost any gas fees.\n\nYour authentication status will reset after 24 hours.\n\nWallet address:\n${adress}\n\nNonce:\n${nonce}`
   }
-
+  function getCookieValue(name: string) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+    return null;
+  }
   const getSig = () => {
-    const store = useUserStore()
     const text = getNonce()
-    const userInfoTime = Number(store.UserInfo.time)
+    const time = getCookieValue('time')
+    const userInfoTime = Number(time)
     if (userInfoTime > 0) {
       const time = new Date().getTime() / 1000 - userInfoTime
       if (time <= 86400) {
@@ -212,6 +220,7 @@ export default function useAccount() {
         return false
       }
     } catch (error) {
+      notifyErr('User denied message signature.', true)
       console.log(error, 'error')
     }
   }
@@ -224,7 +233,7 @@ export default function useAccount() {
       await $onboard.setChain({ chainId: APP_NETWORK })
     }
   }
-  const getTrading = async () => {
+  const getTrading = async (callback?: Function) => {
     const store = useUserStore()
 
     if (store.UserInfo.address) {
@@ -236,6 +245,7 @@ export default function useAccount() {
       }
     } else {
       await login()
+      callback && callback()
       return false
     }
   }

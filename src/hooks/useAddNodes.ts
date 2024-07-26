@@ -2,6 +2,7 @@ import useUserStore from '@/store'
 import { ethers } from 'ethers'
 import { createDao, whitelistProof, daoTimes } from '@/api/daos'
 import { BigNumber } from 'bignumber.js'
+import useSetupDaoStore from '@/store/setupDao'
 BigNumber.config({ EXPONENTIAL_AT: 38 })
 import _ from 'lodash'
 import {
@@ -11,12 +12,9 @@ import {
   setMintCapAndPermission,
 } from '@/common/web3service'
 import { StandardMerkleTree } from '@openzeppelin/merkle-tree'
-import dayjs from 'dayjs'
 import { whitelistFiltre, arrConversion, bigNumTimes, isErcEq } from '@/utils'
 import useToastNotify from '@/hooks/useToastNotify'
-import { useRoute } from 'vue-router'
 
-const route = useRoute()
 
 const fetchkeyArr = (a: [], b: [], key = 'name') => {
   const arrA = a.map((item) => item[key])
@@ -63,7 +61,7 @@ const getProofData = (formData: any, store: any) => {
     formData.type === 2
       ? [
         {
-          address: store.state.UserInfo.address,
+          address: store.UserInfo.address,
           amount: 5,
         },
       ]
@@ -81,16 +79,16 @@ const getProofData = (formData: any, store: any) => {
   }
 }
 
-const getDecimalsNum = async (formData: any) => {
-  let decimalsNum = (0).toString()
-
-  if (formData.daoTokenMode && (formData.thirdParty || route.query.id)) {
-    const erc20 = route.query.id
+const getDecimalsNum = async (formData: any, seedNodeId?: string) => {
+  let decimalsNum = '0'
+  if (formData.daoTokenMode && (formData.thirdParty || seedNodeId)) {
+    const erc20 = seedNodeId
       ? formData.initData.erc20Address
       : formData.erc20ContractAddress
     const decNum = await decimals(erc20)
     decimalsNum = `1e${decNum}`
   } else {
+    console.log('我在这里')
     if (formData.inputToken !== 'Input') {
       if (
         formData.inputToken === '0x0000000000000000000000000000000000000000'
@@ -154,7 +152,7 @@ const getDaoMetadataParam = (data: any, formData: any, decimalsNum: string) => {
     // startDrb: data.data.startDrb,
     mintableRounds: formData.infiniteMode ? 1 : formData.daoMintWindow,
     duration: data.duration,
-    floorPrice: bigNumBerTimes(formData.daoFloorPrice, decimalsNum),
+    floorPrice: bigNumBerTimes(formData.unifiedPriceMode ? 0.0001 : formData.daoFloorPrice, decimalsNum),
     maxNftRank: data.maxNftRank,
     royaltyFee: data.royaltyFee,
     projectUri: data.projectUri,
@@ -179,7 +177,7 @@ const getWhitelist = (formData: any, store: any) => {
     formData.type === 2
       ? [
         {
-          address: store.state.UserInfo.address,
+          address: store.UserInfo.address,
           amount: 5,
         },
       ]
@@ -246,7 +244,7 @@ const getDaoMintCapParam = (formData: any, store: any) => {
     formData.type === 2
       ? [
         {
-          minter: store.state.UserInfo.address,
+          minter: store.UserInfo.address,
           mintCap: 5,
         },
       ]
@@ -461,7 +459,7 @@ const getStrategies = (formData: any, initData: any) => {
   console.log(reqData, 'reqDatareqDatareqDatareqDatareqDatareqDatareqData')
   return reqData
 }
-export default function useAddNodes() {
+export default function useAddNodes(seedNodeId?:string) {
   const store = useUserStore()
 
   const addNode = async (formData: any) => {
@@ -474,7 +472,7 @@ export default function useAddNodes() {
         duration: formData.daoMintWindowDuration,
       })
 
-      const decimalsNum = await getDecimalsNum(formData)
+      const decimalsNum = await getDecimalsNum(formData, seedNodeId)
       console.log(decimalsNum, 'decimalsNum')
       const daoMetadataParam = getDaoMetadataParam(
         data.data,
@@ -492,7 +490,9 @@ export default function useAddNodes() {
       const nftMinterCapIdInfo = getNftMinterCapIdInfo(formData)
       const templateParam = getTemplateParam(formData, decimalsNum)
       const basicDaoParam = getBasicDaoParam(data.data)
+      console.log(basicDaoParam, 'basicDaoParambasicDaoParambasicDaoParam')
       const continuousDaoParam = getContinuousDaoParam(formData, decimalsNum)
+      console.log(continuousDaoParam, 'continuousDaoParamcontinuousDaoParamcontinuousDaoParam')
       const allRatioParam = getAllRatioParam(formData)
       const reqData = {
         createProjectFee: 0,
@@ -513,8 +513,12 @@ export default function useAddNodes() {
       const tx = await createDaoForFunding(reqData)
       const res = await tx.wait()
       console.log(res, 'restxxxxxxxxxxxxxxxxx')
-      notifySuc('dao')
-      return true
+      const setupDaoStore = useSetupDaoStore()
+      const result = await setupDaoStore.inquireNft0AndDaoId({
+        transactionHash: res.transactionHash,
+      })
+      console.log('result addnodes', result)
+      return result
     } catch (error) {
       // formData.dialogLoading = false;
       const err = JSON.stringify(error)
@@ -527,10 +531,10 @@ export default function useAddNodes() {
   const getDaoTime = async () => {
     try {
       const time = await daoTimes()
-      return dayjs(time.data.currentTime * 1000).format('YYYY-MM-DD')
+      return time.data.currentTime * 1000
     } catch (error) {
       console.log(error)
-      return false
+      return ''
     }
   }
 
@@ -596,11 +600,11 @@ export default function useAddNodes() {
           redeemPoolInputRatio: bigNumBerTimes(formData.redeemPoolRatioETH, 100),
           treasuryOutputRatio: 0,
           treasuryInputRatio: 0,
-          selfRewardRatioERC20: bigNumBerTimes(
+          selfRewardOutputRatio: bigNumBerTimes(
             formData.selfRewardRatioERC20,
             100
           ),
-          selfRewardRatioETH: bigNumBerTimes(formData.selfRewardRatioETH, 100),
+          selfRewardInputRatio: bigNumBerTimes(formData.selfRewardRatioETH, 100),
         },
 
         allRatioForFundingParam: {

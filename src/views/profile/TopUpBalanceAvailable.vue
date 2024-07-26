@@ -1,8 +1,8 @@
 <template>
   <div class="card-box">
-    <div v-if="!isLoading">
+    <div v-if="!isLoading" class="flex flex-col justify-center">
       <v-card
-        class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24"
+        class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24 bg-card-1 min-w-[1080px] max-w-[1200px]"
         v-for="(item, idx) in list"
         :key="item.daoName + idx"
       >
@@ -26,7 +26,8 @@
               <TokenIcon
                 :payCurrencyType="item.payCurrencyType"
                 :inputTokenAddress="item.inputTokenAddress"
-            /></v-col>
+              />
+            </v-col>
             <v-col class="flexcen">
               {{ bigNumFormat(item.tokenBalance, 5, 0.00001) }}
               <TokenIcon
@@ -41,13 +42,14 @@
             <v-col> Total Locked ERC-20 Tokens (Off-Chain) </v-col>
           </v-row>
           <v-row align="start" no-gutters class="cen-num">
-            <v-col>
+            <v-col class="flexcen">
               {{ bigNumFormat(item.onChainEthBalance, 5, 0.00001) }}
               <TokenIcon
                 :payCurrencyType="item.payCurrencyType"
                 :inputTokenAddress="item.inputTokenAddress"
-            /></v-col>
-            <v-col>
+              />
+            </v-col>
+            <v-col class="flexcen">
               {{ bigNumFormat(item.onChainTokenBalance, 5, 0.00001) }}
               <TokenIcon
                 :daoToken="true"
@@ -228,7 +230,6 @@ onMounted(() => {
   flex: 1;
   height: 100%;
   :deep(.v-card) {
-    background-color: #252b3a !important;
     padding: 20px;
     box-sizing: border-box;
     margin-bottom: 24px;
@@ -243,7 +244,7 @@ onMounted(() => {
 .t-img {
   width: 68px;
   height: 68px;
-  background-color: #252b3a;
+  background-color: #1a1f2e;
   margin-right: 24px;
   flex: 0 0 auto;
   img {

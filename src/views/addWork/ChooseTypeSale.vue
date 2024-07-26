@@ -17,26 +17,26 @@
             :value="1"
             class="text-none"
             v-if="props.dataObj.pethodType < 3"
-            >Floating Price</v-tab
+            >{{ t('chooseTypeSale.floatingPrice') }}</v-tab
           >
           <v-tab
             selected-class="custom-tabs"
             :value="2"
             class="text-none"
             v-if="props.dataObj.pethodType < 3"
-            >Fixed Price</v-tab
+            >{{ t('chooseTypeSale.fixedPrice') }}</v-tab
           >
           <v-tab
             selected-class="custom-tabs"
             :value="3"
             class="text-none"
             v-if="props.dataObj.pethodType === 3"
-            >Unified Price</v-tab
+            >{{ t('chooseTypeSale.unifiedPrice') }}</v-tab
           >
         </v-tabs>
       </div>
 
-      <v-divider class="my-divider"></v-divider>
+      <v-divider class="border-purple"></v-divider>
       <v-window v-model="tab" class="det-box">
         <v-window-item v-for="n in 3" :key="n" :value="n">
           <v-container fluid>
@@ -54,14 +54,12 @@
 </template>
 <script lang="ts" setup>
 import FormRow from '@/components/FormRow.vue'
-import { ref, onMounted, shallowRef, defineAsyncComponent } from 'vue'
-const FloatingPriceTab = defineAsyncComponent(
-  () => import('./FloatingPriceTab.vue')
-)
-const FixedPriceTab = defineAsyncComponent(() => import('./FixedPriceTab.vue'))
-const UnifiedPriceTab = defineAsyncComponent(
-  () => import('./UnifiedPriceTab.vue')
-)
+import { t } from '@/lang'
+import { ref, onMounted, shallowRef, watch } from 'vue'
+import FloatingPriceTab from './FloatingPriceTab.vue'
+import FixedPriceTab from './FixedPriceTab.vue'
+import UnifiedPriceTab from './UnifiedPriceTab.vue'
+
 const currentCopmonent = shallowRef([
   FloatingPriceTab,
   FixedPriceTab,
@@ -94,6 +92,14 @@ const setUrlMsg = async () => {
 defineExpose({
   setUrlMsg,
 })
+
+watch(
+  () => props.dataObj,
+  (value) => {
+    tab.value = value.pethodType
+  },
+  { deep: true }
+)
 onMounted(() => {
   tab.value = props.dataObj.pethodType
 })

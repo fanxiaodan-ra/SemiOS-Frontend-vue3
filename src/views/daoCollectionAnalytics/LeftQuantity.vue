@@ -14,7 +14,7 @@
           class="d-flex align-center mybg"
           :style="{
             'background-color': props.tab === 1 ? '#364159 !important' : '',
-            'border-color': props.tab === 1 ? '#6062aa  !important' : '',
+            'border-color': props.tab === 1 ? '#2F305B  !important' : '',
           }"
           dark
           @click="toggle"
@@ -22,13 +22,13 @@
           <v-scroll-y-transition>
             <div class="sc-box">
               <p>
-                SubNodes Quantity :
+                {{ t('daoCollectionAnalytics.subnodesQuantity') }}:
                 <span>
                   {{ bigNumFormat(daoAmount.totalAmount, 5, 0.000001) }}</span
                 >
               </p>
               <p>
-                In Progress :
+                {{ t('daoCollectionAnalytics.inProgress') }} :
                 <span>
                   {{
                     bigNumFormat(daoAmount.runningDaoAmount, 5, 0.000001)
@@ -36,7 +36,7 @@
                 >
               </p>
               <p>
-                Closed :
+                {{ t('daoCollectionAnalytics.closed') }} :
                 <span>
                   {{
                     bigNumFormat(daoAmount.endedDaoAmount, 5, 0.000001)
@@ -44,7 +44,7 @@
                 >
               </p>
               <p>
-                Upcoming :
+                {{ t('daoCollectionAnalytics.upComing') }} :
                 <span>
                   {{
                     bigNumFormat(daoAmount.notStartedDaoAmount, 5, 0.000001)
@@ -69,6 +69,7 @@ const props = defineProps({
   },
 })
 import { useRoute } from 'vue-router'
+import { t } from '@/lang';
 const route = useRoute()
 const isLoading = ref(true)
 const daoAmount = ref() as any

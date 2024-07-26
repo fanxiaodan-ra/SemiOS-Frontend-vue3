@@ -4,8 +4,8 @@ let APP_BASE_API = ''
 let APP_OPEN_URL = ''
 let APP_LOCAL_NAME = ''
 const SlipName = 'SemiosSlip'
-// const indexNum = location ? location.origin.indexOf("protodao") : -1;
-const indexNum = 0
+const indexNum = location ? location.origin.indexOf("protodao") : -1;
+// const indexNum = 0
 const version = import.meta.env.VITE_APP_VERSION
 
 const tokenTest = [
@@ -52,7 +52,7 @@ switch (version) {
     APP_BASE_API =
       indexNum > -1
         ? 'https://test-api.protodao.io'
-        : 'http://test-api.semios.io'
+        : 'https://test-api.semios.io'
     APP_OPEN_URL = 'https://sepolia.etherscan.io'
     TOKENLIST = [...tokenTest]
     break
@@ -62,7 +62,7 @@ switch (version) {
     APP_BASE_API =
       indexNum > -1
         ? 'https://test-api.protodao.io'
-        : 'http://test-api.semios.io'
+        : 'https://test-api.semios.io'
     APP_OPEN_URL = 'https://sepolia.etherscan.io'
     TOKENLIST = [...tokenTest]
     break

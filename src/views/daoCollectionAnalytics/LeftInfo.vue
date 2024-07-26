@@ -14,34 +14,34 @@
           class="d-flex align-center mybg"
           :style="{
             'background-color': props.tab === 2 ? '#364159 !important' : '',
-            'border-color': props.tab === 2 ? '#6062aa  !important' : '',
+            'border-color': props.tab === 2 ? '#2F305B  !important' : '',
           }"
           dark
           @click="toggle"
         >
           <v-scroll-y-transition>
             <div class="sc-box">
-              <h3>Seed Nodes ERC-20 Info</h3>
+              <h3>{{ t('daoCollectionAnalytics.seedNodesErc20Info') }}</h3>
               <p>
-                Total supply :
+                {{ t('daoCollectionAnalytics.totalSupply') }} :
                 <span>{{
                   bigNumFormat(daoToken.totalSupply, 5, 0.000001)
                 }}</span>
               </p>
               <p>
-                Circulating ERC-20 :
+                {{ t('daoCollectionAnalytics.circulatingErc20') }} :
                 <span>{{
                   bigNumFormat(daoToken.daoTokenBalance, 5, 0.000001)
                 }}</span>
               </p>
               <p>
-                ETH In Redeem Pool :
+                {{ t('daoCollectionAnalytics.ethInRedeemPool') }} :
                 <span>{{
                   bigNumFormat(daoToken.redeemAssetPoolEth, 5, 0.000001)
                 }}</span>
               </p>
               <p>
-                Redeemed :
+                {{ t('daoCollectionAnalytics.redeemed') }} :
                 <span>{{
                   bigNumFormat(daoToken.redeemedErc20Amont, 5, 0.000001)
                 }}</span>
@@ -57,6 +57,8 @@
 import { bigNumFormat } from '@/utils'
 import { togetherDaoToken } from '@/api/daos'
 import { ref, onMounted } from 'vue'
+import { t } from '@/lang'
+
 const props = defineProps({
   tab: {
     type: Number,

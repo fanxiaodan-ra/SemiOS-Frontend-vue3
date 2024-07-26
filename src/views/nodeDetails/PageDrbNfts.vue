@@ -7,10 +7,10 @@
         noTopHeight="64px"
       />
       <v-main>
-        <div class="box-top">
+        <div class="box-top w-[1200px] mx-auto">
           <div class="top-icon">
             <v-btn @click="callChildMethod" size="40">
-              <i class="iconfont icon-tianjia ft24" />
+              <i class="iconfont icon-tiaojian ft18" />
             </v-btn>
           </div>
           <div class="box-icons">
@@ -59,12 +59,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { daoDrbNfts } from '@/api/works'
 import { cancelAllRequests } from '@/api/request'
 import WorkItemCard from '@/components/workItem/WorkItemCard.vue'
 import WorkItemBox from '@/components/workItem/WorkItemBox.vue'
 import CardLeftFilter from '@/components/CardLeftFilter.vue'
-import { ref, onMounted, onBeforeUnmount, reactive, watch } from 'vue'
+import useNftsStore from '@/store/nfts'
+import { useRoute } from 'vue-router'
+import { throttle } from 'lodash'
+import { ref, onMounted, onBeforeUnmount, reactive, watch, computed } from 'vue'
 const options = [
   {
     value: 0,
@@ -83,6 +85,7 @@ const options = [
     label: 'Price: Low to High',
   },
 ]
+const nftsStore = useNftsStore()
 const qvalue = ref(0)
 const query = reactive({
   sortCondition: 0,
@@ -90,16 +93,50 @@ const query = reactive({
   minPrice: 0,
   maxPrice: 999999999,
 })
-const pageSize = ref(10)
+const pageSize = ref(5)
 const pageNo = ref(1)
-const count = ref(0)
-const list = ref<any>([])
-const isAll = ref(false)
 const isLoading = ref(false)
-import { useRoute } from 'vue-router'
+
+const list = computed(() => nftsStore.nodeDetailDrbNfts || [])
+const isAll = computed(() => nftsStore.nodeDetailDrbNftsPageInfo?.isAll || false)
+
 const route = useRoute()
-const getData = async () => {
+
+const getData = async (loadFunc: Function = () => { }, queryObj: {
+  sortCondition: number
+  fixedPrice: number
+  minPrice: number
+  maxPrice: number
+  pageNo: number
+  pageSize?: number
+}) => {
   isLoading.value = true
+  try {
+    await loadFunc(queryObj)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const init = () => {
+  pageNo.value = 1
+  const queryObj = {
+    sortCondition: query.sortCondition,
+    fixedPrice: query.fixedPrice,
+    minPrice: query.minPrice,
+    maxPrice: query.maxPrice,
+    pageNo: pageNo.value,
+    daoId: route.query.id,
+  }
+  nftsStore.nodeDetailDrbNfts = []
+  nftsStore.nodeDetailDrbNftsPageInfo.isAll = false
+  workType.value === 0 && Object.assign(queryObj, { pageSize: pageSize.value })
+  getData(nftsStore.getDrbNftsInNodeDetailInit, queryObj)
+}
+
+const continueLoadData = async () => {
   const queryObj = {
     daoId: route.query.id,
     sortCondition: query.sortCondition,
@@ -109,40 +146,23 @@ const getData = async () => {
     pageSize: pageSize.value,
     pageNo: pageNo.value,
   }
-  const data: any = await daoDrbNfts(queryObj)
-  list.value = list.value.concat(data.dataList)
-  count.value = data.page.count
-  isAll.value = pageNo.value * pageSize.value >= count.value
-  isLoading.value = false
-  ifScrollHeight()
+  workType.value === 0 && Object.assign(queryObj, { pageSize: pageSize.value })
+  getData(nftsStore.getDrbNftsInNodeDetailLazyLoad, queryObj)
 }
 
-const ifScrollHeight = () => {
-  if (
-    window.scrollY > 0 &&
-    document.body.scrollHeight <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
-    !isAll.value
-  ) {
-    pageNo.value += 1
-    isLoading.value = true
-    getData()
-  }
-}
-const lazyLoading = () => {
+const lazyLoading = throttle(() => {
+  if (isAll.value || isLoading.value) return
   const scrollTop =
     document.documentElement.scrollTop || document.body.scrollTop
   const clientHeight = document.documentElement.clientHeight
   const scrollHeight = document.documentElement.scrollHeight
-  if (pageNo.value * pageSize.value < count.value) {
-    if (scrollHeight - clientHeight <= scrollTop + 560) {
-      if (isLoading.value) return
-      pageNo.value += 1
-      isLoading.value = true
-      getData()
-    }
+  if (scrollHeight - clientHeight <= scrollTop + 560) {
+    if (isLoading.value) return
+    pageNo.value += 1
+    isLoading.value = true
+    continueLoadData()
   }
-}
+}, 500)
 
 const getConditions = (val: any) => {
   cancelAllRequests()
@@ -151,9 +171,7 @@ const getConditions = (val: any) => {
   query.minPrice = val.minPrice
   query.fixedPrice = val.fixedPrice
   pageNo.value = 1
-  list.value = []
-  isAll.value = false
-  getData()
+  init()
 }
 
 const RefChild = ref()
@@ -167,17 +185,15 @@ const workType = ref(0)
 watch(
   () => workType,
   () => {
-    list.value = []
     pageNo.value = 1
-    isAll.value = false
     cancelAllRequests()
-    getData()
+    init()
   },
   { deep: true }
 )
 onMounted(() => {
   window.addEventListener('scroll', lazyLoading, true)
-  getData()
+  init()
 })
 
 onBeforeUnmount(() => {
@@ -190,7 +206,7 @@ onBeforeUnmount(() => {
   height: 100%;
 
   :deep(.v-input__control) {
-    width: 240px;
+    width: 100%;
     margin-left: auto;
   }
 }
@@ -201,10 +217,8 @@ onBeforeUnmount(() => {
   align-items: center;
   margin-left: auto;
   display: flex;
-  width: 100%;
   z-index: 4;
-  background: #1b2233;
-  padding: 0 48px;
+  background: #151925;
 
   .top-icon {
     height: 40px;
@@ -233,7 +247,7 @@ onBeforeUnmount(() => {
 }
 
 .nav-box {
-  background-color: #1b2233;
+  background-color: #151925;
 
   h4 {
     padding: 0 16px;
@@ -260,7 +274,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   color: #b3b5f2;
-  // background-color: #1b2233;
+  // background-color: #151925;
 }
 
 .box-icons {

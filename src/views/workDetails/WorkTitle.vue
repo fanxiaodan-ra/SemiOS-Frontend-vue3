@@ -190,7 +190,12 @@
                 @click="setMintNftEmitIsDialog"
                 :disabled="props.countdownData.isCountdown"
               >
-                Approve & Mint
+                {{
+                  props.dataObj.inputTokenAddress === '' &&
+                  !props.dataObj.erc20PaymentMode
+                    ? 'Mint NFT'
+                    : 'Approve & Mint'
+                }}
               </v-btn>
               <v-btn
                 block
@@ -318,13 +323,13 @@ const unTopUpMintList = ref<any>([])
 const setMintNftEmitIsDialog = async () => {
   loadingText.value =
     'Your transcation is being processed, It should be confirmed on the blockchain shortly.'
-  isDialogLoading.value = true
   mainnetAddress.value = ''
   const isTraded = await whetherItTraded(props.dataObj.daoId)
   if (!isTraded) {
     isDialogLoading.value = false
     return
   }
+  isDialogLoading.value = true
   mintTransfer()
 }
 const mintTransfer = async () => {
@@ -380,13 +385,11 @@ const isMintAndTransfer = ref(false)
 const setMintAndTransferNFTDialog = async () => {
   loadingText.value =
     'Your transcation is being processed, It should be confirmed on the blockchain shortly.'
-  isDialogLoading.value = true
   const isTraded = await whetherItTraded(props.dataObj.daoId)
   if (!isTraded) {
-    isDialogLoading.value = false
     return
   }
-  console.log('我重来都没浪过')
+  isDialogLoading.value = true
   isMintAndTransfer.value = true
   isTransferNFTDialog.value = true
 }
@@ -451,7 +454,7 @@ const goEditWork = () => {
 .title-card {
   // height: 280px;
   margin: 24px 48px;
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   display: flex;
   padding: 24px;
   box-sizing: border-box;

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="12">
     <h3 class="node-name">Basic Parameter</h3>
     <v-form ref="formRef">
       <FormRow

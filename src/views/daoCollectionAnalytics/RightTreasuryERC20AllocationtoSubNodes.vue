@@ -30,9 +30,9 @@
           >
             <v-text-field
               label="Please"
-              variant="outlined"
               density="comfortable"
               v-model="formData.amount"
+              type="number"
               @update:modelValue="
                 setInput(formData.amount, 'amount', 4, 0, 1000000000)
               "
@@ -68,7 +68,7 @@
     >
     <v-btn
       block
-      class="btnb text-none my-mgb16 my-mgt16"
+      class="btnb text-none my-4 mx-0"
       type="submit"
       @click="setUserTreasury(false)"
       >My Wallet</v-btn
@@ -80,6 +80,9 @@
 import DialogLoading from '@/components/DialogLoading.vue'
 import SlotDialog from '@/components/SlotDialog.vue'
 import FormRow from '@/components/FormRow.vue'
+import useAccount from '@/hooks/useAccount'
+
+const { getTrading } = useAccount()
 import {
   decimals,
   getAllowanceTreasury,
@@ -98,6 +101,10 @@ const props = defineProps({
   treasuryDataList: {
     type: Array,
     default: () => [],
+  },
+  userPermission: {
+    type: Object,
+    default: () => {},
   },
 })
 import { ref } from 'vue'
@@ -121,7 +128,7 @@ const isDialogLoading = ref(false)
 import useToastNotify from '@/hooks/useToastNotify'
 const { notifyErr, notifySuc } = useToastNotify()
 
-const setApprove = async (amount: number) => {
+const setApprove = async (amount: string) => {
   try {
     isDialogLoading.value = true
     const app = await approveAmount(props.initData.erc20Address, amount)
@@ -140,11 +147,12 @@ const cancelDialog = () => {
   isAllocationDialog.value = false
 }
 const pay = async () => {
+  const isTrad = await getTrading()
+  if (!isTrad) return
   const { valid } = await formRef.value.validate()
   if (!valid) return false
   if (
-    store.UserInfo.address.toLowerCase() ===
-    props.initData.ownerAddress.toLowerCase()
+    props.userPermission.isPermission
   ) {
     isAllocationDialog.value = true
   } else {
@@ -164,7 +172,7 @@ const setGrantDaoAssetPool = async (type = false) => {
     const decimalsNum = await decimals(props.initData.erc20Address)
     const amount = new BigNumber(formData.value.amount)
       .times(`1e${decimalsNum}`)
-      .toNumber()
+      .toString()
     if (!type) {
       const allowance = await getAllowanceTreasury(
         props.initData.erc20Address,
@@ -198,7 +206,7 @@ const setGrantDaoAssetPool = async (type = false) => {
 
 <style scoped lang="scss">
 .node-card {
-  background-color: #252b3a !important;
+  background-color: #1A1F2E !important;
   padding: 0 !important;
   margin: 0px;
   margin-bottom: 24px;

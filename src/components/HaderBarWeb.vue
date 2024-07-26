@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar flat class="initbgc init-hader">
+    <v-app-bar flat class="initbgc init-hader w-screen">
       <div class="logoclass" @click="goIndex">
         <i class="iconfont icon-a-SEMIOSlogozuhe"></i>
       </div>
@@ -29,7 +29,7 @@
       <v-container class="mx-auto d-flex align-center justify-end">
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props">
+            <v-btn v-bind="props" icon class="mr-1" @click="goSetupDao">
               <i class="iconfont icon-tianjia ft24" />
             </v-btn>
           </template>
@@ -41,8 +41,10 @@
               class="a-style"
             >
               <v-list-item :value="index">
-                <i class="iconfont icon-tianjia" />
-                {{ item.title }}
+                <p class="flex items-center">
+                  <i :class="`iconfont ${item.icon}`" />
+                  {{ item.title }}
+                </p>
               </v-list-item>
             </router-link>
           </v-list>
@@ -50,7 +52,7 @@
 
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn class="text-none" v-bind="props"> Explore </v-btn>
+            <v-btn class="text-none mr-1" v-bind="props" @click="goWork"> Explore </v-btn>
           </template>
           <v-list>
             <router-link
@@ -60,7 +62,7 @@
               class="a-style"
             >
               <v-list-item :value="index">
-                <i class="iconfont icon-tianjia" />
+                <i :class="`iconfont ${item.icon}`" />
                 {{ item.title }}
               </v-list-item>
             </router-link>
@@ -69,21 +71,21 @@
 
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn class="text-none" v-bind="props" @click="goDex"> Redeem </v-btn>
+            <v-btn class="text-none mr-1" v-bind="props" @click="goDex"> Redeem </v-btn>
           </template>
         </v-menu>
         <v-menu v-if="!userInfo.address">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" @click="loginWallet">
+            <v-btn v-bind="props" @click="loginWallet" icon="">
               <i class="iconfont icon-yonghu-fang-L ft24" />
             </v-btn>
           </template>
         </v-menu>
         <v-menu v-else open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props">
+            <v-btn v-bind="props" class="mr-1" icon>
               <v-avatar
-                :image="store.UserInfo.avatar || userInfo.avatar"
+                :image="userInfo.avatar"
                 size="24"
               ></v-avatar>
               <!-- <v-avatar color="grey-darken-1" size="24"></v-avatar> -->
@@ -98,19 +100,19 @@
               class="a-style"
             >
               <v-list-item :value="index" v-if="item.title !== 'Log Out'">
-                <i class="iconfont icon-tianjia" />
+                <i :class="`iconfont ${item.icon}`" />
                 {{ item.title }}
               </v-list-item>
             </router-link>
             <v-list-item @click="setProfileTab">
-              <i class="iconfont icon-tianjia" />
+              <i class="iconfont icon-log-out" />
               Log Out
             </v-list-item>
           </v-list>
         </v-menu>
         <v-menu>
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" @click="loginWallet" v-if="!userInfo.address">
+            <v-btn v-bind="props" @click="loginWallet" v-if="!userInfo.address" icon>
               <i class="iconfont icon-qianbao ft24" />
             </v-btn>
             <router-link
@@ -119,7 +121,7 @@
               v-if="userInfo.address"
             >
               <v-list-item style="padding: 0">
-                <v-btn>
+                <v-btn icon>
                   <i class="iconfont icon-qianbao ft24" />
                 </v-btn>
               </v-list-item>
@@ -135,7 +137,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import IsAcceptSignDialog from '@/components/IsAcceptSignDialog.vue'
 import { useRouter, useRoute } from 'vue-router'
 // import { aPush } from '@/utils'
@@ -147,6 +149,7 @@ const store = useUserStore()
 // }
 
 const query = ref('')
+
 const searchData = () => {
   if (!query.value) return
   router.push({
@@ -162,81 +165,86 @@ const addTabs = [
   {
     title: 'Setup Nodes',
     path: '/setupNodes',
-    icon: '',
+    icon: 'icon-dao',
   },
   {
     title: 'Add Works',
     path: '/addWork',
-    icon: '',
+    icon: 'icon-add-work',
   },
 ]
 const exploreTabs = [
   {
     title: 'Works',
     path: 'explore?type=1',
-    icon: '',
+    icon: 'icon-add-work',
   },
   {
     title: 'NFTs',
     path: 'explore?type=2',
-    icon: '',
+    icon: 'icon-nft',
   },
   {
     title: 'SubNodes',
     path: 'explore?type=3',
-    icon: '',
+    icon: 'icon-subnodes',
   },
   {
     title: 'Seed Nodes',
     path: 'explore?type=4',
-    icon: '',
+    icon: 'icon-seednodes',
   },
 ]
 const profileTabs = [
   {
     title: 'Profile',
     path: 'profile?type=1',
-    icon: '',
+    icon: 'icon-yonghu-fang-L',
   },
   {
     title: 'Wallet',
     path: 'profile?type=2',
-    icon: '',
+    icon: 'icon-wallet1',
   },
   {
     title: 'Top-up Balance',
     path: 'profile?type=3',
-    icon: '',
+    icon: 'icon-top_up_balance',
   },
   {
     title: 'Top-up Reward',
     path: 'profile?type=4',
-    icon: '',
+    icon: 'icon-top-up-banlance',
   },
   {
-    title: 'My Nodes',
+    title: 'My Created Nodes',
     path: 'profile?type=5',
-    icon: '',
+    icon: 'icon-a-MyCreatednodes',
   },
   {
     title: 'My Works',
     path: 'profile?type=6',
-    icon: '',
+    icon: 'icon-add-work',
+  },
+  {
+    title: 'My Permissions',
+    path: 'profile?type=11',
+    icon: 'icon-a-MyPermissions',
   },
   {
     title: 'Favorite',
     path: 'profile?type=7',
-    icon: '',
+    icon: 'icon-shoucang',
   },
   {
     title: 'NFT Holds',
     path: 'profile?type=9',
-    icon: '',
+    icon: 'icon-nft-holder',
   },
   {
     title: 'NFT Minted',
     path: 'profile?type=10',
-    icon: '',
+    icon: 'icon-nft-minted',
   },
 ]
 
@@ -253,6 +261,7 @@ const setProfileTab = async () => {
     avatar: '',
   }
 }
+
 const router = useRouter()
 const goIndex = () => {
   store.setNodeType(0)
@@ -262,8 +271,21 @@ const goIndex = () => {
 }
 
 const goDex = () => {
+  window.open(`${window.location.origin}/dex`, '_blank')
+}
+
+const goSetupDao = () => {
   router.push({
-    path: '/dex',
+    path: '/',
+  })
+}
+
+const goWork = () => {
+  router.push({
+    path: '/explore',
+    query: {
+      type: 1,
+    }
   })
 }
 
@@ -274,11 +296,16 @@ const userInfo = ref({
 })
 onMounted(() => {
   query.value = route.query.query as string
-  userInfo.value = store.UserInfo.address
+})
+
+watch(() => store.UserInfo, (info) => {
+  userInfo.value = info.address
     ? { ...store.UserInfo }
     : getLoginStatus(true)
-})
+}, { deep: true, immediate: true })
+
 </script>
+
 
 <style lang="scss" scoped>
 .logoclass {

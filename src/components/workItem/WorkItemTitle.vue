@@ -151,7 +151,7 @@ const setFavoriteData = async () => {
 .t-img {
   width: 68px;
   height: 68px;
-  background-color: #252b3a;
+  background-color: #1A1F2E;
   margin-right: 8px;
   flex: 0 0 auto;
   img {

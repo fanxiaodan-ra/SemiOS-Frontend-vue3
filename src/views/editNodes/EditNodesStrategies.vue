@@ -1,11 +1,19 @@
 <template>
   <div class="wh100">
-    <h2 class="h2-title">Nodes Strategies</h2>
-    <v-divider class="my-divider"></v-divider>
+    <h2 class="h2-title">{{ t('nodesStrategies.title')}}</h2>
+    <v-divider class="border-purple"></v-divider>
     <loading v-if="isLoading" />
     <div v-else>
-      <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
-        <h3 class="node-name">Nodes Strategies</h3>
+      <p class="text-center text-neutral-500 text-lg font-medium font-['Inter'] tracking-tight mb-6 mt-8">
+        {{ t('nodesStrategies.subTitle') }}
+        <router-link
+          :to="'/workDetails?id=' + userPermission.workId"
+          class="hover:text-primary-2 text-indigo-400 text-lg font-medium font-['Inter'] tracking-tight"
+          >{{ `${userPermission.daoNameNft}.${userPermission.workNumber}` }}</router-link
+        >
+      </p>
+      <v-card class="mx-auto my-pd24 max-w-[1200px] my-mgt24 my-mgb24 bg-card-1" elevation="12">
+        <h3 class="node-name">{{ t('nodesStrategies.title')}}</h3>
         <div>
           <FormNodesBuilder
             :form-input="formData"
@@ -27,18 +35,18 @@
           class="btnb fc7 text-none mr-10"
           type="submit"
           @click="goNode"
-          >Back</v-btn
+          >{{ t('common.back') }}</v-btn
         >
         <v-btn block class="btnz text-none" type="submit" @click="submit"
-          >Submit</v-btn
+          >{{ t('common.submit') }}</v-btn
         >
       </div>
     </div>
   </div>
   <DialogLoading
-    :title="'Loading'"
+    :title="t('common.loading')"
     :isLoading="isDialogLoading"
-    text="Your change is being processed, it should be finished immedately."
+    :text="t('common.processing')"
   />
 </template>
 <script setup lang="ts">
@@ -49,9 +57,12 @@ import Loading from '@/components/Loading.vue'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { blackandwhiteList } from '@/api/daos'
-
+import { t } from '@/lang'
+import usePermission from '@/hooks/useUserPermission'
+import useToastNotify from '@/hooks/useToastNotify'
+const { notifyErr } = useToastNotify()
 const route = useRoute()
-
+const { userPermission, getPermission } = usePermission()
 const formData = ref({
   workBlacklistAddress: [],
   workWhitelistAddress: [],
@@ -82,8 +93,11 @@ import useAddNodes from '@/hooks/useAddNodes'
 const { editNodeStrategies } = useAddNodes()
 const isDialogLoading = ref(false)
 const submit = async () => {
+  if (!userPermission.value.isPermission) {
+    notifyErr(t('common.noPermissionTip'), true)
+    return
+  }
   isDialogLoading.value = true
-  console.log(formData.value, 'formData....++++++++++++initData', initData)
   const isTx = await editNodeStrategies(formData.value, initData.value)
   isDialogLoading.value = false
   if (!isTx) return
@@ -100,6 +114,10 @@ const goNode = () => {
 }
 onMounted(() => {
   getData()
+  getPermission({
+    daoId: route.query.id as string,
+    permissionType: 3
+  })
 })
 </script>
 

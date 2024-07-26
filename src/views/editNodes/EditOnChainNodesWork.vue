@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto my-pd24 my-mw80 my-mgt24 my-mgb24" elevation="16">
+  <v-card class="mx-auto my-pd24 max-w-[1200px] my-mgt24 my-mgb24 bg-card-1" elevation="12">
     <h3 class="node-name">
       {{ $t('AddFormWork.title') }}
     </h3>
@@ -13,6 +13,7 @@
           :label="$t('AddFormWork.unifiedPricePlaceholder')"
           density="comfortable"
           v-model="formData.unifiedPrice"
+          type="number"
           @update:modelValue="
             setInput(formData.unifiedPrice, 'unifiedPrice', 4, 0, 999999999)
           "
@@ -33,6 +34,8 @@
             :label="$t('PleaseEnterLabel')"
             density="comfortable"
             v-model="formData.daoFloorPrice"
+            type="number"
+            :rules="[(v: any) => v >= 0.0001 || $t('common.dontLess', { num: '0.0001' })]"
             @update:modelValue="
               setInput(
                 formData.daoFloorPrice,
@@ -66,6 +69,7 @@
             :label="$t('PleaseEnterLabel')"
             density="comfortable"
             v-model="formData.doublingFactor"
+            type="number"
             @update:modelValue="
               setInput(
                 formData.doublingFactor,
@@ -86,6 +90,7 @@
           <v-text-field
             :label="$t('PleaseEnterLabel')"
             density="comfortable"
+            type="number"
             v-model="formData.growthFactor"
             @update:modelValue="
               setInput(formData.growthFactor, 'growthFactor', 1, 0, 999999999)
@@ -137,6 +142,8 @@ const setInput = (
 const formRef = ref()
 
 const setFormWork = async () => {
+  const { valid } = await formRef.value.validate()
+  if (!valid) return false
   emit('setFormData', formData)
   return true
 }
@@ -165,11 +172,3 @@ onMounted(() => {
   console.log(formData, 'formDataformDataformDataformDataformData')
 })
 </script>
-
-<style lang="scss" scoped>
-:deep(.v-messages__message) {
-  font-size: 0.75rem;
-  color: #745cd4;
-  margin-bottom: 0.375rem;
-}
-</style>

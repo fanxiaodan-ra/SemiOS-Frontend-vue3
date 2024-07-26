@@ -1,9 +1,9 @@
 <template>
   <div class="div-box">
-    <div class="pos_fix">
+    <div class="pos_fix !w-[calc(100%-55px)] min-w-[1225px]">
       <h2>My Works</h2>
-      <v-divider class="my-divider"></v-divider>
-      <div class="box-top">
+      <v-divider class="border-purple"></v-divider>
+      <div class="box-top w-[1200px]">
         <div class="box-icons">
           <v-btn-toggle v-model="workType" divided mandatory>
             <v-btn size="40">
@@ -29,12 +29,14 @@
         :isAll="isAll"
         :isLoading="isLoading"
         v-if="workType === 0"
+        @loadMore="continueLoadData"
       />
       <work-item-card
         :list="list"
         :isAll="isAll"
         :isLoading="isLoading"
         v-if="workType === 1"
+        @loadMore="continueLoadData"
       />
     </div>
   </div>
@@ -43,76 +45,64 @@
 <script setup lang="ts">
 import WorkItemCard from '@/components/workItem/WorkItemCard.vue'
 import WorkItemBox from '@/components/workItem/WorkItemBox.vue'
-import { workCreator } from '@/api/works'
+import useWorkStore from '@/store/work'
 import { cancelAllRequests } from '@/api/request'
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-const pageSize = ref(10)
-const pageNo = ref(1)
-const count = ref(0)
-const list = ref<any>([])
-const isAll = ref(false)
+import { ref, watch, computed } from 'vue'
+
+const workStore = useWorkStore()
+
+const list = computed(() => workStore.createWorks)
+const isAll = computed(() => workStore.createWorksPageInfo?.isAll || false)
+const pageSize = computed(() => workType.value === 0 ? 5 : 10)
 const isLoading = ref(false)
-const getData = async () => {
+
+const getData = async (loadFunc: Function = () => { }, done: Function = () => { }) => {
   isLoading.value = true
-  const queryObj = {
-    pageSize: pageSize.value,
-    pageNo: pageNo.value,
+  try {
+    await loadFunc(workType.value)
+    done('ok')
+  } catch (error) {
+    done('error')
+  } finally {
+    isLoading.value = false
   }
-  const data: any = await workCreator(queryObj)
-  list.value = list.value.concat(data.dataList)
-  count.value = data.page.count
-  isAll.value = pageNo.value * pageSize.value >= count.value
-  isLoading.value = false
-  ifScrollHeight()
 }
 
-const ifScrollHeight = () => {
-  if (
-    window.scrollY > 0 &&
-    document.body.scrollHeight <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
-    !isAll.value
-  ) {
-    pageNo.value += 1
-    isLoading.value = true
-    getData()
+const init = async () => {
+  window.scrollTo(0, 0)
+  if (workStore.createWorks.length > pageSize.value) {
+    workStore.createWorks = [
+      ...workStore.createWorks.slice(0, pageSize.value),
+    ]
+    workStore.createWorksPageInfo.isAll = false
+    workStore.createWorksQuery.pageNo = 1
+  } else {
+    workStore.createWorksQuery.pageNo = 0
+    workStore.createWorksPageInfo = {
+      isAll: false,
+      count: 0,
+    }
+    workStore.createWorks = []
   }
 }
-const lazyLoading = () => {
-  const scrollTop =
-    document.documentElement.scrollTop || document.body.scrollTop
-  const clientHeight = document.documentElement.clientHeight
-  const scrollHeight = document.documentElement.scrollHeight
-  if (pageNo.value * pageSize.value < count.value) {
-    if (scrollHeight - clientHeight <= scrollTop + 560) {
-      if (isLoading.value) return
-      pageNo.value += 1
-      isLoading.value = true
-      getData()
-    }
-  }
+
+const continueLoadData = async ({
+  done,
+}: {
+  done: (val: string) => void
+}) => {
+  workStore.createWorksQuery.pageNo += 1
+  getData(workStore.getWorksInCreateLazyLoad, done)
 }
 
 const workType = ref(0)
 watch(
-  () => workType,
+  () => workType.value,
   () => {
-    list.value = []
-    pageNo.value = 1
-    isAll.value = false
     cancelAllRequests()
-    getData()
-  },
-  { deep: true }
+    init()
+  }
 )
-onMounted(() => {
-  window.addEventListener('scroll', lazyLoading, true)
-  getData()
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', lazyLoading, true)
-})
 </script>
 
 <style lang="scss" scoped>
@@ -132,8 +122,6 @@ h2 {
   text-align: center;
 }
 .work-card-box {
-  width: 80%;
-  margin: 0 auto;
   padding-top: 24px;
   margin-top: 150px;
 }
@@ -144,7 +132,6 @@ h2 {
   :deep(.v-btn-group--density-default.v-btn-group) {
     height: 40px;
   }
-  width: 80%;
   margin: 24px auto;
   .box-icons {
     text-align: end;

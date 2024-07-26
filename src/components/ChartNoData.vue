@@ -1,5 +1,5 @@
 <template>
-  <div class="no-data">
+  <div class="no-data font-bold">
     <div>
       <p><v-icon>mdi-clock-time-eight-outline</v-icon></p>
       <h4>{{ props.title }}</h4>
@@ -31,7 +31,7 @@ const props = defineProps({
   text-align: center;
   i {
     font-size: 28px;
-    color: #6062aa;
+    color: #2F305B;
   }
   h4 {
     margin: 12px 0;

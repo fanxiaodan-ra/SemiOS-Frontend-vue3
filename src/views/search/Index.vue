@@ -1,7 +1,7 @@
 <template>
   <Loading v-if="isLoading" style="margin: auto" />
-  <v-card class="exploe-card" v-else>
-    <div class="exploe-hedar">
+  <v-card class="exploe-card bg-transparent" v-else>
+    <div class="exploe-hedar min-w-[1280px]">
       <v-tabs
         v-model="tab"
         fixed-tabs
@@ -31,10 +31,11 @@
 <script setup lang="ts">
 import Loading from '@/components/Loading.vue'
 import { searchAmount } from '@/api/daos'
-import { ref, onMounted, shallowRef, defineAsyncComponent } from 'vue'
-const Works = defineAsyncComponent(() => import('./Works.vue'))
-const Nodes = defineAsyncComponent(() => import('./Nodes.vue'))
-const SeedNodes = defineAsyncComponent(() => import('./SeedNodes.vue'))
+import { ref, onMounted, shallowRef } from 'vue'
+import Works from './Works.vue'
+import Nodes from './Nodes.vue'
+import SeedNodes from './SeedNodes.vue'
+
 const currentCopmonent = shallowRef([Works, Nodes, SeedNodes])
 const tab = ref(1)
 
@@ -51,13 +52,18 @@ const setTab = () => {
 const amountObj = ref({ workAmount: 0, daoAmount: 0, seedNodesAmount: 0 })
 import { useRoute } from 'vue-router'
 const route = useRoute()
-const isLoading = ref(true)
+const isLoading = ref(false)
 const getData = async () => {
   if (route.query.query) {
-    isLoading.value = true
-    const res = await searchAmount(route.query.query)
-    amountObj.value = res.data
-    isLoading.value = false
+    try {
+      isLoading.value = true
+      const res = await searchAmount(route.query.query)
+      amountObj.value = res.data
+    } catch(e) {
+      console.error(e)
+    } finally {
+      isLoading.value = false
+    }
   }
 }
 onMounted(() => {
@@ -73,11 +79,13 @@ onMounted(() => {
 }
 
 .exploe-hedar {
-  border-bottom: 0.0625rem solid #6062aa !important;
+  border-bottom: 0.0625rem solid #2F305B !important;
   position: fixed;
   width: 100%;
   z-index: 9999;
-  background: #1b2233;
+  background: #151925;
+  padding-top: 34px;
+  padding-bottom: 10px;
 }
 
 .v-container {

@@ -1,11 +1,10 @@
 <template>
   <div class="tab-box">
     <h5>
-      This DAO has opened Unified Pricing Mode, all works under this DAO will be
-      minted at the unified price set by the starter.
+      {{ t('unifiedPriceTab.title') }}
     </h5>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Unified Price </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.unifiedPrice') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.canvasCurrentPrice }}
         <TokenIcon
@@ -20,19 +19,19 @@
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Sub Nodes Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.subNodesFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.fixedDaoReserveRatio.daoMintFee }}%
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Builder Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.builderFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.fixedDaoReserveRatio.canvasMintFee }}%
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Semios Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.semiosFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         <span class="old-fee">2.5 </span>
         {{ props.dataObj.fixedDaoReserveRatio.d4aMintFee }}%
@@ -42,6 +41,7 @@
 </template>
 <script lang="ts" setup>
 import TokenIcon from '@/components/TokenIcon.vue'
+import { t } from '@/lang'
 const props = defineProps({
   dataObj: {
     type: Object,

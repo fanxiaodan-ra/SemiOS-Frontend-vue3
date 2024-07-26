@@ -1,87 +1,50 @@
 <template>
-  <div class="profile-box">
+  <div class="profile-box min-w-[1280px]">
     <v-layout>
       <v-navigation-drawer expand-on-hover rail>
         <div class="n-top"></div>
         <v-list class="avatar-box">
-          <v-list-item
-            :prepend-avatar="store.UserInfo.avatar || userInfo.avatar"
-            :title="userInfo.name"
-            :subtitle="ellipsis(userInfo.address)"
-          >
+          <v-list-item :prepend-avatar="store.UserInfo.avatar || userInfo.avatar" :title="userInfo.name"
+            :subtitle="ellipsis(userInfo.address)">
           </v-list-item>
         </v-list>
-        <v-divider class="my-divider"></v-divider>
+        <v-divider class="border-purple"></v-divider>
 
         <v-list density="compact" nav>
-          <router-link
-            v-for="(item, index) in profileTabs"
-            :key="item.title"
-            :to="item.path"
-            class="a-style"
-          >
-            <v-list-item :value="index">
+          <template v-for="(item, index) in profileTabs" :key="item.title" class="a-style">
+            <v-list-group :value="item.title" v-if="item?.children && item?.children.length > 0">
+              <template v-slot:activator="{ props }">
+                <v-list-item v-bind="props" :title="item.title" :active="item.types.includes(type)"
+                  color="rgb(179, 181, 242)">
+                  <template v-slot:prepend>
+                    <v-icon :class="`iconfont ${item.icon} ft24`" />
+                  </template>
+                </v-list-item>
+              </template>
+
+              <template v-for="i in item.children" class="a-style">
+                <v-list-item @click="navListClick(i.type)" :value="i.title" color="rgb(179, 181, 242)"
+                  :active="type === i.type">
+                  <v-list-item-title>
+                    {{ i.title }}
+                  </v-list-item-title>
+                </v-list-item>
+              </template>
+            </v-list-group>
+            <v-list-item v-else :value="index" @click="navListClick(item.type as number)" :active="type === item.type"
+              color="rgb(179, 181, 242)" active-class="no-bg">
               <template v-slot:prepend>
-                <v-icon class="iconfont icon-tianjia ft24" />
+                <v-icon :class="`iconfont ${item.icon} ft24`" />
               </template>
               <v-list-item-title>
                 {{ item.title }}
               </v-list-item-title>
             </v-list-item>
-          </router-link>
-
-          <v-list-group value="Favorite">
-            <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" title="Favorite">
-                <template v-slot:prepend>
-                  <v-icon class="iconfont icon-tianjia ft24" />
-                </template>
-              </v-list-item>
-            </template>
-
-            <router-link class="a-style" to="profile?type=7">
-              <v-list-item value="Nodes">
-                <v-list-item-title class="mgl56"> Nodes </v-list-item-title>
-              </v-list-item>
-            </router-link>
-
-            <router-link class="a-style" to="profile?type=8">
-              <v-list-item value="Works">
-                <v-list-item-title class="mgl56"> Works </v-list-item-title>
-              </v-list-item>
-            </router-link>
-          </v-list-group>
-
-          <router-link class="a-style" to="profile?type=9">
-            <v-list-item value="NFT Holds" title="NFT Holds">
-              <template v-slot:prepend>
-                <v-icon class="iconfont icon-tianjia ft24" />
-              </template>
-            </v-list-item>
-          </router-link>
-
-          <router-link class="a-style" to="profile?type=10">
-            <v-list-item value="NFT Minted" title="NFT Minted">
-              <template v-slot:prepend>
-                <v-icon class="iconfont icon-tianjia ft24" />
-              </template>
-            </v-list-item>
-          </router-link>
-
-          <v-list-item @click="setProfileTab">
-            <template v-slot:prepend>
-              <v-icon class="iconfont icon-tianjia ft24" />
-            </template>
-            <v-list-item-title> Log Out </v-list-item-title>
-          </v-list-item>
+          </template>
         </v-list>
       </v-navigation-drawer>
 
-      <component
-        ref="childRef"
-        :is="currentCopmonent[type - 1]"
-        :userInfo="userInfo"
-      >
+      <component class="w-full ml-[55px]" ref="childRef" :is="currentCopmonent[type - 1]" :userInfo="userInfo">
       </component>
     </v-layout>
   </div>
@@ -89,26 +52,24 @@
 
 <script setup lang="ts">
 import { ellipsis } from '@/utils'
-import { ref, onMounted, shallowRef, defineAsyncComponent } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, shallowRef } from 'vue'
+import Profile from './Profile.vue';
+import Wallet from './Wallet.vue';
+import TopUpBalance from './TopUpBalance.vue';
+import TopUpReward from './TopUpReward.vue';
+import MyNodes from './MyNodes.vue';
+import MyWorks from './MyWorks.vue';
+import FavoritesNodes from './FavoritesNodes.vue';
+import FavoritesWorks from './FavoritesWorks.vue';
+import NFTHolds from './NFTHolds.vue';
+import NFTMinted from './NFTMinted.vue';
+import MyPermissions from './MyPermissions.vue';
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 import useUserStore from '@/store'
 const store = useUserStore()
 
-const Profile = defineAsyncComponent(() => import('./Profile.vue'))
-const Wallet = defineAsyncComponent(() => import('./Wallet.vue'))
-const TopUpBalance = defineAsyncComponent(() => import('./TopUpBalance.vue'))
-const TopUpReward = defineAsyncComponent(() => import('./TopUpReward.vue'))
-const MyNodes = defineAsyncComponent(() => import('./MyNodes.vue'))
-const MyWorks = defineAsyncComponent(() => import('./MyWorks.vue'))
-const FavoritesNodes = defineAsyncComponent(
-  () => import('./FavoritesNodes.vue')
-)
-const FavoritesWorks = defineAsyncComponent(
-  () => import('./FavoritesWorks.vue')
-)
-const NFTHolds = defineAsyncComponent(() => import('./NFTHolds.vue'))
-const NFTMinted = defineAsyncComponent(() => import('./NFTMinted.vue'))
 const currentCopmonent = shallowRef([
   Profile,
   Wallet,
@@ -120,72 +81,102 @@ const currentCopmonent = shallowRef([
   FavoritesWorks,
   NFTHolds,
   NFTMinted,
+  MyPermissions,
 ])
+console.log(route, 'route')
 const profileTabs = [
   {
     title: 'Profile',
-    path: 'profile?type=1',
-    icon: '',
+    type: 1,
+    icon: 'icon-profile',
   },
   {
     title: 'Wallet',
-    path: 'profile?type=2',
-    icon: '',
+    type: 2,
+    icon: 'icon-wallet1',
   },
   {
     title: 'Top-up Balance',
-    path: 'profile?type=3',
-    icon: '',
+    type: 3,
+    icon: 'icon-top_up_balance',
   },
   {
     title: 'Top-up Reward',
-    path: 'profile?type=4',
-    icon: '',
+    type: 4,
+    icon: 'icon-top-up-banlance',
   },
   {
-    title: 'My Nodes',
-    path: 'profile?type=5',
-    icon: '',
+    title: 'My Created Nodes',
+    type: 5,
+    icon: 'icon-a-MyCreatednodes',
   },
   {
     title: 'My Works',
-    path: 'profile?type=6',
-    icon: '',
+    type: 6,
+    icon: 'icon-add-work',
   },
-  // {
-  //   title: 'Favorite',
-  //   path: 'profile?type=6',
-  //   icon: '',
-  // },
-  // {
-  //   title: 'NFT Holds',
-  //   path: 'profile?type=7',
-  //   icon: '',
-  // },
-  // {
-  //   title: 'NFT Minted',
-  //   path: 'profile?type=8',
-  //   icon: '',
-  // },
+  {
+    title: 'My Permissions',
+    type: 11,
+    icon: 'icon-a-MyPermissions',
+  },
+  {
+    title: 'Favorite',
+    icon: 'icon-shoucang',
+    types: [7, 8],
+    children: [
+      {
+        title: 'Nodes',
+        icon: 'icon-dao',
+        type: 7,
+      },
+      {
+        title: 'Works',
+        icon: 'icon-add-work',
+        type: 8,
+      }
+    ]
+  },
+  {
+    title: 'NFT Holds',
+    type: 9,
+    icon: 'icon-nft-holder',
+  },
+  {
+    title: 'NFT Minted',
+    type: 10,
+    icon: 'icon-nft-minted',
+  }
 ]
 import useAccount from '@/hooks/useAccount'
-const { setLogOut, getLoginStatus } = useAccount()
-const setProfileTab = () => {
-  setLogOut()
-}
+const { getLoginStatus } = useAccount()
 const type = ref<any>(1)
 const userInfo = ref({
   address: '',
   avatar: '',
   name: '',
 })
+const navListClick = (clickType: number) => {
+  type.value = clickType
+  router.push({
+    path: '/profile',
+    query: {
+      type: clickType,
+    },
+  })
+}
 onMounted(() => {
-  type.value = route.query.type
+  type.value = Number(route.query.type)
   userInfo.value = getLoginStatus(true)
   console.log(userInfo, 'userInfo')
 })
 </script>
 <style scoped lang="scss">
+.no-bg {
+  :deep(.v-list-item__overlay) {
+    background: none !important;
+  }
+}
 .profile-box {
   height: 100%;
   flex: 1;
@@ -195,7 +186,7 @@ onMounted(() => {
 .v-navigation-drawer {
   position: fixed !important;
   z-index: 2;
-  background: #1b2233;
+  background: #151925;
   transform: none !important;
 }
 

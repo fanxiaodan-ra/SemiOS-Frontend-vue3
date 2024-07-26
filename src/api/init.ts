@@ -1,4 +1,6 @@
-import { service } from './request'
+// import { service } from './request'
+import service from './request'
+
 const contractAbi = () => {
   return service({
     url: `/api/contract/abi`,

@@ -23,6 +23,7 @@ watch(
   { immediate: true }
 )
 import { APP_LOCAL_NAME } from '@/config.ts'
+
 const getAbi = async () => {
   const abi = window.localStorage.getItem(APP_LOCAL_NAME + 'PactAbi')
   if (abi) {
@@ -42,6 +43,12 @@ onMounted(async () => {
   window.addEventListener('resize', updateScreenWidth)
   await setLogin()
   await getAbi()
+  window.addEventListener('offline', () => {
+    window.location.reload()
+  })
+  window.addEventListener('online', () => {
+    window.location.reload()
+  })
 })
 
 const screenWidth = reactive({
@@ -56,27 +63,12 @@ watchEffect(() => {
   store.setScreenWidth(screenWidth.width)
 })
 
-// setTimeout(() => {
-//   isShow.value = false;
-// }, 2000);
 </script>
 <style>
 #app {
   height: 100%;
   font-family: auto;
-  background: #1b2233;
-}
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background: #cecece;
+  background: #151925;
+  min-width: 1280px;
 }
 </style>

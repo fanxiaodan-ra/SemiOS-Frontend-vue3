@@ -1,27 +1,24 @@
 <template>
-  <div class="t-card">
-    <v-card
-      v-for="(item, idx) in props.list"
-      :key="item.imgUrl + idx"
-      class="msg-grow"
+    <List 
+      :list="props.list" 
+      :isLoading="props.isLoading"
+      :isAll="isAll" 
+      @loadMore="handleLoadMore"
     >
-      <work-item-title :data-obj="item" />
-      <work-item-details :data-obj="item" />
-    </v-card>
-    <table-loading
-      :is-loading="props.isLoading"
-      :list="props.list"
-      :isAll="props.isAll"
-      :isSearch="props.isSearch"
-      :searchType="props.searchType"
-    />
-  </div>
+      <template v-slot:work-item-title="{ dataObj }">
+        <WorkItemTitle :data-obj="dataObj" />
+        <WorkItemDetails :data-obj="dataObj" />
+      </template>
+    </List>
 </template>
 
 <script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
+import List from '../List.vue'
 import WorkItemTitle from './WorkItemTitle.vue'
 import WorkItemDetails from './WorkItemDetails.vue'
-import TableLoading from '../TableLoading.vue'
+type InfiniteScrollStatus = 'ok' | 'empty' | 'loading' | 'error';
+
 const props = defineProps({
   list: <any>{
     type: Array,
@@ -44,63 +41,13 @@ const props = defineProps({
     default: 0,
   },
 })
-</script>
 
-<style scoped lang="scss">
-.t-card {
-  padding: 0 48px;
-  :deep(.v-card) {
-    background-color: #252b3a !important;
-    padding: 20px;
-    box-sizing: border-box;
-    margin-bottom: 24px;
-  }
-  .card-title {
-    display: flex;
-    .t-img {
-      width: 68px;
-      height: 68px;
-      background-color: #252b3a;
-      margin-right: 24px;
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-  }
-  .t-name {
-    flex: 1;
-    h4 {
-      color: #bbbaba;
-      font-size: 20px;
-      font-weight: 500;
-      margin: 0;
-      margin-bottom: 4px;
-    }
-    span {
-      color: #9e9e9e;
-      font-family: Inter;
-      font-size: 12px;
-      font-weight: 400;
-    }
-  }
-  .t-collect {
-    width: 200px;
-    margin-left: auto;
-    text-align: end;
-    i {
-      font-size: 18px;
-    }
-    i:hover {
-      font-size: 22px;
-    }
-    .t-num {
-      margin-left: 12px;
-    }
-  }
+const emits = defineEmits(['loadMore'])
+
+const handleLoadMore = ({ done }: {
+  done: (status: InfiniteScrollStatus) => void
+}) => {
+  if (props.isAll) return
+  emits('loadMore', { done })
 }
-.msg-grow {
-  padding: 0 48px;
-}
-</style>
+</script>

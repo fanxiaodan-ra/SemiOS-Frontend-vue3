@@ -7,7 +7,7 @@ import { BigNumber } from 'bignumber.js'
 import { decimals, sig } from '@/common/web3service'
 
 export default function useAddWork() {
-  const { notifyErr, notifySuc } = useToastNotify()
+  const { notifyErr } = useToastNotify()
   const { getTrading, getSig } = useAccount()
 
   const addWork = async (formData: any) => {
@@ -69,18 +69,19 @@ export default function useAddWork() {
         createSignHash: signature,
         workDescription: formData.workDescription,
         workUriRandom: workInfo.workUriRandom,
-        priceType: formData.priceType === 2 ? 0 : 1,
-        fixedPrice: formData.priceType === 2 ? null : formData.fixedPrice,
+        priceType: formData.pethodType === 1 ? 0 : 1,
+        fixedPrice: formData.pethodType === 1 ? null : formData.fixedPrice,
       }
       console.log(req, '我是创建work参数')
-      const data = await workCreate(req)
+      const data:any = await workCreate(req)
       if (data.resultCode === 100) return data.data.workId
-      notifyErr(data.resultDesc, true)
-      return false
-    } catch (error) {
+    } catch (error:any) {
       console.log(error, 'error')
-      const err = JSON.stringify(error)
-      notifyErr('User denied message signature.', true)
+      if (error.resultDesc) {
+        notifyErr(error.resultDesc, true)
+      } else {
+        notifyErr('User denied message signature.', true)
+      }
       return false
     }
   }

@@ -21,8 +21,7 @@
                 <v-icon>mdi-plus</v-icon>
               </p>
               <p>
-                Click here to Launch Sub Nodes for this series of Nodes, Only
-                Seed Nodes Starter can set ERC- 20 Tokens Allocation.
+                {{ t('daoCollectionAnalytics.leftBtnDesc') }}
               </p>
             </div>
           </v-scroll-y-transition>
@@ -35,6 +34,7 @@
 import { togetherDaoAmount } from '@/api/daos'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { t } from '@/lang'
 const route = useRoute()
 const router = useRouter()
 const goSetupdao = () => {

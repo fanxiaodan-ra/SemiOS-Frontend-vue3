@@ -28,16 +28,17 @@
     </div>
   </div>
   <div :class="!isMore ? 'view-more' : 'has-more'" v-if="isBtn"></div>
-  <div class="icons" @click="isMore = !isMore" v-if="isBtn">
-    {{ isMore ? 'See More' : 'See Less' }}
-    <v-icon color="#b3b5f2" class="">
+  <div class="icons text-primary-1" @click="isMore = !isMore" v-if="isBtn">
+    {{ isMore ? 'See Less' : 'See More' }}
+    <v-icon color="#8C91FF" class="">
       {{ isMore ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
     </v-icon>
   </div>
 </template>
 
 <script setup lang="ts">
-import { MdPreview } from 'md-editor-v3'
+import { MdPreview, config } from 'md-editor-v3'
+import LinkAttr from 'markdown-it-link-attributes'
 import 'md-editor-v3/lib/preview.css'
 
 const props = defineProps({
@@ -51,6 +52,27 @@ const props = defineProps({
   },
 })
 
+config({
+  markdownItPlugins(plugins) {
+    return [
+      ...plugins,
+      {
+        type: 'linkAttr',
+        plugin: LinkAttr,
+        options: {
+          matcher(href: string) {
+            // If markdown-it-anchor is used.
+            // Anchor links at the heading should be ignored.
+            return !href.startsWith('#')
+          },
+          attrs: {
+            target: '_blank',
+          },
+        },
+      },
+    ]
+  },
+})
 import { onMounted, ref } from 'vue'
 const ewRef = ref()
 const isMore = ref(false)
@@ -104,7 +126,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #b3b5f2;
   i {
     display: flex;
   }

@@ -1,46 +1,32 @@
 <template>
   <div v-if="isLoading" class="card-loading mypage">
-    <v-skeleton-loader
-      elevation="12"
-      height="100%"
-      type="list-item,list-item,list-item,list-item"
-    ></v-skeleton-loader>
+    <v-skeleton-loader elevation="12" height="100%" type="list-item,list-item,list-item,list-item"></v-skeleton-loader>
   </div>
 
   <v-row class="mypage" v-else>
     <v-col>
       <v-item v-slot="{ toggle }">
-        <v-card
-          :color="props.tab === 5 ? 'primary' : ''"
-          class="d-flex align-center mybg"
-          :style="{
+        <v-card :color="props.tab === 5 ? 'primary' : ''" class="d-flex align-center mybg" :style="{
             'background-color': props.tab === 5 ? '#364159 !important' : '',
-            'border-color': props.tab === 5 ? '#6062aa  !important' : '',
-          }"
-          dark
-          @click="toggle"
-        >
+            'border-color': props.tab === 5 ? '#2F305B  !important' : '',
+          }" dark @click="toggle">
           <v-scroll-y-transition>
             <div class="sc-box">
-              <p>
-                Incentive Plan :
-                <span>{{ bigNumFormat(daoPlan.planTotal, 5, 0.000001) }}</span>
+              <p class="!text-base">
+                {{ t('daoCollectionAnalytics.incentivePlan') }} :
+                <span>{{ planTotal }}</span>
               </p>
               <p>
-                In Progress :
-                <span>{{
-                  bigNumFormat(daoPlan.planOngoing, 5, 0.000001)
-                }}</span>
+                {{ t('daoCollectionAnalytics.inProgress') }} :
+                <span>{{ planOngoing }}</span>
               </p>
               <p>
-                Closed :
-                <span>{{ bigNumFormat(daoPlan.planEnd, 5, 0.000001) }}</span>
+                {{ t('daoCollectionAnalytics.closed') }} :
+                <span>{{ planEnd }}</span>
               </p>
               <p>
-                Upcoming :
-                <span>{{
-                  bigNumFormat(daoPlan.planNotStarted, 5, 0.000001)
-                }}</span>
+                {{ t('daoCollectionAnalytics.upComing') }} :
+                <span>{{ planNotStarted }}</span>
               </p>
             </div>
           </v-scroll-y-transition>
@@ -51,8 +37,9 @@
 </template>
 <script setup lang="ts">
 import { bigNumFormat } from '@/utils'
-import { togetherPlan } from '@/api/daos'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import useDaoColAnsStore from '@/store/daoColAns'
+
 const props = defineProps({
   tab: {
     type: Number,
@@ -60,18 +47,37 @@ const props = defineProps({
   },
 })
 import { useRoute } from 'vue-router'
+import { t } from '@/lang';
 const route = useRoute()
 const isLoading = ref(true)
-const daoPlan = ref() as any
+const store = useDaoColAnsStore()
+
+const daoPlan = computed(() => store.togetherPlan)
+
+const planTotal = computed(() => {
+  return bigNumFormat(daoPlan.value.planTotal, 5, 0.000001)
+})
+const planOngoing = computed(() => {
+  return bigNumFormat(daoPlan.value.planOngoing, 5, 0.000001)
+})
+
+const planEnd = computed(() => {
+  return bigNumFormat(daoPlan.value.planEnd, 5, 0.000001)
+})
+
+const planNotStarted = computed(() => {
+  return bigNumFormat(daoPlan.value.planNotStarted, 5, 0.000001)
+})
 const getData = async () => {
   isLoading.value = true
   const query = {
-    daoId: route.query.id,
+    daoId: route.query.id as string,
   }
-
-  const daoPlanRes = await togetherPlan(query)
-  daoPlan.value = daoPlanRes.data
-  isLoading.value = false
+  try {
+    await store.getTogetherPlan(query)
+  } finally {
+    isLoading.value = false
+  }
 }
 onMounted(() => {
   getData()

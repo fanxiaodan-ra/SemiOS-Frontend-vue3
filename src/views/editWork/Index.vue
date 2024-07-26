@@ -2,7 +2,7 @@
   <loading v-if="isLoading" />
   <div class="edit-box" v-else>
     <h2>Edit Information</h2>
-    <v-divider class="my-divider"></v-divider>
+    <v-divider class="border-purple"></v-divider>
     <BasicParameter
       v-if="formData.workStatus === 0"
       :dataObj="formData"
@@ -77,9 +77,11 @@ import useAccount from '@/hooks/useAccount'
 const { getSig } = useAccount()
 const isDialogLoading = ref(false)
 const submit = async () => {
-  const isNext = await childRef.value.setData()
+  if (formData.value.workStatus === 0) {
+    const isNext = await childRef.value.setData()
+    if (!isNext) return
+  }
   await childSocialRef.value.setData()
-  if (!isNext) return
   try {
     isDialogLoading.value = true
 

@@ -17,6 +17,11 @@
       :topUpBalanceList="topUpBalanceList"
       v-if="dataObj.workStatus === 1 && topUpBalanceList.length > 0"
     />
+    <NftPermission
+      :daoId="dataObj.projectId"
+      :isOwner="dataObj.ownerAddress === store.UserInfo.address"
+      v-if="dataObj.workStatus === 1"
+    />
     <WorkCurrent :dataObj="dataObj" />
     <WorkTitle
       :dataObj="dataObj"
@@ -40,9 +45,10 @@ import WorkDetail from './WorkDetail.vue'
 import WorkCurrent from './WorkCurrent.vue'
 import WorkDescription from './WorkDescription.vue'
 import WorkTopBalance from './WorkTopBalance.vue'
+import NftPermission from './NftPermission.vue'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-// import useUserStore from '@/store'
-// const store = useUserStore()
+import useUserStore from '@/store'
+const store = useUserStore()
 import { workDetail, workDetailNft } from '@/api/works'
 import { useRoute } from 'vue-router'
 const route = useRoute()

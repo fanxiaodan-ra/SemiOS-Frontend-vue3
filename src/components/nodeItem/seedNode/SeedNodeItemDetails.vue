@@ -14,7 +14,7 @@
           >SubNodes Quantity</v-tab
         >
         <v-tab selected-class="custom-tabs" :value="3" class="text-none"
-          >Seed Nodes Erc-20 Info</v-tab
+          >Seed Nodes ERC-20 Info</v-tab
         >
         <v-tab selected-class="custom-tabs" :value="4" class="text-none"
           >Maker</v-tab
@@ -23,6 +23,7 @@
           >Treasury</v-tab
         >
       </v-tabs>
+      <v-divider class="border-purple mt-2"></v-divider>
     </div>
     <v-window v-model="tab" class="det-box">
       <v-window-item v-for="n in 5" :key="n" :value="n">
@@ -39,16 +40,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef, computed, defineAsyncComponent } from 'vue'
-const ItemMembers = defineAsyncComponent(() => import('./ItemMembers.vue'))
-const ItemSubNodesQuantity = defineAsyncComponent(
-  () => import('./ItemSubNodesQuantity.vue')
-)
-const ItemSeedNodesInfo = defineAsyncComponent(
-  () => import('./ItemSeedNodesInfo.vue')
-)
-const ItemMaker = defineAsyncComponent(() => import('./ItemMaker.vue'))
-const ItemTreasury = defineAsyncComponent(() => import('./ItemTreasury.vue'))
+import { ref, shallowRef, computed } from 'vue'
+import ItemMembers from './ItemMembers.vue';
+import ItemSubNodesQuantity from './ItemSubNodesQuantity.vue';
+import ItemSeedNodesInfo from './ItemSeedNodesInfo.vue';
+import ItemMaker from './ItemMaker.vue';
+import ItemTreasury from './ItemTreasury.vue';
+
 const props = defineProps({
   dataObj: {
     type: Object,

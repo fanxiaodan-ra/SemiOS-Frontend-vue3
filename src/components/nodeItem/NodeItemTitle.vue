@@ -1,11 +1,11 @@
 <template>
-  <div class="card-title">
+  <div class="card-title items-start">
     <div class="t-img"><img :src="props.dataObj.daoLogoUrl" alt="" /></div>
     <div class="t-box">
-      <div style="display: flex; flex: 1">
-        <h4>
+      <div class="flex flex-1">
+        <h4 class="text-white flex items-end">
           {{ truncateString(props.dataObj.daoName) }}
-          <span>{{ truncateString(props.dataObj.erc20Name) }}</span>
+          <span class="leading-5">{{ truncateString(props.dataObj.erc20Name) }}</span>
         </h4>
         <div class="t-collect" v-if="isFavorited">
           <div class="favo-box">
@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-      <p>
+      <p class="leading-5">
         {{ props.dataObj.daoDescription }}
       </p>
     </div>
@@ -68,7 +68,7 @@ const setFavoriteData = async () => {
 .t-img {
   width: 68px;
   height: 68px;
-  background-color: #252b3a;
+  background-color: #1A1F2E;
   margin-right: 24px;
   flex: 0 0 auto;
   img {
@@ -88,8 +88,6 @@ const setFavoriteData = async () => {
     margin: 0;
     margin-bottom: 4px;
     flex: 1;
-
-    height: 32px;
     display: flex;
     align-items: flex-end;
   }
@@ -98,7 +96,8 @@ const setFavoriteData = async () => {
     font-family: Inter;
     font-size: 12px;
     font-weight: 400;
-    margin-left: 24px;
+    margin-left: 16px;
+    line-height: 24px;
   }
   p {
     color: #9e9e9e;
@@ -106,7 +105,6 @@ const setFavoriteData = async () => {
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 14px;
     letter-spacing: 0.2px;
     margin: 0;
     overflow: hidden;

@@ -13,6 +13,7 @@
               density="comfortable"
               append-inner-icon="mdi-percent-outline"
               v-model="formData.royalty.builder"
+              type="number"
               @update:modelValue="
                 setInput(
                   formData.royalty.builder,
@@ -32,6 +33,7 @@
               density="comfortable"
               append-inner-icon="mdi-percent-outline"
               v-model="formData.royalty.minter"
+              type="number"
               @update:modelValue="
                 setInput(
                   formData.royalty.minter,
@@ -64,7 +66,7 @@
               v-model="formData.royalty.pDao"
               disabled
             >
-              <span class="old-fee">2.5</span>
+              <span class="old-fee">{{ t('AddFormTokenomicsStructure.oldFee') }}</span>
             </v-text-field>
           </v-col>
         </v-row>
@@ -76,6 +78,8 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import { reactive, onMounted, watch } from 'vue'
+import { t } from '@/lang'
+
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -112,7 +116,7 @@ const setInput = (
   min = 0,
   max = Infinity
 ) => {
-  formData.royalty[type] = oninputNum(val, position, min, max)
+  formData.royalty[type] = Number(oninputNum(val, position, min, max))
   if (type === 'builder') {
     if (formData.royalty.builder >= 100 - formData.royalty.pDao) {
       formData.royalty.subDao = 0

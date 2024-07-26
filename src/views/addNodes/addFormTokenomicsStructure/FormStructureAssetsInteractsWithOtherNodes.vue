@@ -196,7 +196,7 @@ onMounted(() => {
     ETHOtherNodesList.value = props.initData.daoEthAllocationVos.map(
       (item: any) => {
         return {
-          name: item.projectId,
+          projectId: item.projectId,
           value: item.royaltyProportion,
           daoName: item.daoName,
         }
@@ -205,7 +205,7 @@ onMounted(() => {
     ERCOtherNodeslist.value = props.initData.daoTokenAllocationVos.map(
       (item: any) => {
         return {
-          name: item.projectId,
+          projectId: item.projectId,
           value: item.royaltyProportion,
           daoName: item.daoName,
         }

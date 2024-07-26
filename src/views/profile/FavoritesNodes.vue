@@ -1,78 +1,72 @@
 <template>
-  <div class="div-box">
-    <div class="pos_fix">
+  <div class="div-box items-center">
+    <div class="pos_fix !w-[calc(100%-55px)] min-w-[1225px]">
       <h2>Favorite Nodes</h2>
-      <v-divider class="my-divider"></v-divider>
+      <v-divider class="border-purple"></v-divider>
     </div>
-    <div class="node-card-box">
+    <div class="node-card-box w-full">
       <node-item-card
         :list="list"
         :isAll="isAll"
-        :isLoading="loading"
+        :isLoading="isLoading"
         :is-favorited="true"
+        @loadMore="continueLoadData"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import useDaoStore from '@/store/dao';
 import NodeItemCard from '@/components/nodeItem/NodeItemCard.vue'
-import { favoriteDao } from '@/api/daos'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-const pageSize = ref(10)
-const pageNo = ref(1)
-const count = ref(0)
-const list = ref<any>([])
-const isAll = ref(false)
-const loading = ref(false)
-const getData = async () => {
-  loading.value = true
-  const query = {
-    pageSize: pageSize.value,
-    pageNo: pageNo.value,
+import { ref, onMounted, computed } from 'vue'
+
+const daoStore = useDaoStore()
+
+const list = computed(() => daoStore.favouriteNodes)
+const isAll = computed(() => daoStore.favouriteNodesPageInfo?.isAll || false)
+const isLoading = ref(false)
+
+const getData = async (loadFunc: Function = () => { }, done: Function = () => {}) => {
+  isLoading.value = true
+  try {
+    await loadFunc()
+    done('ok')
+  } catch (error) {
+    done('error')
+  } finally {
+    isLoading.value = false
   }
-  const data: any = await favoriteDao(query)
-  list.value = list.value.concat(data.dataList)
-  count.value = data.page.count
-  isAll.value = pageNo.value * pageSize.value >= count.value
-  loading.value = false
-  ifScrollHeight()
 }
 
-const ifScrollHeight = () => {
-  if (
-    window.scrollY > 0 &&
-    document.body.scrollHeight <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
-    !isAll.value
-  ) {
-    pageNo.value += 1
-    loading.value = true
-    getData()
+if (daoStore.favouriteNodes.length > 5) {
+  daoStore.favouriteNodes = [
+    ...daoStore.favouriteNodes.slice(0, 5),
+  ]
+  daoStore.favouriteNodesPageInfo.isAll = false
+  daoStore.favouriteNodesPageQuery.pageNo = 1
+} else {
+  daoStore.favouriteNodesPageQuery.pageNo = 0
+  daoStore.favouriteNodesPageInfo = {
+    isAll: false,
+    count: 0,
   }
+  daoStore.favouriteNodes = []
 }
-const lazyLoading = () => {
-  const scrollTop =
-    document.documentElement.scrollTop || document.body.scrollTop
-  const clientHeight = document.documentElement.clientHeight
-  const scrollHeight = document.documentElement.scrollHeight
-  if (pageNo.value * pageSize.value < count.value) {
-    if (scrollHeight - clientHeight <= scrollTop + 560) {
-      if (loading.value) return
-      pageNo.value += 1
-      loading.value = true
-      getData()
-    }
-  }
-}
+
+
 onMounted(() => {
-  window.addEventListener('scroll', lazyLoading, true)
-  getData()
+  window.scrollTo(0, 0)
 })
 
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', lazyLoading, true)
-})
+const continueLoadData = async ({
+  done,
+}: {
+  done: (val: string) => void
+}) => {
+  daoStore.favouriteNodesPageQuery.pageNo += 1
+  getData(daoStore.getFavouriteNodesLazyLoad, done)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -92,8 +86,6 @@ h2 {
   text-align: center;
 }
 .node-card-box {
-  max-width: 80%;
-  margin: 0 auto;
   margin-top: 86px;
   padding-top: 24px;
 }

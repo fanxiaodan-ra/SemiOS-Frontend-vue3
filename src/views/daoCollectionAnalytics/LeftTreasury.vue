@@ -14,16 +14,16 @@
           class="d-flex align-center mybg"
           :style="{
             'background-color': props.tab === 4 ? '#364159 !important' : '',
-            'border-color': props.tab === 4 ? '#6062aa  !important' : '',
+            'border-color': props.tab === 4 ? '#2F305B  !important' : '',
           }"
           dark
           @click="toggle"
         >
           <v-scroll-y-transition>
             <div class="sc-box">
-              <h3>Treasury</h3>
+              <h3>{{ t('daoCollectionAnalytics.treasury') }}</h3>
               <p>
-                Treasury Balance :
+                {{ t('daoCollectionAnalytics.treaBalance') }} :
                 <span>{{
                   bigNumFormat(daoTreasury.treasuryTotalAmount, 5, 0.000001)
                 }}</span>
@@ -39,6 +39,7 @@
 import { bigNumFormat } from '@/utils'
 import { togetherTreasury } from '@/api/daos'
 import { ref, onMounted } from 'vue'
+import { t } from '@/lang'
 const props = defineProps({
   tab: {
     type: Number,

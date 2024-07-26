@@ -1,11 +1,10 @@
 <template>
   <div class="tab-box">
     <h5>
-      The price of work will be dynamically adjusted based on the sales of works
-      under the same Builder.
+      {{ t('floatingPriceTab.title') }}
     </h5>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Current Price </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.curPrice') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.canvasCurrentPrice }}
         <TokenIcon
@@ -20,7 +19,7 @@
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Floor Price </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.floorPrice') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.daoFloorPrice }}
         <TokenIcon
@@ -35,19 +34,19 @@
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Sub Nodes Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.subNodesFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.daoReserveRatio.daoMintFee }}%
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Builder Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.builderFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         {{ props.dataObj.daoReserveRatio.canvasMintFee }}%
       </v-col>
     </v-row>
     <v-row no-gutters>
-      <v-col cols="6" class="text-font"> Semios Fee </v-col>
+      <v-col cols="6" class="text-font">{{ t('common.semiosFee') }}</v-col>
       <v-col cols="6" class="text-font flexend">
         <span class="old-fee">2.5 </span>
         {{ props.dataObj.daoReserveRatio.d4aMintFee }}%
@@ -57,6 +56,7 @@
 </template>
 <script lang="ts" setup>
 import TokenIcon from '@/components/TokenIcon.vue'
+import { t } from '@/lang'
 const props = defineProps({
   dataObj: {
     type: Object,

@@ -1,26 +1,18 @@
 <template>
   <div class="card-det">
     <div class="tab-hedar">
-      <v-tabs
-        v-model="tab"
-        fixed-tabs
-        color="deep-purple-accent-4"
-        @click.stop.prevent
-      >
+      <v-tabs v-model="tab" fixed-tabs color="deep-purple-accent-4" @click.stop.prevent>
         <v-tab selected-class="custom-tabs" :value="1" class="text-none">{{
           $t('NodeDetail.currentBlockWindowInformationLabel')
-        }}</v-tab>
+          }}</v-tab>
       </v-tabs>
+      <v-divider class="border-purple mt-2"></v-divider>
     </div>
     <v-window v-model="tab" class="det-box">
       <v-window-item v-for="n in 5" :key="n" :value="n">
         <v-container fluid>
-          <component
-            ref="childRef"
-            :is="currentCopmonent[tab - 1]"
-            :data-obj="props.dataObj"
-            :topupMode="props.dataObj.topupMode"
-          ></component>
+          <component ref="childRef" :is="currentCopmonent[tab - 1]" :data-obj="props.dataObj"
+            :topupMode="props.dataObj.topupMode"></component>
         </v-container>
       </v-window-item>
     </v-window>
@@ -28,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import ItemCurrent from '@/components/nodeItem/ItemCurrent.vue'
+import ItemCurrent from '@/components/nodeItem/WorkItemCurrent.vue'
 const props = defineProps({
   dataObj: {
     type: Object,

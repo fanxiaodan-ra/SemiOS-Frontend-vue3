@@ -113,7 +113,6 @@ const pay = async () => {
     const err = JSON.stringify(error)
     notifyErr(err)
     isDialogLoading.value = false
-    console.log(error, 'errorerrorerrorerror')
   }
 }
 </script>

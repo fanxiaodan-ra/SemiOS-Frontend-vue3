@@ -103,9 +103,7 @@ const submit = async () => {
         ...formData.value,
         socialLinks: connectionsList,
       }
-      console.log(req, 'reqreqreqreqreq')
       const res = (await workEdit(req)) as any
-      console.log(res, 'res')
       if (res.resultCode === 100) {
         isDialogLoading.value = false
         notifySuc('Updated', true)

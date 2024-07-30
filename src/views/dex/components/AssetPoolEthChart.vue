@@ -30,7 +30,6 @@ const getData = async () => {
   try {
     isLoading.value = true
     const data:any = await dexStore.getAssetPoolEth(chartquery)
-    console.log(data, 'data')
     chartData.value = {
       xdata: data.time,
       yadata: data.changes,
@@ -41,12 +40,10 @@ const getData = async () => {
       maxPrice: data.maxTotalAmount,
     }
     newEcharts(chartData.value)
-    // console.log(chartData, 'chartData ')
   } catch (error) {
-    console.log(error, 'error')
+    console.error(error, 'error')
   } finally {
     isLoading.value = false
-    console.log(isLoading.value, 'isLoading')
   }
 }
 const option = ref() as any
@@ -57,7 +54,6 @@ const newEcharts = (chartData:any) => {
   } else {
     maxvolume = roundToSignificantFigures(Number(chartData.maxVolume))
   }
-  console.log(maxvolume, 'maxvolumemaxvolumemaxvolume')
   const months = [
     'Jan',
     'Feb',
@@ -233,7 +229,6 @@ const newEcharts = (chartData:any) => {
       },
     ],
   }
-  console.log(option.value)
 }
 
 watch(() => option.value, (option: any) => {
@@ -241,7 +236,6 @@ watch(() => option.value, (option: any) => {
 })
 
 watch(() => dexStore.ercToken, (ercToken: any) => {
-  console.log(ercToken, 'ercToken')
   if (ercToken.erc20Address !== '') {
     getData()
   }

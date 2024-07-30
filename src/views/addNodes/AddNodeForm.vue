@@ -146,7 +146,6 @@ const setFormData = (params: any) => {
   if (formVal?.value) {
     formData.value = { ...formData.value, ...formVal.value }
   }
-  console.log(formData, 'formData.value ', formVal)
   if (validVal) {
     formsValid.value[validVal.position] = validVal.value
     valid.value = formsValid.value.filter((item) => item === false).length === 0
@@ -164,7 +163,6 @@ const submit = async () => {
     const isAddFormAssetType = await AddFormAssetTypeRef.value.validateNext()
     if (!isAddFormAssetType) return
   }
-  console.log(formData, 'formData.value ')
   if (!valid.value) return
   isDialogLoading.value = true
 

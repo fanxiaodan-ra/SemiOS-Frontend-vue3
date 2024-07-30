@@ -56,7 +56,6 @@ describe('NftPermissionVue', () => {
 
   it('should render correctly', async () => {
     await wrapper.vm.$nextTick();
-    console.log(wrapper.html())
     expect(wrapper.find('h4').text()).toBe('Permission Bound To This NFT');
     expect(wrapper.findAll('.v-skeleton-loader').length).toBe(0); // No skeleton loaders should be present initially
   });

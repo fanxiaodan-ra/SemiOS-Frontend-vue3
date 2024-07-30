@@ -60,8 +60,7 @@ const isLoading = ref(true)
 const checked = ref(true)
 watch(
   () => checked.value,
-  (val) => {
-    console.log(val, 'val')
+  () => {
     isLoading.value = true
     getData()
   }

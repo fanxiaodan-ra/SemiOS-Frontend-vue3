@@ -45,14 +45,11 @@ const props = defineProps({
 })
 
 const isLoading = ref(false)
-import useUserStore from '@/store'
-const store = useUserStore()
 const balance = ref(0)
 
 const getData = async () => {
   isLoading.value = true
   try {
-    console.log(store.UserInfo, '=-as=d-as=d-=as-d=as-d=as-d-=as-d')
     balance.value = await getBalance()
   } catch(e) {
     console.error(e)

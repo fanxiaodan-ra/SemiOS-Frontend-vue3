@@ -46,16 +46,14 @@ const props = defineProps({
 const checked = ref(true)
 watch(
   () => checked.value,
-  (val) => {
-    console.log(val, 'val')
+  () => {
     isLoading.value = true
     getData()
   }
 )
 watch(
   () => props.dayTime,
-  (val) => {
-    console.log(val, 'val')
+  () => {
     isLoading.value = true
     getData()
   }
@@ -183,19 +181,9 @@ font-weight: 600;font-size: 16px;">${params.value[1]} ETH</div>
         },
       ],
       axisLabel: {
-        // interval: 2,
         color: '#9E9E9E',
-        // formatter: "{MMM}{d}",
-        // formatter: (value) => {
-        //   console.log(value, "asd");
-        //   const date = new Date(value);
-        //   const mon = date.getMonth();
-        //   const day = date.getDate();
-        //   return `${months[mon]} ${day}`;
-        // },
         formatter: '{MMM} {d}',
       },
-      // axisTick: { alignWithLabel: true },
       axisLine: {
         onZero: false,
         lineStyle: {
@@ -254,7 +242,6 @@ font-weight: 600;font-size: 16px;">${params.value[1]} ETH</div>
     ],
   }
   if (myChart.value) {
-    console.log(myChart.value, 'myChart.value')
     myChart.value.setOption(option.value, true)
     window.addEventListener('resize', function () {
       myChart.value.resize()

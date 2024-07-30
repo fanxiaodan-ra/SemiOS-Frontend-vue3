@@ -282,8 +282,10 @@ const setApprove = async (address: string, num: string) => {
     const app = await approveAmount(address, num)
     await app.wait()
     notifySuc('Successful transaction', true)
+    loading.value = false
   } catch (error) {
     notifyErr(JSON.stringify(error))
+    loading.value = false
   } 
 }
 
@@ -300,7 +302,6 @@ const setAmountGt = async (txParams: TxParams) => {
         txParams.rewardToken,
         userStore.UserInfo.address
       )
-      console.log(allowance, 'allowance')
       const appNum = new BigNumber(num).minus(allowance).toString()
       if (Number(appNum) > 0) {
         setApprove(txParams.rewardToken, num)
@@ -309,6 +310,7 @@ const setAmountGt = async (txParams: TxParams) => {
       await createPlan(txParams)
     } catch(e) {
       notifyErr(JSON.stringify(e))
+      loading.value = false
     }
     return
   }

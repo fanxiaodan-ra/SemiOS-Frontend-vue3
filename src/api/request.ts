@@ -117,7 +117,6 @@ const request = <T = any>(config: AxiosRequestConfig): Promise<T> => {
 };
 
 export const cancelAllRequests = () => {
-  console.log(cancelTokens, 'cancelTokens')
   cancelTokens.forEach((source: any) => {
     source.cancel('Request canceled');
   });

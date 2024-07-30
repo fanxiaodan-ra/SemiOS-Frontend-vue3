@@ -140,13 +140,8 @@
 import { ref, onMounted, watch } from 'vue'
 import IsAcceptSignDialog from '@/components/IsAcceptSignDialog.vue'
 import { useRouter, useRoute } from 'vue-router'
-// import { aPush } from '@/utils'
 import useUserStore from '@/store'
 const store = useUserStore()
-// const openAurl = (push: string) => {
-//   console.log(push, 'push')
-//   return aPush(location.origin + push)
-// }
 
 const query = ref('')
 
@@ -158,7 +153,6 @@ const searchData = () => {
       query: query.value,
     },
   })
-  console.log('我被点击了')
 }
 
 const addTabs = [

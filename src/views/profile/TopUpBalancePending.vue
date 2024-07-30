@@ -95,7 +95,7 @@ const getData = async () => {
       await getItemDetail(list.value[i])
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 onMounted(() => {

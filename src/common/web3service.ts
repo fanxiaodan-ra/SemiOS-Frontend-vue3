@@ -4,7 +4,6 @@ import { BigNumber } from 'bignumber.js'
 
 const getProvider = () => {
   const provider = $onboard.state.get().wallets?.[0]?.provider
-  console.log(provider, 'provider')
   if (provider) {
     return new ethers.providers.Web3Provider(provider, 'any')
   } else {
@@ -13,7 +12,6 @@ const getProvider = () => {
   }
 }
 const getBalance = async () => {
-  console.log($onboard.state.get().wallets?.[0], '$onboard.state.get().wallets?.[0]')
   const address = $onboard.state.get().wallets?.[0].accounts?.[0].address
   const balance = await getProvider().getBalance(address)
   return address ? new BigNumber(ethers.utils.formatEther(balance)).toNumber() : 0
@@ -30,7 +28,6 @@ const call = (contractAddress: string, abi: any) => {
 }
 //send
 const send = (contractAddress: string, abi: any) => {
-  console.log('111111')
   const signer = getProvider().getSigner()
   const contract = new ethers.Contract(contractAddress, abi, signer)
   return contract
@@ -72,7 +69,6 @@ const createDaoForFunding = async (data: any) => {
     allRatioParam: data.allRatioParam,
     actionType: data.actionType,
   }
-  console.log(createSemiDaoParam, '我是所有参数')
   const overrides = {
     value: ethers.utils.parseEther(data.createProjectFee + ''),
   }
@@ -80,7 +76,6 @@ const createDaoForFunding = async (data: any) => {
     store.PactAbi.protocol_contract,
     JSON.parse(store.PactAbi.pd_create_abi)
   )
-  console.log(JSON.parse(store.PactAbi.pd_create_abi), 'contract')
   const tx = await contract.createDao(createSemiDaoParam, overrides)
 
   return tx
@@ -100,7 +95,6 @@ const setDaoParamsFunding = async (data: any) => {
     setChildrenParam: data.setChildrenParam,
     allRatioParam: data.allRatioForFundingParam,
   }
-  console.log(req, '我是所有参数')
   const protocolAddress = store.PactAbi.protocol_contract
   const abi = JSON.parse(store.PactAbi.protocol_setter_abi)
   const contract = send(protocolAddress, abi)
@@ -183,7 +177,6 @@ const getWorkAllowance = async (address: string, metamask: any) => {
 }
 
 const mintNFT = async (data: any) => {
-  console.log(data, 'data')
   const store = useUserStore()
   BigNumber.config({ EXPONENTIAL_AT: 38 })
   const protocolAddress = store.PactAbi.protocol_contract
@@ -210,13 +203,11 @@ const mintNFT = async (data: any) => {
     deadline: 0,
     nftIdentifier: data.nftIdentifier,
   }
-  console.log(CreateCanvasAndMintNFTParam, 'CreateCanvasAndMintNFTParam')
   const tx = await contract.mintNFT(CreateCanvasAndMintNFTParam, overrides)
   return tx
 }
 const approveWork = async (daoErc20Address: string, amount: string) => {
   const store = useUserStore()
-  console.log(daoErc20Address, 'daoErc20Address', amount)
   const contract = send(
     daoErc20Address,
     JSON.parse(store.PactAbi.d4a_erc20_abi)
@@ -249,7 +240,6 @@ const transferNFTs = async (data: any) => {
 
 const lockTopUpNFT = async (data: any) => {
   const store = useUserStore()
-  console.log(data, 'datadata')
   const contract = send(
     store.PactAbi.protocol_contract,
     JSON.parse(store.PactAbi.work_lock_abi)
@@ -264,16 +254,6 @@ const setMintCapAndPermission = async (data: any) => {
     store.PactAbi.protocol_contract,
     store.PactAbi.protocol_setter_abi
   )
-  console.log('setMintCapAndPermission', {
-    daoId: data.daoId,
-    mintCap: data.mintCap,
-    userMintCapParam: data.userMintCapParam,
-    nftMinterCapInfo: data.nftMinterCapInfo,
-    nftMinterCapIdInfo: data.nftMinterCapIdInfo,
-    whitelist: data.whitelist,
-    blacklist: data.blacklist,
-    unblacklist: data.unblacklist,
-  })
   const tx = await contract.setMintCapAndPermission(
     data.daoId,
     data.mintCap,
@@ -402,7 +382,6 @@ const grantTreasury = async (data: any) => {
     store.PactAbi.protocol_contract,
     JSON.parse(store.PactAbi.pd_grant_abi)
   )
-  console.log(contract, 'contract', data)
   const tx = await contract.grantTreasury(
     data.daoId,
     data.amount,
@@ -467,7 +446,6 @@ const createPlan = async (data: any) => {
     JSON.parse(store.PactAbi.pd_plan_abi)
   )
 
-  console.log(createPlanParam, 'createPlanParam')
   const tx = data.rewardToken === "" ? await contract.createPlan(createPlanParam, overrides) : await contract.createPlan(createPlanParam)
   return tx
 }
@@ -483,7 +461,6 @@ const addPlanTotalReward = async (data: any) => {
     store.PactAbi.protocol_contract,
     JSON.parse(store.PactAbi.pd_plan_abi)
   )
-  console.log(contract, 'contract', data)
   const tx = data.rewardTokenSymbol === 'ETH'
     ? await contract.addPlanTotalReward(data.planId, data.amount, data.useTreasury, overrides)
     : await contract.addPlanTotalReward(data.planId, data.amount, data.useTreasury)
@@ -497,7 +474,6 @@ const exchangeOutputToInput = async (project_id: string, amount: string, address
     protocolAddress,
     JSON.parse(store.PactAbi.protocol_contract_proxy_abi)
   )
-  console.log(contract, 'contract', project_id, amount, address)
   const tx = await contract.exchangeOutputToInput(project_id, amount, address)
   return tx
 }

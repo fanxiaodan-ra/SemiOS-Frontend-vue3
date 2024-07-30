@@ -66,7 +66,6 @@
           density="comfortable"
           type="number"
           v-model="formData.daoMintWindowDuration"
-          append-inner-icon="mdi-hours-24"
           @update:modelValue="
             setInput(
               formData.daoMintWindowDuration,
@@ -77,6 +76,9 @@
             )
           "
         >
+        <template v-slot:append-inner>
+           <div class="z-10 text-grey-1">{{ t('common.hours') }}</div>
+          </template>
         </v-text-field>
       </FormRow>
       <FormRow
@@ -195,7 +197,6 @@ const emit = defineEmits(['setFormData'])
 watch(
   () => formData,
   (value) => {
-    console.log(value, 'value')
     validateForm(value)
   },
   { deep: true }

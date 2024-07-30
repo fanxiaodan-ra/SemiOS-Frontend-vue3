@@ -27,18 +27,15 @@ let myChartInstance: echarts.ECharts;
 
 const getData = async () => {
   const chartquery = { dayTime: 7 }
-  console.log(chartquery, 'chartquery')
   try {
     isLoading.value = true
     const data = await dexStore.getApy(chartquery)
-    console.log(data, 'data')
     chartData.value = data
     newEcharts(chartData.value)
   } catch (error) {
-    console.log(error, 'error')
+    console.error(error, 'error')
   } finally {
     isLoading.value = false
-    console.log(isLoading.value, 'isLoading')
   }
 }
 const option = ref() as any
@@ -150,7 +147,6 @@ watch(() => option.value, (option: any) => {
 })
 
 watch(() => dexStore.ercToken, (ercToken: any) => {
-  console.log(ercToken, 'ercToken')
   if (ercToken.erc20Address !== '') {
     getData()
   }

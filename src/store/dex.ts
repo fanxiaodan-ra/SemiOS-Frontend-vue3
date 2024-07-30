@@ -60,7 +60,6 @@ export const useDexStore = defineStore({
           ercToken = res.data
         }
         this.ercToken = ercToken
-        console.log('ercToken', ercToken)
         return true
       } catch (error) {
         console.error(error)
@@ -178,7 +177,6 @@ export const useDexStore = defineStore({
     },
     async getTransactions(data: any) {
       try {
-        console.log(this.ercToken, 'this.ercToken')
         const res:any = await transaction({
           ...data,
           erc20Address: this.ercToken.erc20Address,

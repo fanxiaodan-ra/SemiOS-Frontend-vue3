@@ -169,6 +169,5 @@ onMounted(() => {
           .div(props.initData.decimalsNum)
           .toNumber()
       : 0.1
-  console.log(formData, 'formDataformDataformDataformDataformData')
 })
 </script>

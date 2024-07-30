@@ -76,17 +76,14 @@ const setUpImgUrl = () => {
   emit('setUpImg', formData.value.imgFile)
 }
 const updateSourceFile = (e: any) => {
-  console.log(e)
   if (e.length > 0) {
     const file = e[0]
     const typs = ['image/png', 'image/jpeg', 'image/gif', 'image/jpg']
     const isJPG = typs.indexOf(file.type) > -1
-    console.log(isJPG, 'isJPG')
     if (!isJPG) {
       errorMessage.value = 'Invalid file type'
     }
     const isLt = file.size / 1024 / 1024 < props.imgSize
-    console.log(isLt, 'isLt')
     if (!isLt) {
       errorMessage.value = 'File size exceeds limit'
     }

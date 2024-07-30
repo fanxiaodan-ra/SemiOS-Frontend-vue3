@@ -88,8 +88,7 @@ const props = defineProps({
 })
 watch(
   () => props.dayTime,
-  (val) => {
-    console.log(val, 'val')
+  () => {
     isLoading.value = true
     getData()
   }

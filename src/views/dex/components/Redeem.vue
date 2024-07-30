@@ -212,7 +212,6 @@ const setSwapIput = () => {
     return
   }
   if (Number(inputErc.value) > 0) {
-    console.log(inputErc.value, 'inputErc', ethVal.value)
     inputErcNum.value = new BigNumber(inputErc.value)
       .times(ethVal.value)
       .div(1e8)

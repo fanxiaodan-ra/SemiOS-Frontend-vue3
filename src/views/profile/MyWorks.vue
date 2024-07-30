@@ -101,7 +101,8 @@ watch(
   () => {
     cancelAllRequests()
     init()
-  }
+  },
+  { immediate: true }
 )
 </script>
 

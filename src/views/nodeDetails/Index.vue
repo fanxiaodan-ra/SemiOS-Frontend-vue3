@@ -54,7 +54,6 @@ const getData = async () => {
   const res = await analyticsDetail({
     daoId: route.query.id,
   })
-  console.log(res, 'resresresresresresres')
   dataObj.value = res.data
   isLoading.value = false
   if (dataObj.value.daoStatus === 1 && dataObj.value.startTime > 0) {

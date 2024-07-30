@@ -190,7 +190,6 @@ const setGrantDaoAssetPool = async (type = false) => {
       tokenUri: 'grant treasury nft',
       address: props.initData.erc20Address,
     }
-    console.log(req, 'req')
     const tx = await grantDaoAssetPool(req)
     await tx.wait()
     notifySuc('Transury')
@@ -199,7 +198,6 @@ const setGrantDaoAssetPool = async (type = false) => {
     const err = JSON.stringify(error)
     notifyErr(err)
     isDialogLoading.value = false
-    console.log(error, 'errorerrorerrorerror')
   }
 }
 </script>

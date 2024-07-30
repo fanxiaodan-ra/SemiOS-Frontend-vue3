@@ -62,7 +62,6 @@ const datetime = ref(new Date())
 const formatDate = ref(date.format(new Date(), 'fullDateWithWeekday'))
 const menu = ref(false)
 watch([datetime, formatDate], (cur) => {
-  console.log(cur, 'cur')
   formatDate.value = date.format(cur[0], 'fullDateWithWeekday')
 
   menu.value = false

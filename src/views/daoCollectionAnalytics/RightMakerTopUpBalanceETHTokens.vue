@@ -102,7 +102,6 @@ const submitFormEth = async () => {
       subDaoIds: subDaoIds,
       outputRatios: erc20Ratios,
     }
-    console.log(req, 'req')
     const tx = await setTopUpOutputSplitRatio(req)
     const res = await tx.wait()
     isDialogLoading.value = false
@@ -143,7 +142,7 @@ const getData = async () => {
       ...res.data.ethTransTokenList,
     ]
   } catch (error) {
-    console.log(error, 'error')
+    console.error(error, 'error')
   }
   isLoading.value = false
 }

@@ -77,7 +77,6 @@ const getData = async () => {
   isLoading.value = false
 }
 const setFormData = (data: any) => {
-  console.log(data, 'data')
   formData.value = { ...formData.value, ...data }
 }
 const childRef = ref()
@@ -106,9 +105,7 @@ const submit = async () => {
         ...formData.value,
         socialLinks: connectionsList,
       }
-      console.log(req, 'reqreqreqreqreq')
       const res = (await daoEdit(req)) as any
-      console.log(res, 'res')
       if (res.resultCode === 100) {
         isDialogLoading.value = false
         notifySuc('Updated', true)

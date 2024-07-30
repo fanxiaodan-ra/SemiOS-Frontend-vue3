@@ -125,7 +125,6 @@ const validateForm = async (value: any) => {
   const childValid = FormStructureThisNodesInternalIncentivesRef.value
     ? await FormStructureThisNodesInternalIncentivesRef.value.inputErr()
     : true
-  console.log(value, 'valuevaluevalue')
   emit('setFormData', {
     formVal: value,
     validVal: {

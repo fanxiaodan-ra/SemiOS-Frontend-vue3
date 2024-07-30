@@ -106,18 +106,16 @@ const getData = async () => {
       await getItemDetail(list.value[i])
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 const isDialogLoading = ref(false)
 import useToastNotify from '@/hooks/useToastNotify'
 const { notifyErr, notifySuc } = useToastNotify()
 const collectItem = async (item: any) => {
-  console.log(item, 'item')
   if (item.totalCollectable === 0)
     return notifyErr('No Collectable Reward.', true)
-  isDialogLoading.value = true
-  console.log(item, 'item')
+    isDialogLoading.value = true
   try {
     const nfts = (await topupNft({ projectId: item.projectId })) as any
     const nftIdentifierfts = nfts.dataList.map((item: any) => {
@@ -126,7 +124,6 @@ const collectItem = async (item: any) => {
         tokenId: item.workNumber,
       }
     })
-    console.log(nftIdentifierfts, 'nftIdentifierfts')
     const tx = await claimDaoPlanRewardForMultiNft({
       projectId: item.projectId,
       nfts: nftIdentifierfts,
@@ -138,7 +135,7 @@ const collectItem = async (item: any) => {
     }
     isDialogLoading.value = false
   } catch (error) {
-    console.log(error, 'error')
+    console.error(error, 'error')
     const err = JSON.stringify(error)
     notifyErr(err)
     isDialogLoading.value = false

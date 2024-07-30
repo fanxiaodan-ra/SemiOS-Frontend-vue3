@@ -12,9 +12,11 @@
           type="number"
           v-model="lockTime"
           :rules="valueRules"
-          append-inner-icon="mdi-hours-24"
-          @update:modelValue="setInput(lockTime, 0, 1, 999999999)"
+          @update:modelValue="setInput(lockTime, 0, 1, 720)"
         >
+         <template v-slot:append-inner>
+           <div class="z-10 text-grey-1">{{ t('common.hours') }}</div>
+          </template>
         </v-text-field>
       </v-form>
       <v-btn
@@ -29,6 +31,7 @@
 </template>
 <script lang="ts" setup>
 import SlotDialog from '@/components/SlotDialog.vue'
+import { t } from '@/lang'
 
 import { ref, watch } from 'vue'
 const props = defineProps({

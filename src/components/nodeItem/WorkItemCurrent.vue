@@ -149,7 +149,6 @@ const props = defineProps({
     default: false,
   },
 })
-console.log(props, 'props')
 const dataObj = computed(() => props.dataObj)
 const info = ref({
   blockRewardEth: 0,
@@ -175,7 +174,7 @@ const init = async () => {
     })
     info.value = data
   } catch (error) {
-    console.log('error', error)
+    console.error('error', error)
   } finally {
     loading.value = false
   }

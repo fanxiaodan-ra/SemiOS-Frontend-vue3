@@ -54,7 +54,6 @@ const getData = async () => {
     maxVolume: res.data.maxChanges,
     maxPrice: res.data.maxTotalAmount,
   }
-  console.log(chartData.value, 'chartData.value ')
   isLoading.value = false
   if (chartData.value.xdata?.length > 0) {
     setTimeout(() => {
@@ -74,7 +73,6 @@ const newEcharts = () => {
   } else {
     maxvolume = roundToSignificantFigures(Number(chartData.value.maxVolume))
   }
-  console.log(maxvolume, 'maxvolumemaxvolumemaxvolume')
   const months = [
     'Jan',
     'Feb',
@@ -292,7 +290,6 @@ const newEcharts = () => {
     ],
   }
   if (myChart.value) {
-    console.log(myChart.value, 'myChart.value')
     myChart.value.setOption(option.value, true)
     window.addEventListener('resize', function () {
       myChart.value.resize()

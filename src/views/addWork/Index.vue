@@ -145,7 +145,6 @@ const descriptionRules = [
 const getData = async () => {
   const data = (await daoListProtodao()) as any
   daos.value = data.dataList
-  console.log(daos, 'daos')
   isLoading.value = false
 }
 
@@ -176,9 +175,7 @@ const setSelect = async (val: string) => {
       : null
     formData.value = { ...formData.value, ...res.data }
     btnLoading.value = false
-    console.log(formData.value, 'formDataformDataformDataformDataformData')
   }
-  console.log(formData.value, 'val')
 }
 
 const setUpImg = (val: any) => {
@@ -186,7 +183,6 @@ const setUpImg = (val: any) => {
 }
 const setPethodType = (val: number) => {
   formData.value.pethodType = val
-  console.log(formData.value.pethodType, ' formData.value.pethodType')
 }
 const setFixedPrice = (val: number) => {
   formData.value.fixedPrice = val
@@ -197,7 +193,6 @@ const childRef = ref()
 const isDialogLoading = ref(false)
 const isSuccessDialog = ref(false)
 const submit = async () => {
-  console.log(formData.value.fixedPrice, 'formData.fixedPrice')
   const isTrad = await getTrading()
   if (!isTrad) return
   const isMsg = await childRef.value.setUrlMsg()
@@ -212,10 +207,8 @@ const submit = async () => {
       return
     }
   }
-  console.log(formData.value, '=-=-=')
   isDialogLoading.value = true
   workId.value = await addWork(formData.value)
-  console.log(workId.value, ';workId.value ')
   if (workId.value) {
     await setSelect(formData.value.daoId)
     isSuccessDialog.value = true

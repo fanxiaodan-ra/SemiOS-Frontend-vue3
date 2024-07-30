@@ -92,7 +92,7 @@ const init = async () => {
     const data = await permissionStore.getNftPermissionInDetail(workId)
     dataList.value = data
   } catch (error) {
-    console.log('error', error)
+    console.error('error', error)
   } finally {
     isLoading.value = false
   }

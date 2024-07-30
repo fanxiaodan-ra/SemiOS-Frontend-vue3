@@ -177,21 +177,19 @@ const getData = async () => {
       await getItemDetail(list.value[i])
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 const isDialogLoading = ref(false)
 import useToastNotify from '@/hooks/useToastNotify'
 const { notifyErr, notifySuc } = useToastNotify()
 const updataBalance = async (item: any) => {
-  console.log(item, 'item')
   if (!item.isUpdateBalance)
     return notifyErr(
       'Your on-chain and off-chain record are synchronized.',
       true
     )
   isDialogLoading.value = true
-  console.log(item, 'item')
   try {
     const nfts = (await topupNft({ projectId: item.projectId })) as any
     const nftIdentifierfts = nfts.dataList.map((item: any) => {
@@ -200,7 +198,6 @@ const updataBalance = async (item: any) => {
         tokenId: item.workNumber,
       }
     })
-    console.log(nftIdentifierfts, 'nftIdentifierfts')
     const tx = await updateMultiTopUpAccount({
       projectId: item.projectId,
       nfts: nftIdentifierfts,
@@ -212,7 +209,7 @@ const updataBalance = async (item: any) => {
     }
     isDialogLoading.value = false
   } catch (error) {
-    console.log(error, 'error')
+    console.error(error, 'error')
     const err = JSON.stringify(error)
     notifyErr(err)
     isDialogLoading.value = false

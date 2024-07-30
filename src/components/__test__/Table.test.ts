@@ -170,7 +170,6 @@ describe('Table', () => {
         plugins: [vuetify]
       }
     })
-    console.log(wrapper.html())
     const loaders = wrapper.find('.v-data-table-progress__loader')
     expect(loaders.exists()).toBe(true)
   })

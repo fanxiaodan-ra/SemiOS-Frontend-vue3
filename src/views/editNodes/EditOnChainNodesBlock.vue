@@ -143,7 +143,6 @@ const setInput = (
 const formRef = ref()
 
 const setFormBlock = async () => {
-  console.log(formData, 'formDataformDataformData')
   if (formData.radioModify) {
     const { valid } = await formRef.value.validate()
     if (!valid) return false
@@ -159,7 +158,6 @@ defineExpose({
 })
 
 onMounted(() => {
-  console.log(props.initData, 'props.initData')
   formData.daoMintWindow = props.initData.daoMintWindow
   formData.totalNftCasting = props.initData.totalNftMintCap
   formData.dailyMintCap = props.initData.dailyMintCap

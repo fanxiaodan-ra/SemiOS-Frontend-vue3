@@ -92,7 +92,6 @@ const props = defineProps({
 
 
 const pageChange = (val: number) => {
-  console.log('pageChange', val)
   props.loadItems({ page: val, itemsPerPage: props.pageInfo.itemsPerPage })
 }
 

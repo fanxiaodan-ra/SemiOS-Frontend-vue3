@@ -43,6 +43,7 @@ export default {
     noPermissionTip: 'You don‘t have permission to edit this page.',
     loginExpired: 'Login expired, please log in again.',
     noData: 'No items to display.',
+    hours: 'Hours',
   },
   PleaseEnterLabel: 'Please enter',
   AddNodeName: {
@@ -491,7 +492,8 @@ export default {
   nftDetail: {
     nftPermission: 'Permission Bound To This NFT',
     nodes: 'Nodes',
-    permissionToTransfer: 'Permission Bound to this NFT'
+    permissionToTransfer: 'Permission Bound to this NFT',
+    lockedTip: 'This NFT is already locked.'
   },
   permissionList: {
     title: 'Permissions NFT',

@@ -275,7 +275,6 @@ const setERCInput = (
   max = Infinity
 ) => {
   const inputNum = oninputNum(val, position, min, max)
-  console.log(inputNum, 'inputNum')
   // const strNum = formData.ERC20OtherNodes
   const letNum = minusOthers(100, formData.ERC20OtherNodes)
   if (new BigNumber(inputNum).gt(letNum)) {

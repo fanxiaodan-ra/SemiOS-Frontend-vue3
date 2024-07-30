@@ -85,7 +85,6 @@ const getData = async () => {
   isLoading.value = false
 }
 const setFormData = (data: any) => {
-  console.log(data, 'data')
   formData.value = { ...formData.value, ...data }
 }
 const router = useRouter()

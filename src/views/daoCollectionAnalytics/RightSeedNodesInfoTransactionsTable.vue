@@ -49,7 +49,7 @@
           </a>
         </td>
         <td class="co9e">
-          {{ timeFormatting(item.tradeTime, 0, 1) }}
+          {{ timeFormatting(item.tradeTime * 1000, 0, 1) }}
         </td>
       </tr>
     </tbody>

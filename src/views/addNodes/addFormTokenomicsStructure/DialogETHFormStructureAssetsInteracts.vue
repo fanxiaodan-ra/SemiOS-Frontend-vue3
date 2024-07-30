@@ -73,7 +73,6 @@ const valueRules = [
 ]
 const emit = defineEmits(['cancelEthDialog', 'addEthData'])
 const cancelDialog = () => {
-  console.log('wasdasdasdasd')
   emit('cancelEthDialog')
 }
 
@@ -99,7 +98,6 @@ const formRef = ref()
 const addData = async () => {
   const { valid } = await formRef.value.validate()
   if (!valid) return false
-  console.log(formData, 'formData')
   formData.daoName = selectData.value.daoName
   formData.projectId = selectData.value.projectId
   emit('addEthData', formData)

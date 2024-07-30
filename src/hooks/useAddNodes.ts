@@ -88,7 +88,6 @@ const getDecimalsNum = async (formData: any, seedNodeId?: string) => {
     const decNum = await decimals(erc20)
     decimalsNum = `1e${decNum}`
   } else {
-    console.log('我在这里')
     if (formData.inputToken !== 'Input') {
       if (
         formData.inputToken === '0x0000000000000000000000000000000000000000'
@@ -107,9 +106,7 @@ const getDecimalsNum = async (formData: any, seedNodeId?: string) => {
 }
 
 const filterBlacklist = (val: any, initData: any) => {
-  console.log(val, 'val')
   const accounts = whitelistFiltre(val)
-  console.log(accounts, 'accountsaccountsaccountsaccounts')
   //Whether the blacklist array exists
   if (initData.length > 0) {
     //Whether two arrays are equal
@@ -405,7 +402,6 @@ const getStrategies = (formData: any, initData: any) => {
     formData.mintingWithUnlimitedlistAddress.map((item: any) => item.address),
     formData.mintingWithMaxlistAddress.map((item: any) => item.address)
   )
-  console.log(mintingRootObj, 'mintingRootObj')
   reqData.whitelist.minterMerkleRoot = mintingRootObj.root
 
   const createCanvasRootObj = filterMerkle(
@@ -456,14 +452,12 @@ const getStrategies = (formData: any, initData: any) => {
     formData.mintingCapForDaolistAmount.length > 0
       ? formData.mintingCapForDaolistAmount[0].amount
       : 0
-  console.log(reqData, 'reqDatareqDatareqDatareqDatareqDatareqDatareqData')
   return reqData
 }
 export default function useAddNodes(seedNodeId?:string) {
   const store = useUserStore()
 
   const addNode = async (formData: any) => {
-    console.log(formData, 'formData')
     try {
       const proofData = getProofData(formData, store)
       await whitelistProof(proofData)
@@ -473,7 +467,6 @@ export default function useAddNodes(seedNodeId?:string) {
       })
 
       const decimalsNum = await getDecimalsNum(formData, seedNodeId)
-      console.log(decimalsNum, 'decimalsNum')
       const daoMetadataParam = getDaoMetadataParam(
         data.data,
         formData,
@@ -490,9 +483,7 @@ export default function useAddNodes(seedNodeId?:string) {
       const nftMinterCapIdInfo = getNftMinterCapIdInfo(formData)
       const templateParam = getTemplateParam(formData, decimalsNum)
       const basicDaoParam = getBasicDaoParam(data.data)
-      console.log(basicDaoParam, 'basicDaoParambasicDaoParambasicDaoParam')
       const continuousDaoParam = getContinuousDaoParam(formData, decimalsNum)
-      console.log(continuousDaoParam, 'continuousDaoParamcontinuousDaoParamcontinuousDaoParam')
       const allRatioParam = getAllRatioParam(formData)
       const reqData = {
         createProjectFee: 0,
@@ -509,20 +500,17 @@ export default function useAddNodes(seedNodeId?:string) {
         allRatioParam,
         actionType: 20,
       }
-      console.log(reqData, 'reqData')
       const tx = await createDaoForFunding(reqData)
       const res = await tx.wait()
-      console.log(res, 'restxxxxxxxxxxxxxxxxx')
       const setupDaoStore = useSetupDaoStore()
       const result = await setupDaoStore.inquireNft0AndDaoId({
         transactionHash: res.transactionHash,
       })
-      console.log('result addnodes', result)
       return result
     } catch (error) {
       // formData.dialogLoading = false;
       const err = JSON.stringify(error)
-      console.log(err, ' formData.errMsgText')
+      console.error(err, ' formData.errMsgText')
       notifyErr(err)
       return false
     }
@@ -533,13 +521,12 @@ export default function useAddNodes(seedNodeId?:string) {
       const time = await daoTimes()
       return time.data.currentTime * 1000
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return ''
     }
   }
 
   const editNodeChain = async (formData: any, changeInfiniteMode: boolean) => {
-    console.log(formData, 'formData')
     try {
       let remainingRound = null
       if (changeInfiniteMode) {
@@ -637,24 +624,19 @@ export default function useAddNodes(seedNodeId?:string) {
           daoCreatorInputRewardRatio: bigNumTimes(formData.eth.subDao),
         },
       }
-      console.log(reqData, 'reqData')
       const tx = await setDaoParamsFunding(reqData)
-      const res = await tx.wait()
-      console.log(res, 'restxxxxxxxxxxxxxxxxx')
+      await tx.wait()
       notifySuc('Updated!', true)
       return true
     } catch (error) {
-      console.log(error, 'error')
-      // formData.dialogLoading = false;
+      console.error(error, 'error')
       const err = JSON.stringify(error)
-      console.log(err, ' formData.errMsgText')
       notifyErr(err)
       return false
     }
   }
 
   const editNodeStrategies = async (formData: any, initData: any) => {
-    console.log(formData, 'formData')
     try {
       const reqData = getStrategies(formData, initData)
       await whitelistProof(reqData.setProofData)
@@ -662,14 +644,11 @@ export default function useAddNodes(seedNodeId?:string) {
         daoId: initData.projectId,
         ...reqData,
       })
-      const res = await tx.wait()
-      console.log(res, 'editNodeStrategies')
+      await tx.wait()
       notifySuc('Updated!', true)
       return true
     } catch (error) {
-      console.log(error, 'error')
       const err = JSON.stringify(error)
-      console.log(err, ' formData.errMsgText')
       notifyErr(err)
       return false
     }

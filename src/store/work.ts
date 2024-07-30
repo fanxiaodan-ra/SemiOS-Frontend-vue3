@@ -170,7 +170,6 @@ export const useWorkStore = defineStore({
         this.favoriteWorksPageInfo = {
           isAll: res.page.pageNo * res.page.pageSize >= res.page.count,
           count: res.page.count,
-          // pageNo: res.page.pageNo,
         }
       } catch (error) {
         console.error(error)

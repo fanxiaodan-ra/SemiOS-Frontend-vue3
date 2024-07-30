@@ -107,7 +107,6 @@ const pay = async () => {
   if (!isTrad) return
   const { valid } = await formRef.value.validate()
   if (!valid) return false
-  console.log('我进来了')
   isDialogLoading.value = true
   BigNumber.config({ EXPONENTIAL_AT: 38 })
   try {
@@ -137,7 +136,6 @@ const pay = async () => {
     const err = JSON.stringify(error)
     notifyErr(err)
     isDialogLoading.value = false
-    console.log(error, 'errorerrorerrorerror')
   }
 }
 </script>

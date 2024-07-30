@@ -151,7 +151,6 @@ const getData = async () => {
       (a: number, item: any) => new BigNumber(a).plus(item.value).toNumber(),
       0
     )
-    console.log(initData, 'initData')
     formData.value.daoPriceReserveRatio.builder =
       initData.value.unFixedReserveRatio.canvasMintFee
     formData.value.daoPriceReserveRatio.mainDAO =
@@ -198,15 +197,12 @@ const setEditForm = async () => {
     return
   }
   const isBlock = await nodesBlockRef.value.setFormBlock()
-  console.log(isBlock, 'isBlock')
   if (!isBlock) return
   const isWork = await nodesWorkRef.value.setFormWork()
-  console.log(isWork, 'isWork')
   if (!isWork) return
   const isToken = nodesTokenomicsRef.value
     ? await nodesTokenomicsRef.value.setTokenomicsData()
     : true
-  console.log(isToken, 'isToken')
   if (!isToken) return
   isDialogLoading.value = true
   const req = {
@@ -214,17 +210,14 @@ const setEditForm = async () => {
     daoId: initData.value.projectId,
     decimalsNum: initData.value.decimalsNum,
   }
-  console.log(req, 'reqreqreq')
   const changeInfiniteMode =
     initData.value.infiniteMode === formData.value.infiniteMode ? false : true
-  console.log(changeInfiniteMode, 'changeInfiniteMode')
   const isTx = await editNodeChain(req, changeInfiniteMode)
   isDialogLoading.value = false
   if (!isTx) return
   goNode()
 }
 const setFormData = (data: any) => {
-  console.log(data, 'datadatadatadata')
   formData.value = { ...formData.value, ...data }
 }
 const router = useRouter()

@@ -80,7 +80,7 @@ const init = async () => {
     })
     nfts.value = res
   } catch (error) {
-    console.log(error)
+    console.error(error)
   } finally {
     nftsLoading.value = false
   }

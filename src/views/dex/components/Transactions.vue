@@ -87,7 +87,6 @@ const serverItems = computed(() => {
     account: string,
     tradeTime: number,
   }, index: number) => {
-    console.log(item, item.tradeTime, timeFormatting(item.tradeTime, 0, 1))
     return {
       tradeTypeDesc: item.tradeTypeDesc,
       transactionHash: ellipsis(item.transactionHash),

@@ -67,14 +67,19 @@
               "
               @click="setIsLock"
             >
-              <i
-                :class="
-                  props.dataObj.workLockStatus === 0
-                    ? 'icon-lock'
-                    : 'icon-lock1'
-                "
-                class="iconfont fc7"
-              ></i>
+              <v-tooltip :text="t('nftDetail.lockedTip')" :disabled="dataObj.workLockStatus === 0">
+                <template v-slot:activator="{ props }">
+                  <i
+                    :class="
+                      dataObj.workLockStatus === 0
+                        ? 'icon-lock'
+                        : 'icon-lock1'
+                    "
+                    class="iconfont fc7"
+                    v-bind="props"
+                  ></i>
+                </template>
+              </v-tooltip>
             </v-btn>
             <v-btn
               size="32"
@@ -158,30 +163,6 @@
             <div class="icons">
               <IconsTab :dataObj="props.dataObj" :isName="false" />
             </div>
-            <!-- <div class="time-box" v-if="props.countdownData.isCountdown">
-              <v-row no-gutters style="margin-top: auto">
-                <v-col cols="12" sm="4">
-                  <v-sheet class="ma-2 pa-2 time-item">
-                    <span class="num-span">{{ props.countdownData.h }}</span>
-                    <span class="type-span">HOURS</span>
-                  </v-sheet>
-                </v-col>
-
-                <v-col cols="12" sm="4">
-                  <v-sheet class="ma-2 pa-2 time-item">
-                    <span class="num-span">{{ props.countdownData.m }}</span>
-                    <span class="type-span">MINUTES</span></v-sheet
-                  >
-                </v-col>
-
-                <v-col cols="12" sm="4">
-                  <v-sheet class="ma-2 pa-2 time-item">
-                    <span class="num-span">{{ props.countdownData.s }}</span>
-                    <span class="type-span">SECONDS</span>
-                  </v-sheet>
-                </v-col>
-              </v-row>
-            </div> -->
             <div class="det-btns">
               <v-btn
                 block
@@ -224,7 +205,6 @@
                   props.dataObj.ownerAddress === store.UserInfo.address
                 "
                 @click="isTransferNFTDialog = true"
-                :disabled="props.countdownData.isCountdown"
                 >Transfer NFT</v-btn
               >
             </div>
@@ -275,6 +255,7 @@ import BindingBalanceTab from './BindingBalanceTab.vue'
 import TransferNFTDialog from './TransferNFTDialog.vue'
 import LockDialog from './LockDialog.vue'
 import useUserStore from '@/store'
+import { t } from '@/lang'
 const store = useUserStore()
 
 const props = defineProps({
@@ -345,10 +326,7 @@ const mintTransfer = async () => {
       const nftIdentifier = data.nftIdentifier
       await mintNft(props.dataObj, nftIdentifier, mainnetAddress.value)
       getFatherData()
-      // if (mint) console.log(mint, 'mint')
-      //mint
     } else {
-      console.log(data, 'data')
       unTopUpMintList.value = data.unTopUpMintList
       isSelectBalance.value = true
       isDialogLoading.value = false

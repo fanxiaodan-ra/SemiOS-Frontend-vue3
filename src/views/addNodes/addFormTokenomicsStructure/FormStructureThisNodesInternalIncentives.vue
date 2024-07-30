@@ -246,7 +246,6 @@ const inputFloatingErr = () => {
     formData.daoPriceReserveRatio.pDao,
     formData.daoPriceReserveRatio.subDAO
   )
-  console.log(num, 'num')
   if (num !== 100) {
     errorFloatingMessage.value = ['The sum must equal 100%']
     return false
@@ -264,7 +263,6 @@ const setFixedInput = (
   max = Infinity
 ) => {
   const inputNum = oninputNum(val, position, min, max)
-  console.log(inputNum, 'inputNum')
   Object.assign(formData.fixedPriceReserveRatio, { [type]: inputNum })
 }
 

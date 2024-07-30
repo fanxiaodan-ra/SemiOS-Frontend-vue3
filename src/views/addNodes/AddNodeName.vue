@@ -73,7 +73,6 @@ const { getTrading } = useAccount()
 const emit = defineEmits(['setDaoName', 'setIsModeSelection'])
 const submit = async () => {
   const isTrad = await getTrading()
-  console.log(isTrad, 'isTrad')
   if (!isTrad) return
   btnLoading.value = true
   const { valid } = await formRef.value.validate()

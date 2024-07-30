@@ -38,8 +38,7 @@ const props = defineProps({
 })
 watch(
   () => props.dayTime,
-  (val) => {
-    console.log(val, 'val')
+  () => {
     isLoading.value = true
     getData()
   }
@@ -245,7 +244,6 @@ const newEcharts = () => {
     ],
   }
   if (myChart.value) {
-    console.log(myChart.value, 'myChart.value')
     myChart.value.setOption(option.value, true)
     window.addEventListener('resize', function () {
       myChart.value.resize()

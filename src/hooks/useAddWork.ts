@@ -11,17 +11,13 @@ export default function useAddWork() {
   const { getTrading, getSig } = useAccount()
 
   const addWork = async (formData: any) => {
-    console.log(formData, 'formData')
     const isTrad = await getTrading()
-    console.log(isTrad, 'isTrad')
     if (!isTrad) return false
     const isSig = await getSig()
     if (!isSig) return false
-    console.log(isSig, 'isSig')
     const isWork = await workAuthority({
       daoId: formData.daoId,
     })
-    console.log(isWork, 'isWork')
     if (!isWork.data.createCanvas) {
       notifyErr('You are ineligible to add works.', true)
       return false
@@ -33,7 +29,6 @@ export default function useAddWork() {
       const decimalsNum = workInfo.erc20PaymentMode
         ? await decimals(workInfo.daoErc20Address)
         : workInfo.inputTokenDecimals
-      console.log(decimalsNum, 'decimalsNum')
       const chainID = await sig().getChainId()
       const domain = {
         name: 'ProtoDaoProtocol',
@@ -61,7 +56,6 @@ export default function useAddWork() {
                 .toString(),
       }
       const signature = await sig()._signTypedData(domain, types, value)
-      console.log(signature, 'signature')
       const req = {
         image: formData.image,
         daoId: formData.daoId,
@@ -72,14 +66,10 @@ export default function useAddWork() {
         priceType: formData.pethodType === 1 ? 0 : 1,
         fixedPrice: formData.pethodType === 1 ? null : formData.fixedPrice,
       }
-      console.log(req, '我是创建work参数')
       const data:any = await workCreate(req)
-      if (data.resultCode === 100) return data.data.workId
+      return data.data.workId
     } catch (error:any) {
-      console.log(error, 'error')
-      if (error.resultDesc) {
-        notifyErr(error.resultDesc, true)
-      } else {
+      if (!error.resultDesc) {
         notifyErr('User denied message signature.', true)
       }
       return false

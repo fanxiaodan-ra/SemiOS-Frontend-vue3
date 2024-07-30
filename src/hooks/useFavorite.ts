@@ -10,7 +10,6 @@ export default function useFavorite() {
     const isTrad = await getTrading()
     if (!isTrad) return false
     const sig = await getSig()
-    console.log(sig, 'sig')
     if (sig) {
       const query = {
         type: type,

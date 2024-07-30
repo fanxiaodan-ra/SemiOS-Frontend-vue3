@@ -122,7 +122,6 @@ const getConditions = (val: any) => {
   val.fixedPrice >= 0 && (workStore.exploreWorksQuery.fixedPrice = val.fixedPrice)
   Number(val.maxPrice) >= 0 && (workStore.exploreWorksQuery.maxPrice = val.maxPrice)
   Number(val.minPrice) >= 0 && (workStore.exploreWorksQuery.minPrice = val.minPrice)
-  console.log(workStore.exploreWorksQuery, 'workStore.exploreWorksQuery after')
   workStore.exploreWorks = []
   cancelAllRequests()
 }

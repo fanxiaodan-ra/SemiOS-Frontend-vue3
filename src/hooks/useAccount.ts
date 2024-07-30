@@ -24,7 +24,6 @@ export default function useAccount() {
   const login = async () => {
     const store = useUserStore()
     const wallets = await $onboard.connectWallet()
-    console.log(wallets, 'wallets')
     if (wallets?.length === 0) return
     const address = addressToLowerCase(wallets[0].accounts[0].address)
     const res = await loginAccount(address)
@@ -42,7 +41,6 @@ export default function useAccount() {
     const store = useUserStore()
     const wallets = $onboard.state.select('wallets')
     unsubscribeFc = wallets.subscribe((update) => {
-      console.log(update, 'update')
       if (update?.length > 0) {
         if (
           store.UserInfo.address &&
@@ -52,8 +50,6 @@ export default function useAccount() {
           setLogOut()
         } else {
           store.setNeworkId(update[0].chains[0].id)
-          // const currentState = onboard.state.get().wallets
-          // console.log(currentState, 'currentState')
         }
       } else {
         setLogOut()
@@ -63,7 +59,6 @@ export default function useAccount() {
   const setUser = async () => {
     const store = useUserStore()
     const wallets = $onboard.state.get().wallets
-    console.log(wallets, 'walletss')
     store.setNeworkId(wallets[0].chains[0].id)
     $onboard.state.actions.setPrimaryWallet(wallets[0])
     const wallet = {
@@ -76,7 +71,6 @@ export default function useAccount() {
     }
     const user = await cookieInfo()
     store.setUserInfo(user.data)
-    console.log(JSON.stringify(wallet), 'JSON.stringify(wallet)')
     const localData = {
       ...user.data, ...wallet
     }
@@ -96,13 +90,11 @@ export default function useAccount() {
     })
     store.setIsAcceptSign(false)
     const wallets = $onboard.state.get().wallets
-    console.log(wallets, 'walletswalletswalletswallets')
     if (wallets?.length !== 0) {
       $onboard.disconnectWallet({ label: wallets[0].label })
     }
     store.setNeworkId('')
     window.localStorage.setItem(APP_LOCAL_NAME, '')
-    console.log(unsubscribeFc, 'unsubscribeFc')
     if (unsubscribeFc) {
       unsubscribeFc()
       unsubscribeFc = null
@@ -221,7 +213,7 @@ export default function useAccount() {
       }
     } catch (error) {
       notifyErr('User denied message signature.', true)
-      console.log(error, 'error')
+      console.error(error, 'error')
     }
   }
 

@@ -94,7 +94,6 @@ const getData = async () => {
       ...countdownObj,
       isCountdown: true,
     }
-    console.log(countdownData, 'countdownData')
     setTimeNum('nextDrbStartTime')
     // setTimeNum()
   }
@@ -109,7 +108,6 @@ const getData = async () => {
       ...countdownObj,
       isCountdown: true,
     }
-    console.log(countdownData, 'countdownData')
     setTimeNum('lockTime')
   }
   isLoading.value = false

@@ -58,7 +58,6 @@ const replaceAllStr = (str: any, find: any, replace: any) => {
 }
 
 const whitelistFiltre = (value: any, arr = []) => {
-  console.log(value, 'value')
   const valstr = value.join()
   const str = replaceAllStr(
     replaceAllStr(replaceAllStr(valstr, /[(\r\n)\r\n]+/, ','), '，', ','),

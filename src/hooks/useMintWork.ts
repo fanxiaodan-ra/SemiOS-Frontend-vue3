@@ -28,7 +28,6 @@ export default function useMintWork() {
 
   const whetherItTraded = async (daoId: number) => {
     const isTrad = await getTrading()
-    console.log(isTrad, 'isTrad')
     if (!isTrad) return false
     const isWork = await workAuthority({ daoId: daoId })
     if (!isWork.data.mintWork) {
@@ -75,103 +74,6 @@ export default function useMintWork() {
       pageSize: -1,
     })) as any
     const unTopUpMintList = mintTopList.dataList
-    // const unTopUpMintList = [
-    //   {
-    //     workId: 181,
-    //     workNumber: 2,
-    //     daoId: 237,
-    //     daoName: 'in233 Etop',
-    //     daoNumber: 239,
-    //     canvasNumber: 1,
-    //     erc721TokenAddress: '0x74d441d388d1daeec51830f942c0c695dbfc462e',
-    //     imgUrl:
-    //       'https://test-protodao.s3.ap-southeast-1.amazonaws.com/work/239/2.png',
-    //     bgColor: '#532FE7',
-    //     height: 298.0,
-    //     erc20Amount: 500000.0,
-    //     ethAmount: 10.0,
-    //     workLockStatus: 0,
-    //     togetherDaoId: 234,
-    //     togetherDaoName: 'zmn usdcDispay',
-    //     daoErc20Address: '0x221a302263396e4043c6c8eae80c2030327b65f9',
-    //     payCurrencyType: 'USDC',
-    //     inputTokenAddress: '0x9fcfceb7c2f7f6748c082a95bdd925f1702a8c3a',
-    //     daoSymbol: 'SEMI.T237',
-    //     erc20PaymentMode: 0,
-    //   },
-    //   {
-    //     workId: 28,
-    //     imgUrl:
-    //       'https://test-protodao.s3.ap-southeast-1.amazonaws.com/work/11/1.png',
-    //     workNumber: 2,
-    //     daoId: 237,
-    //     daoName: 'in233 Etop',
-    //     daoNumber: 239,
-    //     canvasNumber: 1,
-    //     erc721TokenAddress: '0x74d441d388d1daeec51830f942c0c695dbfc462e',
-
-    //     bgColor: '#532FE7',
-    //     height: 298.0,
-    //     erc20Amount: 500000.0,
-    //     ethAmount: 10.0,
-    //     workLockStatus: 0,
-    //     togetherDaoId: 234,
-    //     togetherDaoName: 'zmn usdcDispay',
-    //     daoErc20Address: '0x221a302263396e4043c6c8eae80c2030327b65f9',
-    //     payCurrencyType: 'USDC',
-    //     inputTokenAddress: '0x9fcfceb7c2f7f6748c082a95bdd925f1702a8c3a',
-    //     daoSymbol: 'SEMI.T237',
-    //     erc20PaymentMode: 0,
-    //   },
-    //   {
-    //     workId: 27,
-    //     imgUrl:
-    //       'https://test-protodao.s3.ap-southeast-1.amazonaws.com/work/10/1.png',
-    //     workNumber: 2,
-    //     daoId: 237,
-    //     daoName: 'in233 Etop',
-    //     daoNumber: 239,
-    //     canvasNumber: 1,
-    //     erc721TokenAddress: '0x74d441d388d1daeec51830f942c0c695dbfc462e',
-
-    //     bgColor: '#532FE7',
-    //     height: 298.0,
-    //     erc20Amount: 500000.0,
-    //     ethAmount: 10.0,
-    //     workLockStatus: 0,
-    //     togetherDaoId: 234,
-    //     togetherDaoName: 'zmn usdcDispay',
-    //     daoErc20Address: '0x221a302263396e4043c6c8eae80c2030327b65f9',
-    //     payCurrencyType: 'USDC',
-    //     inputTokenAddress: '0x9fcfceb7c2f7f6748c082a95bdd925f1702a8c3a',
-    //     daoSymbol: 'SEMI.T237',
-    //     erc20PaymentMode: 0,
-    //   },
-    //   {
-    //     workId: 23,
-    //     imgUrl:
-    //       'https://test-protodao.s3.ap-southeast-1.amazonaws.com/work/4/5.png',
-    //     workNumber: 2,
-    //     daoId: 237,
-    //     daoName: 'in233 Etop',
-    //     daoNumber: 239,
-    //     canvasNumber: 1,
-    //     erc721TokenAddress: '0x74d441d388d1daeec51830f942c0c695dbfc462e',
-    //     bgColor: '#532FE7',
-    //     height: 298.0,
-    //     erc20Amount: 500000.0,
-    //     ethAmount: 10.0,
-    //     workLockStatus: 0,
-    //     togetherDaoId: 234,
-    //     togetherDaoName: 'zmn usdcDispay',
-    //     daoErc20Address: '0x221a302263396e4043c6c8eae80c2030327b65f9',
-    //     payCurrencyType: 'USDC',
-    //     inputTokenAddress: '0x9fcfceb7c2f7f6748c082a95bdd925f1702a8c3a',
-    //     daoSymbol: 'SEMI.T237',
-    //     erc20PaymentMode: 0,
-    //   },
-    // ]
-    console.log(unTopUpMintList, 'unTopUpMintList')
     if (unTopUpMintList.length > 0) {
       const workMintUnTopUp = {
         isMint: false,
@@ -239,7 +141,6 @@ export default function useMintWork() {
           workPrice = 0
         }
       }
-      console.log(workPrice, 'workPrice')
       if (Number(workPrice) > 0) {
         if (dataObj.erc20PaymentMode || dataObj.payCurrencyType !== 'ETH') {
           const erc20Address = dataObj.erc20PaymentMode
@@ -252,7 +153,6 @@ export default function useMintWork() {
             erc20Address,
             store.UserInfo.address
           )
-          console.log(allowance, 'allowanceallowance')
           const appNum = new BigNumber(num).minus(allowance).toString()
           if (Number(appNum) > 0) {
             await setApprove(erc20Address, num)
@@ -301,33 +201,21 @@ export default function useMintWork() {
             ? new BigNumber(nftFlatPrice).times(`1e${decimalsNum}`).toString()
             : new BigNumber(nftFlatPrice).times(1e18).toString(),
       }
-      console.log(reqData, 'reqData')
       const tx = await mintNFT(reqData)
       await tx.wait()
       notifySuc(
         'You have successfully minted a work. Now, it’s time to show or transfer your NFT to your friends.',
         true
       )
-      // dialogLoading = false
-      // isBind = false
-      // this[isSccName] = true
-      // isSccName = ''
-      // mainnetAddress = ''
-      // getData()
     } catch (error) {
-      console.log(error, 'error')
+      console.error(error, 'error')
       const err = JSON.stringify(error)
       notifyErr(err)
-      // dialogLoading = false
-      // isBind = false
-      // isSccName = ''
-      // mainnetAddress = ''
     }
   }
 
   const setTransferNFTs = async (dataObj: any, address: string) => {
     const isTrad = await getTrading()
-    console.log(isTrad, 'isTrad')
     if (!isTrad) return false
     try {
       const reqData = {
@@ -362,7 +250,7 @@ export default function useMintWork() {
       notifySuc('Your NFT has been successfully locked.', true)
     } catch (error) {
       const err = JSON.stringify(error)
-      console.log(err, 'err')
+      console.error(err, 'err')
       notifyErr(err)
     }
   }

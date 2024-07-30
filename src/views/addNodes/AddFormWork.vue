@@ -236,7 +236,6 @@ const setInput = (
   max = Infinity
 ) => {
   const inputNum = oninputNum(val, position, min, max)
-  console.log(inputNum, 'inputNuminputNuminputNum')
   formData.value[type] = inputNum as never
 }
 

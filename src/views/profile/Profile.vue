@@ -151,11 +151,10 @@ const userRules = [(v: string) => v.length <= 45 || 'Max 45 characters']
 const formRef = ref()
 const setUpImg = (val: any) => {
   formData.value.avatar = val.length > 0 ? val[0] : null
-  console.log(formData.value.avatar, ' formData.value.avatar')
 }
 
 import useToastNotify from '@/hooks/useToastNotify'
-const { notifyErr, notifySuc } = useToastNotify()
+const { notifySuc } = useToastNotify()
 import useAccount from '@/hooks/useAccount'
 const { getSig } = useAccount()
 const save = async () => {
@@ -165,17 +164,12 @@ const save = async () => {
   const sig = await getSig()
   if (sig) {
     try {
-      const res = (await userProfileSave(formData.value)) as any
-      if (res.resultCode === 100) {
-        await getData()
-        btnLoading.value = false
-        notifySuc('Updated', true)
-      } else {
-        notifyErr(res.resultDesc, true)
-        btnLoading.value = false
-      }
-    } catch (error: any) {
-      notifyErr(error.resultDesc, true)
+      await userProfileSave(formData.value)
+      await getData()
+      btnLoading.value = false
+      notifySuc('Updated', true)
+    } catch (error) {
+      console.error(error)
       btnLoading.value = false
     }
   } else {

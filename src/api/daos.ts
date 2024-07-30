@@ -156,10 +156,6 @@ const daoEditDetail = async (data: any) => {
 
 const daoEdit = async (data: any) => {
   let format = new FormData()
-  console.log(
-    Object.prototype.toString.call(data.daoLogo),
-    'Object.prototype.toString.call(data.daoLogo) '
-  )
   if (Object.prototype.toString.call(data.daoLogo) === '[object File]') {
     format.append('daoLogo', data.daoLogo)
   }
@@ -198,7 +194,6 @@ const daoEdit = async (data: any) => {
     format.append('twitterLink', '')
   }
   format.append('socialLinks', data.socialLinks)
-  console.log(format, 'formatformatformatformatformatformat')
   return service({
     url: `/api/dao/edit`,
     method: 'POST',

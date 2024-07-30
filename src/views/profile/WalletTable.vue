@@ -149,7 +149,6 @@ const getData = async () => {
   const res = await walletDao()
   list.value = res.data.daoIncomeVos
   daoCollect.value = res.data
-  console.log('daoCollect', daoCollect.value)
   isLoading.value = false
 }
 

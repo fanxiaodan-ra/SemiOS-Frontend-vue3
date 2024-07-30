@@ -110,5 +110,4 @@ const initWeb3 = Onboard({
   },
   disableFontDownload: true,
 })
-console.log(initWeb3, 'initWeb3initWeb3initWeb3initWeb3')
 export { initWeb3 }

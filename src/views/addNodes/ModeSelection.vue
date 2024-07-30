@@ -55,7 +55,6 @@ import { ethers } from 'ethers'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const basicMode = async () => {
-  console.log(props.initData, 'initDatainitDatainitData')
   emit('setLoading', true)
   emit('cancelDialog', false)
   const tiem = await getDaoTime()

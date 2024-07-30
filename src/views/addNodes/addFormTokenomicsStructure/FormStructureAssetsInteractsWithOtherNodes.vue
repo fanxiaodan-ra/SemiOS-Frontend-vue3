@@ -152,7 +152,6 @@ const cancelEthDialog = () => {
 const emit = defineEmits(['setETHOtherFormData', 'setERCOtherFormData'])
 const ETHOtherNodesList = ref<any>([])
 const addEthData = (val: any) => {
-  console.log(val, 'val')
   ETHOtherNodesList.value.push({ ...val })
   emit('setETHOtherFormData', ETHOtherNodesList.value)
 }
@@ -188,7 +187,6 @@ const getDaoList = async () => {
   const res = (await allcationList({ daoId: route.query.id, type: 1 })) as any
   daos.value = res.dataList.filter((item: any) => item.topupMode !== true)
   tokenDaos.value = res.dataList
-  console.log(res, 'resresres')
 }
 onMounted(() => {
   getDaoList()

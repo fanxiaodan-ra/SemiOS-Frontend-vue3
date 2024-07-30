@@ -123,7 +123,6 @@ const setValue = () => {
 }
 
 const setApprove = async (address:string, amount:string) => {
-  console.log(address, amount, '============授权')
   try {
     appLoading.value = true
     const app = await approveWork(address, amount)
@@ -183,12 +182,10 @@ const setAmountGt = async () => {
       const num = new BigNumber(totalReward.value)
         .times(`1e${decimalsNum}`)
         .toString()
-      console.log(num, 'num')
       const allowance = await getAllowanceTreasury(
         rewardToken,
         userStore.UserInfo.address
       )
-      console.log(allowance, 'allowance')
       const appNum = new BigNumber(num).minus(allowance).toString()
       if (Number(appNum) > 0) {
         setApprove(rewardToken, num)

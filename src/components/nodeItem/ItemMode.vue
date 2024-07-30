@@ -109,7 +109,7 @@ const init = async () => {
     })
     info.value = data
   } catch (error) {
-    console.log(error)
+    console.error(error)
   } finally {
     loading.value = false
   }

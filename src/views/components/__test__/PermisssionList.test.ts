@@ -65,7 +65,6 @@ describe('PermissionList', () => {
       ownerAddress: '0X00',
     }]
     await wrapper.vm.$nextTick()
-    console.log(document.body.innerHTML )
     expect(store.getPermissionListInDetail).toBeCalledWith({ daoId: '1' })
     const dialog = document.querySelector('.v-dialog');
     expect(dialog).toBeTruthy();

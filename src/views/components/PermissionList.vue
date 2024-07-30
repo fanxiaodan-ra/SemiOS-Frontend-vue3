@@ -101,7 +101,6 @@ const loadItems = async () => {
   } catch (e) {
     console.error(e)
   } finally {
-    console.log(111111111111)
     isLoading.value = false
   }
 }

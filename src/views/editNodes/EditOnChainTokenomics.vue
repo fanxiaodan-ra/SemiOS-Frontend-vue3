@@ -91,7 +91,6 @@ const setFormData = (val: any) => {
 }
 
 const setETHOtherFormData = (val: any) => {
-  console.log(val, 'setETHOtherFormData')
   formData.value.ETHOtherNodesList = val
   formData.value.ETHOtherNodes = val.reduce(
     (a: number, item: any) => new BigNumber(a).plus(item.value).toNumber(),

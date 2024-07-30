@@ -83,7 +83,6 @@ const currentCopmonent = shallowRef([
   NFTMinted,
   MyPermissions,
 ])
-console.log(route, 'route')
 const profileTabs = [
   {
     title: 'Profile',
@@ -168,7 +167,6 @@ const navListClick = (clickType: number) => {
 onMounted(() => {
   type.value = Number(route.query.type)
   userInfo.value = getLoginStatus(true)
-  console.log(userInfo, 'userInfo')
 })
 </script>
 <style scoped lang="scss">

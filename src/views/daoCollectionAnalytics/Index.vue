@@ -38,14 +38,9 @@ import RightMaker from './RightMaker.vue'
 import RightTreasury from './RightTreasury.vue'
 import RightIncentivePlan from './RightIncentivePlan/index.vue'
 
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 const tab = ref(0)
-watch(
-  () => tab.value,
-  (value) => {
-    console.log(value, 'valuevaluevaluevalue')
-  }
-)
+
 import { togetherDaoToken } from '@/api/daos'
 import { useRoute } from 'vue-router'
 const route = useRoute()

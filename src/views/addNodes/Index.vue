@@ -4,7 +4,7 @@
     @setIsModeSelection="setIsModeSelection"
     v-if="store.addNodeType === 0"
   />
-  <AddNodeFrom
+  <AddNodeForm
     @setAddType="setAddType"
     :initData="initData"
     :daoName="daoName"
@@ -29,7 +29,7 @@ import { maincreator } from '@/api/daos'
 import { ref, onMounted } from 'vue'
 import ModeSelection from './ModeSelection.vue'
 import AddNodeName from './AddNodeName.vue'
-import AddNodeFrom from './AddNodeFrom.vue'
+import AddNodeForm from './AddNodeForm.vue'
 import SucDialog from './components/SucDialog.vue'
 import useUserStore from '@/store'
 import { useRoute } from 'vue-router'
@@ -73,4 +73,3 @@ onMounted(() => {
   }
 })
 </script>
-<style lang="scss" scoped></style>

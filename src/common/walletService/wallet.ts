@@ -1,13 +1,13 @@
 import blocknativeLogo from './icons/blocknative-logo'
 import blocknativeIcon from './icons/blocknative-icon'
 import Onboard from '@web3-onboard/core'
-// import injectedModule from '@web3-onboard/injected-wallets'
+import injectedModule from '@web3-onboard/injected-wallets'
 import walletConnectModule from '@web3-onboard/walletconnect'
 import metamaskSDK from '@web3-onboard/metamask'
 
 const dappId = '17292f6a-f7de-4ea0-8042-2db6915a118a'
 const INFURA_ID = '9aa3d95b3bc440fa88ea12eaa4456161'
-// const injected = injectedModule()
+const injected = injectedModule()
 // const walletConnect = walletConnectModule(INFURA_ID)
 const WalletConnectOptions = {
   /**
@@ -31,7 +31,8 @@ const WalletConnectOptions = {
 // initialize the module with options
 const metamaskSDKWallet = metamaskSDK({
   options: {
-    extensionOnly: false,
+    extensionOnly: true,
+    preferDesktop: true,
     dappMetadata: {
       name: 'Demo Web3Onboard',
     },
@@ -40,8 +41,8 @@ const metamaskSDKWallet = metamaskSDK({
 const walletConnect = walletConnectModule(WalletConnectOptions)
 const initWeb3 = Onboard({
   theme: 'dark',
-  // wallets: [metamaskSDKWallet, walletConnect, injected],
-  wallets: [walletConnect, metamaskSDKWallet],
+  wallets: [metamaskSDKWallet, walletConnect, injected],
+  // wallets: [walletConnect, metamaskSDKWallet],
   chains: [
     {
       id: '0x1',

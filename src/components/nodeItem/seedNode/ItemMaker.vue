@@ -9,15 +9,28 @@
           </v-col>
           <v-col class="my-flexaj" cols="4">
             {{ bigNumFormat(infoData.noSpendEthAmount, 5, 0.000001) }}
+            <TokenIcon
+              size="16px"
+              class="ml-2"
+              :payCurrencyType="dataObj.payCurrencyType"
+              :inputTokenAddress="dataObj.inputTokenAddress"
+            />
           </v-col>
-          <v-col cols="4">
+          <v-col cols="4" class="flex items-center">
             {{ bigNumFormat(infoData.noSpendTokenAmount, 5, 0.000001) }}
+            <TokenIcon
+              size="16px"
+              class="ml-2"
+              :daoToken="true"
+              :daoSymbol="dataObj.daoSymbol"
+              :daoErc20Address="dataObj.daoErc20Address"
+            />
           </v-col>
         </v-row>
         <v-row align="start" no-gutters class="current-name">
-          <v-col cols="4">Maker</v-col>
-          <v-col cols="4">Total Unspent ETH</v-col>
-          <v-col cols="4">Total Locked ERC-20</v-col>
+          <v-col cols="4">{{ t('makerInfo.makers') }}</v-col>
+          <v-col cols="4">{{  t('makerInfo.totalUnspentInputTokens') }}</v-col>
+          <v-col cols="4">{{ t('makerInfo.totalLockedOutputTokens') }}</v-col>
         </v-row>
       </div>
     </div>
@@ -29,6 +42,9 @@ import Loading from '@/components/Loading.vue'
 import { togetherDaoMaker } from '@/api/daos'
 import { bigNumFormat } from '@/utils'
 import { ref, onMounted } from 'vue'
+import { t } from '@/lang'
+import TokenIcon from '@/components/TokenIcon.vue'
+
 const props = defineProps({
   dataObj: {
     type: Object,

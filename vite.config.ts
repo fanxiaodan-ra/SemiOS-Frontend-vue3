@@ -32,8 +32,16 @@ export default defineConfig(({ mode }) => {
             }
             //剩余资源文件
             return 'assets/[name].[ext]'
+          },
+          manualChunks: {
+            'vue-vendor': ['vue', 'vue-router', 'pinia', 'vue-i18n'],
+            'library': ['axios', 'dayjs', 'lodash', 'bignumber.js', 'vuetify'],
+            'echarts': ['echarts'],
+            'md-editor': ['md-editor-v3'],
+            'view': ['v-viewer', 'viewerjs', '@yeger/vue-masonry-wall', 'mermaid', 'katex'],
+            'web3': ['ethers', '@web3-onboard/core', '@web3-onboard/injected-wallets', '@web3-onboard/metamask', '@web3-onboard/walletconnect'],
           }
-        }
+        },
       }
     },
     plugins: [

@@ -401,7 +401,8 @@ export default {
     'noItem': 'No items to display',
     'diaTitle': 'Add Tokens To Plan',
     'addTokens': 'Add Tokens',
-    'createPlanLoadingText': 'Your Plan is being created, it should be confir med on the blockchain shortly.'
+    'createPlanLoadingText': 'Your Plan is being created, it should be confir med on the blockchain shortly.',
+    'incentiveType': 'Remaining Block'
   },
   chooseTypeSale: {
     floatingPrice: 'Floating Price',
@@ -421,6 +422,7 @@ export default {
     workDescLabel: 'Please enter your work description, Markdown syntax is supported.',
     uploadWorkSus: 'You have successfully uploaded your work. You can mint or invite others to mint your work.',
     mintOrTransNft: 'Mint & Transfer NFT',
+    openedTopupMode: 'This Nodes has enabled Top-Up mode, so it does not follow the normal Block Reward logic.'
   },
   unifiedPriceTab: {
     title: 'This DAO has opened Unified Pricing Mode, all works under this DAO will be minted at the unified price set by the starter.'
@@ -523,5 +525,10 @@ export default {
   },
   myCreatedNodes: {
     title: 'My Created Nodes',
+  },
+  makerInfo: {
+    makers: 'Makers',
+    totalUnspentInputTokens: 'Total Unspent Input Tokens',
+    totalLockedOutputTokens: 'Total Locked Output Tokens',
   },
 }

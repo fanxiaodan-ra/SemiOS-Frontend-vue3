@@ -1,7 +1,7 @@
 <template>
   <span>
     <!-- Token -->
-    <a class="token-icon" :href="aPush()" target="_blank" v-if="props.daoToken">
+    <a class="token-icon" :href="aPush()" target="_blank" v-if="props.daoToken" @click.stop>
       <v-btn
         class="text-none"
         variant="text"
@@ -19,7 +19,7 @@
       </v-btn>
     </a>
     <!-- ETH -->
-    <a class="token-icon" :href="aPush()" target="_blank" v-else>
+    <a class="token-icon" :href="aPush()" target="_blank" v-else @click.stop>
       <v-btn
         class="text-none"
         variant="text"

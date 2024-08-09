@@ -4,7 +4,7 @@ import { createDao, whitelistProof, daoTimes } from '@/api/daos'
 import { BigNumber } from 'bignumber.js'
 import useSetupDaoStore from '@/store/setupDao'
 BigNumber.config({ EXPONENTIAL_AT: 38 })
-import _ from 'lodash'
+import { uniq, find, difference } from 'lodash'
 import {
   createDaoForFunding,
   decimals,
@@ -19,12 +19,12 @@ import useToastNotify from '@/hooks/useToastNotify'
 const fetchkeyArr = (a: [], b: [], key = 'name') => {
   const arrA = a.map((item) => item[key])
   const arrB = b.map((item) => item[key])
-  return _.uniq([...arrA, ...arrB])
+  return uniq([...arrA, ...arrB])
 }
 
 const fetchvalArr = (a: any, b: any, key = 'name') => {
   return a.map((item: any) => {
-    const obj = _.find(b, [key, item])
+    const obj = find(b, [key, item])
     return obj ? obj.value * 100 : '0'
   })
 }
@@ -118,9 +118,9 @@ const filterBlacklist = (val: any, initData: any) => {
       }
     } else {
       //It's in the old array, it's not in the new array
-      const deleteArr = _.difference(initData, accounts)
+      const deleteArr = difference(initData, accounts)
       //It didn't exist in the old array, but it exists in the new array
-      const addArr = _.difference(accounts, initData)
+      const addArr = difference(accounts, initData)
       return {
         deleteArr: deleteArr,
         addArr: addArr,
@@ -128,7 +128,7 @@ const filterBlacklist = (val: any, initData: any) => {
     }
   } else {
     if (accounts.length > 0) {
-      const addArr = _.difference(accounts, [])
+      const addArr = difference(accounts, [])
       // this.editData.blacklist.minterAccounts = addArr;
       return {
         deleteArr: [],
@@ -507,11 +507,13 @@ export default function useAddNodes(seedNodeId?:string) {
         transactionHash: res.transactionHash,
       })
       return result
-    } catch (error) {
-      // formData.dialogLoading = false;
-      const err = JSON.stringify(error)
-      console.error(err, ' formData.errMsgText')
-      notifyErr(err)
+    } catch (error:any) {
+      // only the error from tx, then show notifyError
+      if (!error.resultCode) {
+        const err = JSON.stringify(error)
+        notifyErr(err)
+      }
+      
       return false
     }
   }

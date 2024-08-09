@@ -169,7 +169,7 @@ const setSelect = async (val: string) => {
       ? 1
       : 2
     formData.value.fixedPrice = res.data.unifiedPrice
-      ? res.data.canvasCurrentPrice
+      ? 0
       : res.data.basicDao === 2
       ? 0.01
       : null

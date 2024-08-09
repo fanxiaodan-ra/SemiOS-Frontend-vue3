@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "41364142",
+      "name": "Total Locked Output Tokens",
+      "font_class": "a-TotalLockedOutputTokens",
+      "unicode": "e661",
+      "unicode_decimal": 58977
+    },
+    {
+      "icon_id": "41364152",
+      "name": "Total Unspent Input Tokens-01",
+      "font_class": "a-TotalUnspentInputTokens-01",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "41364132",
+      "name": "maker -01",
+      "font_class": "a-maker-01",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
       "icon_id": "41190682",
       "name": "My Permissions",
       "font_class": "a-MyPermissions",

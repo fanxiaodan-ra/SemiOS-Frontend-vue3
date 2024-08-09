@@ -168,7 +168,7 @@
                 block
                 class="btnz text-none my-mgrl8"
                 v-if="props.dataObj.workStatus === 0"
-                @click="setMintNftEmitIsDialog"
+                @click="checkLogin"
                 :disabled="props.countdownData.isCountdown"
               >
                 {{
@@ -255,8 +255,10 @@ import BindingBalanceTab from './BindingBalanceTab.vue'
 import TransferNFTDialog from './TransferNFTDialog.vue'
 import LockDialog from './LockDialog.vue'
 import useUserStore from '@/store'
+import useAccount from '@/hooks/useAccount'
 import { t } from '@/lang'
 const store = useUserStore()
+const { getTrading } = useAccount()
 
 const props = defineProps({
   dataObj: {
@@ -301,16 +303,22 @@ const topUpMintList = ref<any>([])
 const isBindingBalance = ref(false)
 const unTopUpMintList = ref<any>([])
 
+const checkLogin = async () => {
+  const isTrad = await getTrading()
+  if (!isTrad) return
+  setMintNftEmitIsDialog()
+}
+
 const setMintNftEmitIsDialog = async () => {
   loadingText.value =
     'Your transcation is being processed, It should be confirmed on the blockchain shortly.'
   mainnetAddress.value = ''
+  isDialogLoading.value = true
   const isTraded = await whetherItTraded(props.dataObj.daoId)
   if (!isTraded) {
     isDialogLoading.value = false
     return
   }
-  isDialogLoading.value = true
   mintTransfer()
 }
 const mintTransfer = async () => {

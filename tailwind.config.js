@@ -15,7 +15,8 @@ export default {
         },
         'primary': {
           1: '#8C91FF',
-          2: '#C2C5FF'
+          2: '#C2C5FF',
+          3: '#B3B5F2'
         },
         'w': {
           1: '#fff',

@@ -9,7 +9,7 @@
           <favourite :data-obj="props.dataObj" :is-favorited="isFavorited" />
         </div>
       </div>
-      <p class="leading-5">
+      <p class="leading-5 line-clamp-3">
         {{ props.dataObj.daoDescription }}
       </p>
     </div>

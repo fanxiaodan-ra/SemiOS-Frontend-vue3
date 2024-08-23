@@ -10,66 +10,57 @@
     :daoName="daoName"
     v-if="store.addNodeType !== 0"
   />
-  <ModeSelection
-    :isModeSelection="isModeSelection"
+  <SelectionOrBase
+    from="setupDao"
     :daoName="daoName"
-    :initData="initData"
-    @cancelDialog="setIsModeSelection"
-    @setLoading="setLoading"
-    @setAddType="setAddType"
-    @show-suc-dialog="setShowSucDialog"
+    :isModeSelection="isModeSelection"
+    @setIsModeSelection="setIsModeSelection"
   />
-  <DialogLoading :title="'Setup Nodes'" :isLoading="isDialogLoading" />
-  <SucDialog v-model="showSucDialog" />
-
 </template>
 <script setup lang="ts">
-import DialogLoading from '@/components/DialogLoading.vue'
-import { maincreator } from '@/api/daos'
-import { ref, onMounted } from 'vue'
-import ModeSelection from './ModeSelection.vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import AddNodeName from './AddNodeName.vue'
 import AddNodeForm from './AddNodeForm.vue'
-import SucDialog from './components/SucDialog.vue'
+import SelectionOrBase from './SelectionOrBase.vue'
 import useUserStore from '@/store'
+import useSetupDaoStore from '@/store/setupDao'
 import { useRoute } from 'vue-router'
 
-const store = useUserStore()
-const isDialogLoading = ref(false)
-const setLoading = (val: boolean) => {
-  isDialogLoading.value = val
-}
 const route = useRoute()
+const store = useUserStore()
+const setupDaoStore = useSetupDaoStore()
 
 const daoName = ref('')
-const showSucDialog = ref(false)
 const setDaoName = (val: string) => {
   daoName.value = val
 }
 
 const isModeSelection = ref(false)
-
 const setIsModeSelection = (val: boolean) => {
   isModeSelection.value = val
 }
-const initData = ref<any>({})
-const getInitData = async () => {
-  const res = await maincreator({ daoId: route.query.id })
-  initData.value = res.data
-}
 
+const initData = computed(() => setupDaoStore.initData)
+onMounted(() => {
+  if (route.query.id) {
+    setupDaoStore.initDaoParams({
+      daoId: route.query.id as string,
+    })
+  } else {
+    setupDaoStore.clearInitData()
+  }
+})
 const setAddType = (val: number) => {
   store.setNodeType(val)
 }
+watch(() => route.query.type, (val) => {
+  const type = Number(val) || 0
+  setAddType(type)
+}, { immediate: true })
 
-const setShowSucDialog = (val: boolean) => {
-  showSucDialog.value = val
-}
-
-onMounted(() => {
-  store.setNodeType(0)
-  if (route.query.id) {
-    getInitData()
+watch(() => route.query.daoName, (val) => {
+  if (val) {
+    setDaoName(val as string)
   }
-})
+}, { immediate: true })
 </script>

@@ -78,15 +78,15 @@ const formData = ref({
   ETHOtherNodesList: [],
   daoPriceReserveRatio: {
     builder: 0,
-    mainDAO: 97.5,
+    mainDao: 97.5,
     pDao: 0,
-    subDAO: 2.5,
+    subDao: 2.5,
   },
   fixedPriceReserveRatio: {
     builder: 0,
-    mainDAO: 97.5,
+    mainDao: 97.5,
     pDao: 0,
-    subDAO: 2.5,
+    subDao: 2.5,
   },
   royalty: {
     pDao: 0,
@@ -153,19 +153,19 @@ const getData = async () => {
     )
     formData.value.daoPriceReserveRatio.builder =
       initData.value.unFixedReserveRatio.canvasMintFee
-    formData.value.daoPriceReserveRatio.mainDAO =
+    formData.value.daoPriceReserveRatio.mainDao =
       initData.value.unFixedReserveRatio.redeemPoolMintFee
     formData.value.daoPriceReserveRatio.pDao =
       initData.value.unFixedReserveRatio.d4aMintFee
-    formData.value.daoPriceReserveRatio.subDAO =
+    formData.value.daoPriceReserveRatio.subDao =
       initData.value.unFixedReserveRatio.daoMintFee
     formData.value.fixedPriceReserveRatio.builder =
       initData.value.fixedReserveRatio.canvasMintFee
-    formData.value.fixedPriceReserveRatio.mainDAO =
+    formData.value.fixedPriceReserveRatio.mainDao =
       initData.value.fixedReserveRatio.redeemPoolMintFee
     formData.value.fixedPriceReserveRatio.pDao =
       initData.value.fixedReserveRatio.d4aMintFee
-    formData.value.fixedPriceReserveRatio.subDAO =
+    formData.value.fixedPriceReserveRatio.subDao =
       initData.value.fixedReserveRatio.daoMintFee
 
     formData.value.royalty = {

@@ -61,7 +61,7 @@
 import FormRow from '@/components/FormRow.vue'
 import DialogFormAddress from '@/components/nodeStrategies/DialogFormAddress.vue'
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -71,8 +71,20 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{ address: string }>,
+    default: () => [],
+  },
 })
-const mintingWithUnlimitedlistAddress = ref<any>([])
+const mintingWithUnlimitedlistAddress = ref(props.list)
+watch(
+  () => props.list,
+  (val) => {
+    mintingWithUnlimitedlistAddress.value = val
+  },
+  { deep: true }
+)
+
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

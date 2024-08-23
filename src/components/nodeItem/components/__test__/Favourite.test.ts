@@ -54,7 +54,6 @@ describe('FavouriteVue', () => {
       }
     })
     const favorite = wrapper.find('.favourite')
-    console.log(favorite.html())
     expect(favorite.exists()).toBeTruthy()
     expect(favorite.find('.icon-shoucang').exists()).toBeTruthy()
     expect(favorite.find('.favorite-num').text()).toEqual('0')

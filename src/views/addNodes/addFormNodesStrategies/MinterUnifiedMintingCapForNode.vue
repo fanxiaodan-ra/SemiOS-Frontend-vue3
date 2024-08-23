@@ -54,7 +54,7 @@
 import FormRow from '@/components/FormRow.vue'
 import DialogFormMinterUnifiedMintingCap from '@/components/nodeStrategies/DialogFormMinterUnifiedMintingCap.vue'
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -64,8 +64,20 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{ amount: number }>,
+    default: () => [],
+  },
 })
-const mintingCapForDaolistAmount = ref<any>([])
+const mintingCapForDaolistAmount = ref(props.list)
+watch(
+  () => props.list,
+  (val) => {
+    mintingCapForDaolistAmount.value = val
+  },
+  { deep: true }
+)
+
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

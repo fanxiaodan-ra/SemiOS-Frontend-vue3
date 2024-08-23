@@ -80,6 +80,13 @@ import FormRow from '@/components/FormRow.vue'
 import { reactive, onMounted, watch } from 'vue'
 import { t } from '@/lang'
 
+const DEFAULT_ROYALTY = {
+  pDao: 0,
+  subDao: 50,
+  builder: 25,
+  minter: 25,
+}
+
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -91,12 +98,7 @@ const props = defineProps({
   },
 })
 const formData = reactive({
-  royalty: {
-    pDao: 0,
-    subDao: 50,
-    builder: 25,
-    minter: 25,
-  },
+  royalty: props.formDataProp.royalty || DEFAULT_ROYALTY,
 })
 
 const emit = defineEmits(['setFormData'])
@@ -104,6 +106,14 @@ watch(
   () => formData,
   (value) => {
     emit('setFormData', value)
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.formDataProp.royalty,
+  (value) => {
+    formData.royalty = value
   },
   { deep: true }
 )
@@ -168,7 +178,6 @@ const setInput = (
   }
 }
 onMounted(() => {
-  // emit('setFormData', formData)
   if (props.isEdit) {
     formData.royalty = {
       pDao: props.formDataProp.daoRoyaltyToken.d4aReward,

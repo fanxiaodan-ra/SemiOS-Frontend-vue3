@@ -43,7 +43,7 @@ describe('setupDao', () => {
   it('inquireNft0AndDaoId with resolved correct values', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);
-    store = useSetupDaoStore();
+    store = useSetupDaoStore() as any;
     vi.useFakeTimers();
     vi.mock('@/api/works', () => {
       return {

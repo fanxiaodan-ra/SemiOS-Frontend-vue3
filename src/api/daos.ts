@@ -33,7 +33,7 @@ const daoTimes = async () => {
   })
 }
 
-const maincreator = async (data: any) => {
+const maincreator = async (data: { daoId: string }) => {
   return service({
     url: `/api/dao/maincreator`,
     method: 'POST',
@@ -458,6 +458,14 @@ const togetherPlanBasicInfo = async (data: any) => {
   })
 }
 
+const exportDaoInfo = async (data: { daoId: string, type: number }) => {
+  return service({
+    url: `/api/dao/export/info`,
+    method: 'POST',
+    data: data,
+  })
+}
+
 export {
   checkName,
   whitelistProof,
@@ -512,5 +520,6 @@ export {
   treasuryList,
   treasuryTransaction,
   togetherPlanList,
-  togetherPlanBasicInfo
+  togetherPlanBasicInfo,
+  exportDaoInfo,
 }

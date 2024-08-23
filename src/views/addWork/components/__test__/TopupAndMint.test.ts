@@ -47,7 +47,6 @@ describe('TopupAndMintVue', () => {
         plugins: [vuetify]
       }
     });
-    console.log(wrapper.html())
     expect(wrapper.text()).toBe('This Nodes has enabled Top-Up mode, so it does not follow the normal Block Reward logic.');
   })
 })

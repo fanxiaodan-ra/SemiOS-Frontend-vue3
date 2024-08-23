@@ -8,7 +8,7 @@
         </v-btn>
       </div>
       <v-card-actions>
-        <v-btn border class="text-none btnmo btnb my-mgb12 ftr" prepend-icon="mdi-plus" variant="text" block
+        <v-btn v-if="from !== 'nodeDetails'" border class="text-none btnmo btnb my-mgb12 ftr" prepend-icon="mdi-plus" variant="text" block
           size="large" @click="basicMode">
           {{ $t('ModeSelection.btnText', 0) }}
         </v-btn>
@@ -45,6 +45,10 @@ const props = defineProps({
     type: Object,
     default: () => { },
   },
+  from: {
+    type: String,
+    default: '',
+  },
 })
 
 const cloceMode = () => {
@@ -52,8 +56,9 @@ const cloceMode = () => {
 }
 import { ethers } from 'ethers'
 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 const basicMode = async () => {
   emit('setLoading', true)
   emit('cancelDialog', false)
@@ -82,15 +87,15 @@ const basicMode = async () => {
     topUpMode: false,
     daoPriceReserveRatio: {
       builder: 0,
-      mainDAO: 97.5,
+      mainDao: 97.5,
       pDao: 0,
-      subDAO: 2.5,
+      subDao: 2.5,
     },
     fixedPriceReserveRatio: {
       builder: 0,
-      mainDAO: 97.5,
+      mainDao: 97.5,
       pDao: 0,
-      subDAO: 2.5,
+      subDao: 2.5,
     },
     royalty: {
       pDao: 0,
@@ -132,26 +137,33 @@ const basicMode = async () => {
     emit('showSucDialog', true)
   }
 }
-// import useToastNotify from '@/hooks/useToastNotify'
-// const { notifyErr, notifyInfo, notifySuc } = useToastNotify()
+
+const goSetupDao = (type: number) => {
+  if (!(props.from === 'nodeDetails')) return
+  router.push({
+    path: '/setupNodes',
+    query: {
+      forkId: route.query.id,
+      id: route.query.id,
+      type: type,
+      daoName: props.daoName,
+    },
+  })
+}
+
 const instructionMode = () => {
   emit('cancelDialog', false)
   const type = route.query.id ? 2 : 1
   emit('setAddType', type)
-  // setTimeout(() => {
-  //   emit("setAddType", 1);
-  // }, 500);
-  // notifyErr("");
+
+  goSetupDao(type)
 }
+
 const professionalMode = () => {
   emit('cancelDialog', false)
   emit('setAddType', 6)
-  // setTimeout(() => {
-  //   emit("setAddType", 2);
-  // }, 500);
-  // notifyInfo()
-  // notifySuc('')
-  // notifyErr('')
+
+  goSetupDao(6)
 }
 </script>
 

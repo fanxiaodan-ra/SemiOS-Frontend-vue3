@@ -46,7 +46,7 @@
           {{ bigNumFormat(info?.mintFee, 5, 0.000001) }}
           <TokenIcon
             mgl="6px"
-            :daoToken="info?.daoToken"
+            :daoToken="dataObj?.erc20PaymentMode"
             :daoSymbol="dataObj.daoSymbol"
             :daoErc20Address="dataObj.daoErc20Address"
             :payCurrencyType="dataObj.payCurrencyType"

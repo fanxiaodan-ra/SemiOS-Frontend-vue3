@@ -86,7 +86,6 @@ export default function useToastNotify() {
         hideProgressBar: false, // 显示/隐藏进度条
         closeButton: false,
         icon: true,
-
         rtl: false,
       }
     )
@@ -104,7 +103,7 @@ export default function useToastNotify() {
       hideProgressBar: false, // 显示/隐藏进度条
       closeButton: false,
       icon: {
-        iconClass: 'iconfont icon-a-SEMIOSlogodange', // Optional
+        iconClass: 'iconfont icon-logoicon', // Optional
         iconChildren: '', // Optional
         iconTag: 'span', // Optional
       },

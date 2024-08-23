@@ -1,26 +1,48 @@
 <template>
   <div class="from-box">
+    <div class="w-full max-w-[1200px] self-center flex flex-col mx-auto" v-if="route.query.id">
+      <ImportForkedParam className="self-end mt-6" />
+    </div>
     <NodesHeader v-if="store.addNodeType > 0" />
-    <AddFormAssetType @setFormData="setFormData" v-show="(store.addNodeType === 1 || store.addNodeType === 6) && !route.query.id
-      " :formDataProp="formData" :initData="props.initData" ref="AddFormAssetTypeRef" />
-    <AddFormBlock @setFormData="setFormData" v-show="store.addNodeType === 2 || store.addNodeType === 6"
-      :formDataProp="formData" :initData="props.initData" />
-    <AddFormWork @setFormData="setFormData" v-show="store.addNodeType === 3 || store.addNodeType === 6"
-      :formDataProp="formData" />
-    <AddFormTokenomicsStructure @setFormData="setFormData" v-show="store.addNodeType === 4 || store.addNodeType === 6"
-      :formDataProp="formData" />
-    <AddFormNodesStrategies @setFormData="setFormData" v-show="store.addNodeType === 5 || store.addNodeType === 6"
-      :formDataProp="formData" />
+    <AddFormAssetType
+      @setFormData="setFormData"
+      v-show="(store.addNodeType === 1 || store.addNodeType === 6) && !route.query.id"
+      :formDataProp="formData"
+      :initData="props.initData"
+      ref="AddFormAssetTypeRef"
+    />
+    <AddFormBlock
+      @setFormData="setFormData" v-show="store.addNodeType === 2 || store.addNodeType === 6"
+      :formDataProp="formData"
+      :initData="props.initData"
+    />
+    <AddFormWork
+      @setFormData="setFormData" v-show="store.addNodeType === 3 || store.addNodeType === 6"
+      :formDataProp="formData"
+    />
+    <AddFormTokenomicsStructure
+      @setFormData="setFormData"
+      v-show="store.addNodeType === 4 || store.addNodeType === 6"
+      :formDataProp="formData"
+    />
+    <AddFormNodesStrategies
+      @setFormData="setFormData"
+      v-show="store.addNodeType === 5 || store.addNodeType === 6"
+      :formDataProp="formData"
+    />
 
-    <div class="dflex flex-jc my-mgb24 my-mgt24" v-if="store.addNodeType === 6">
+    <div
+      class="dflex flex-jc my-mgb24 my-mgt24"
+      v-if="store.addNodeType === 6"
+    >
       <v-btn block class="btnz text-none" type="submit" @click="submit">
         {{
-          t('common.submit')
+        t('common.submit')
         }}
       </v-btn>
     </div>
 
-    <DialogLoading :title="'Setup Nodes'" :isLoading="isDialogLoading" />
+    <DialogLoading title="Setup Nodes" :isLoading="isDialogLoading" />
     <SucDialog v-model="showSucDialog" />
   </div>
 </template>
@@ -33,17 +55,22 @@ import AddFormWork from './AddFormWork.vue'
 import AddFormTokenomicsStructure from './addFormTokenomicsStructure/Index.vue'
 import AddFormNodesStrategies from './addFormNodesStrategies/Index.vue'
 import NodesHeader from './NodesHeader.vue'
+import ImportForkedParam from './components/ImportForkedParam.vue'
 import useUserStore from '@/store'
 import { useRoute } from 'vue-router'
 import { t } from '@/lang'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import { ethers } from 'ethers'
 import useAddNodes from '@/hooks/useAddNodes'
 import useAccount from '@/hooks/useAccount'
+import useForkedParams from './hooks/useForkedParams'
+import type { Erc721MintIdCaps, WhiteListedERC721Id, ReserveRatio, ethReserveRatio, MintingAddress, ERCNftAddress, NodeList } from '@/types/SetupDao'
 
 const { getTrading } = useAccount()
+
 const route = useRoute()
 const store = useUserStore()
+
 const props = defineProps({
   initData: {
     type: Object,
@@ -63,9 +90,8 @@ const formData = ref({
   inputTokenErc20ContractAddress: '',
   thirdParty: false,
   erc20ContractAddress: '',
-  mintingNftWithMaxlistAddress: [],
-  mintingNftWithUnlimitedlistAddress: [],
-  workNftlistAddress: [],
+  mintingNftWithMaxlistAddress: [] as Erc721MintIdCaps,
+  mintingNftWithUnlimitedlistAddress: [] as WhiteListedERC721Id,
   // ------- block
 
   daoStartDate: '',
@@ -90,43 +116,49 @@ const formData = ref({
   //----------Nodes Tokenomics Structure
   lotteryMode: false,
   ERC20OtherNodes: 0,
-  ERCOtherNodeslist: [],
-  ETHOtherNodesList: [],
+  ERCOtherNodeslist: [] as NodeList[],
+  ETHOtherNodesList: [] as NodeList[],
   ETHOtherNodes: 0,
-  nodesReservesRatioERC20: 0,
+  nodesReservesRatioERC20: 100,
   nodesReservesRatioETH: 0,
   selfRewardRatioERC20: 0,
   selfRewardRatioETH: 0,
-  redeemPoolRatioETH: 0,
+  redeemPoolRatioETH: 100,
   daoPriceReserveRatio: {
     builder: 0,
-    mainDAO: 97.5,
+    mainDao: 97.5,
     pDao: 0,
-    subDAO: 2.5,
-  },
+    subDao: 2.5,
+  } as ReserveRatio,
   fixedPriceReserveRatio: {
     builder: 0,
-    mainDAO: 97.5,
+    mainDao: 97.5,
     pDao: 0,
-    subDAO: 2.5,
-  },
+    subDao: 2.5,
+  } as ReserveRatio,
   royalty: {
     pDao: 0,
     subDao: 50,
     builder: 25,
     minter: 25,
-  },
-  eth: { pDao: 0, subDao: 50, builder: 25, minter: 25 },
+  } as ethReserveRatio,
+  eth: {
+    pDao: 0,
+    subDao: 50,
+    builder: 25,
+    minter: 25
+  } as ethReserveRatio,
 
-  workBlacklistAddress: [],
-  workWhitelistAddress: [],
-  workErclistAddress: [],
-  mintingBlacklistAddress: [],
-  mintingWithMaxlistAddress: [],
-  mintingWithUnlimitedlistAddress: [],
-  mintingErcWithMaxlistAddress: [],
-  mintingErcWithUnlimitedlistAddress: [],
-  mintingCapForDaolistAmount: [],
+  workBlacklistAddress: [] as Array<{ address: string }>,
+  workWhitelistAddress: [] as Array<{ address: string }>,
+  workErclistAddress: [] as Array<{ address: string }>,
+  workNftlistAddress: [] as WhiteListedERC721Id,
+  mintingBlacklistAddress: [] as Array<{ address: string }>,
+  mintingWithMaxlistAddress: [] as MintingAddress,
+  mintingWithUnlimitedlistAddress: [] as Array<{ address: string }>,
+  mintingErcWithMaxlistAddress: [] as ERCNftAddress,
+  mintingErcWithUnlimitedlistAddress: [] as Array<{ address: string }>,
+  mintingCapForDaolistAmount: [] as Array<{ amount: number }>,
 
   tokenAllocation: 0,
   type: 1,
@@ -134,8 +166,35 @@ const formData = ref({
     ? props.initData.existDaoId
     : ethers.constants.HashZero,
   isAncestorDao: props.initData.existDaoId ? false : true,
-  initData: {},
+  initData: {} as any,
 })
+
+const {
+  nodeBlockParam,
+  nodeWorksParam,
+  nodesTokenStructure,
+  nodesStrategies,
+  setForkedParams,
+  resetParams,
+} = useForkedParams()
+
+watch(
+  () => [
+    nodeBlockParam.value,
+    nodeWorksParam.value,
+    nodesTokenStructure.value,
+    nodesStrategies.value
+  ],
+  () => {
+    formData.value = {
+      ...formData.value,
+      ...nodeBlockParam.value,
+      ...nodeWorksParam.value,
+      ...nodesTokenStructure.value,
+      ...nodesStrategies.value,
+    }
+}, { deep: true })
+
 const valid = ref(false)
 const formsValid = ref([true, true, true, true])
 const showSucDialog = ref(false)
@@ -175,6 +234,7 @@ const submit = async () => {
     isDialogLoading.value = false
     if (result) {
       showSucDialog.value = true
+      resetParams()
     }
   } catch (error) {
     isDialogLoading.value = false
@@ -182,11 +242,19 @@ const submit = async () => {
 }
 
 onMounted(() => {
+  if (route.query.forkId) {
+    setForkedParams(route.query.id as string)
+  }
+
   formData.value.thirdParty = props.initData.thirdParty
     ? props.initData.thirdParty
     : false
   formData.value.daoName = props.daoName
   formData.value.inputToken = !route.query.id ? '0x0000000000000000000000000000000000000000' : props.initData.payCurrencyType === 'ETH' ? '0x0000000000000000000000000000000000000000' : props.initData.inputTokenAddress
+})
+
+onBeforeUnmount(() => {
+  resetParams()
 })
 
 watch(
@@ -195,6 +263,10 @@ watch(
     if (data) {
       formData.value = {
         ...formData.value,
+        existDaoId: data.existDaoId
+          ? data.existDaoId
+          : ethers.constants.HashZero,
+        isAncestorDao: data.existDaoId ? false : true,
         initData: data,
       }
     }

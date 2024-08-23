@@ -39,15 +39,15 @@
             <v-col class="my-mgl12">
               <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.subNodesFeeLabel')"
                 density="comfortable" append-inner-icon="mdi-percent-outline"
-                v-model="formData.daoPriceReserveRatio.subDAO" 
+                v-model="formData.daoPriceReserveRatio.subDao" 
                 :rules="[
                   (v:number) => v >= 0.1 || $t('common.dontLess', { num: 0.1 }),
                 ]"
                 type="number"
                 @update:modelValue="
                   setFloatingInput(
-                    formData.daoPriceReserveRatio.subDAO,
-                    'subDAO',
+                    formData.daoPriceReserveRatio.subDao,
+                    'subDao',
                     1,
                     0.1,
                     100
@@ -63,10 +63,10 @@
               <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.seedNodesFeeLabel')"
                 density="comfortable" append-inner-icon="mdi-percent-outline"
                 type="number"
-                v-model="formData.daoPriceReserveRatio.mainDAO" @update:modelValue="
+                v-model="formData.daoPriceReserveRatio.mainDao" @update:modelValue="
         setFloatingInput(
-          formData.daoPriceReserveRatio.mainDAO,
-          'mainDAO',
+          formData.daoPriceReserveRatio.mainDao,
+          'mainDao',
           1,
           0,
           100
@@ -113,15 +113,15 @@
           <v-col class="my-mgl12">
             <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.subNodesFeeLabel')"
               density="comfortable" append-inner-icon="mdi-percent-outline"
-              v-model="formData.fixedPriceReserveRatio.subDAO"
+              v-model="formData.fixedPriceReserveRatio.subDao"
               :rules="[
                   (v:number) => v >= 0.1 || $t('common.dontLess', { num: 0.1 }),
                 ]"
               type="number"
               @update:modelValue="
               setFixedInput(
-                formData.fixedPriceReserveRatio.subDAO,
-                'subDAO',
+                formData.fixedPriceReserveRatio.subDao,
+                'subDao',
                 1,
                 0.1,
                 100
@@ -134,18 +134,24 @@
         </v-row>
         <v-row no-gutters v-if="!formDataProp.daoTokenMode && !formDataProp.thirdParty">
           <v-col class="my-mgr12">
-            <v-text-field class="color-input-a" :label="$t('AddFormTokenomicsStructure.seedNodesFeeLabel')"
+            <v-text-field
+              class="color-input-a"
+              :label="$t('AddFormTokenomicsStructure.seedNodesFeeLabel')"
               density="comfortable" append-inner-icon="mdi-percent-outline"
               type="number"
-              v-model="formData.fixedPriceReserveRatio.mainDAO" @update:modelValue="
-        setFixedInput(
-          formData.fixedPriceReserveRatio.mainDAO,
-          'mainDAO',
-          1,
-          0,
-          100
-        )
-        " :error-messages="errorFixedMessage" @change="inputFixedErr">
+              v-model="formData.fixedPriceReserveRatio.mainDao"
+              @update:modelValue="
+                setFixedInput(
+                  formData.fixedPriceReserveRatio.mainDao,
+                  'mainDao',
+                  1,
+                  0,
+                  100
+                )
+              "
+              :error-messages="errorFixedMessage"
+              @change="inputFixedErr"
+            >
             </v-text-field>
           </v-col>
           <v-col class="my-mgl12">
@@ -173,6 +179,20 @@
 import FormRow from '@/components/FormRow.vue'
 import { reactive, ref, onMounted, watch } from 'vue'
 import { t } from '@/lang'
+
+const DEFAULT_DAO_PRICE_RESERVE_RATIO = {
+  builder: 0,
+  mainDao: 97.5,
+  pDao: 0,
+  subDao: 2.5,
+}
+const DEFAULT_FIXED_PRICE_RESERVE_RATIO = {
+  builder: 0,
+  mainDao: 97.5,
+  pDao: 0,
+  subDao: 2.5,
+}
+
 const props = defineProps({
   formDataProp: {
     type: Object,
@@ -186,10 +206,12 @@ const props = defineProps({
 
 const setMainDaoAndBuilder = (cur: boolean, old: boolean) => {
   if (cur !== old) {
-    formData.fixedPriceReserveRatio.mainDAO = cur ? 0 : 97.5
+    formData.fixedPriceReserveRatio.mainDao = cur ? 0 : 97.5
     formData.fixedPriceReserveRatio.builder = cur ? 97.5 : 0
-    formData.daoPriceReserveRatio.mainDAO = cur ? 0 : 97.5
+    formData.fixedPriceReserveRatio.subDao = 2.5
+    formData.daoPriceReserveRatio.mainDao = cur ? 0 : 97.5
     formData.daoPriceReserveRatio.builder = cur ? 97.5 : 0
+    formData.daoPriceReserveRatio.subDao = 2.5
   }
 }
 watch(
@@ -203,20 +225,21 @@ watch(
 )
 
 const formRef = ref()
+
 const formData = reactive({
-  daoPriceReserveRatio: {
-    builder: 0,
-    mainDAO: 97.5,
-    pDao: 0,
-    subDAO: 2.5,
-  },
-  fixedPriceReserveRatio: {
-    builder: 0,
-    mainDAO: 97.5,
-    pDao: 0,
-    subDAO: 2.5,
-  },
+  daoPriceReserveRatio: props.formDataProp.daoPriceReserveRatio || DEFAULT_DAO_PRICE_RESERVE_RATIO,
+  fixedPriceReserveRatio: props.formDataProp.fixedPriceReserveRatio || DEFAULT_FIXED_PRICE_RESERVE_RATIO,
 })
+
+watch(() => [
+  props.formDataProp.daoPriceReserveRatio,
+  props.formDataProp.fixedPriceReserveRatio,
+], ([daoPriceReserveRatio, fixedPriceReserveRatio]) => {
+  if (!props.isEdit) {
+    formData.daoPriceReserveRatio = daoPriceReserveRatio
+    formData.fixedPriceReserveRatio = fixedPriceReserveRatio
+  }
+}, { deep: true })
 
 const emit = defineEmits(['setFormData'])
 watch(
@@ -242,9 +265,9 @@ const errorFloatingMessage = ref<string[]>([])
 const inputFloatingErr = () => {
   const num = plusOthers(
     formData.daoPriceReserveRatio.builder,
-    formData.daoPriceReserveRatio.mainDAO,
+    formData.daoPriceReserveRatio.mainDao,
     formData.daoPriceReserveRatio.pDao,
-    formData.daoPriceReserveRatio.subDAO
+    formData.daoPriceReserveRatio.subDao
   )
   if (num !== 100) {
     errorFloatingMessage.value = ['The sum must equal 100%']
@@ -270,9 +293,9 @@ const errorFixedMessage = ref<string[]>([])
 const inputFixedErr = () => {
   const num = plusOthers(
     formData.fixedPriceReserveRatio.builder,
-    formData.fixedPriceReserveRatio.mainDAO,
+    formData.fixedPriceReserveRatio.mainDao,
     formData.fixedPriceReserveRatio.pDao,
-    formData.fixedPriceReserveRatio.subDAO
+    formData.fixedPriceReserveRatio.subDao
   )
   if (num !== 100) {
     errorFixedMessage.value = [t('common.sumMustEqual100')]
@@ -286,27 +309,27 @@ const inputFixedErr = () => {
 onMounted(() => {
   if (!props.isEdit) {
     if (props.formDataProp.thirdParty) {
-      formData.daoPriceReserveRatio.mainDAO = 0
-      formData.daoPriceReserveRatio.subDAO = 100
-      formData.fixedPriceReserveRatio.mainDAO = 0
-      formData.fixedPriceReserveRatio.subDAO = 100
+      formData.daoPriceReserveRatio.mainDao = 0
+      formData.daoPriceReserveRatio.subDao = 100
+      formData.fixedPriceReserveRatio.mainDao = 0
+      formData.fixedPriceReserveRatio.subDao = 100
     }
   } else {
     formData.daoPriceReserveRatio.builder =
       props.formDataProp.unFixedReserveRatio.canvasMintFee
-    formData.daoPriceReserveRatio.mainDAO =
+    formData.daoPriceReserveRatio.mainDao =
       props.formDataProp.unFixedReserveRatio.redeemPoolMintFee
     formData.daoPriceReserveRatio.pDao =
       props.formDataProp.unFixedReserveRatio.d4aMintFee
-    formData.daoPriceReserveRatio.subDAO =
+    formData.daoPriceReserveRatio.subDao =
       props.formDataProp.unFixedReserveRatio.daoMintFee
     formData.fixedPriceReserveRatio.builder =
       props.formDataProp.fixedReserveRatio.canvasMintFee
-    formData.fixedPriceReserveRatio.mainDAO =
+    formData.fixedPriceReserveRatio.mainDao =
       props.formDataProp.fixedReserveRatio.redeemPoolMintFee
     formData.fixedPriceReserveRatio.pDao =
       props.formDataProp.fixedReserveRatio.d4aMintFee
-    formData.fixedPriceReserveRatio.subDAO =
+    formData.fixedPriceReserveRatio.subDao =
       props.formDataProp.fixedReserveRatio.daoMintFee
   }
 })

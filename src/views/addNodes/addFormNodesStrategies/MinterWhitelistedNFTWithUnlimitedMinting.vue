@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import DialogFormNft from '@/components/nodeStrategies/DialogFormNft.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { t } from '@/lang'
 const props = defineProps({
   isEdit: {
@@ -71,8 +71,23 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{
+      erc721Address: string
+      tokenId: string
+    }>,
+    default: () => [],
+  },
 })
-const mintingNftWithUnlimitedlistAddress = ref<any>([])
+const mintingNftWithUnlimitedlistAddress = ref(props.list)
+watch(
+  () => props.list,
+  (val) => {
+    mintingNftWithUnlimitedlistAddress.value = val
+  },
+  { deep: true }
+)
+
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

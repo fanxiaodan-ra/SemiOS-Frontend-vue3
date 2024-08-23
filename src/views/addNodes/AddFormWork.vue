@@ -206,9 +206,48 @@ const formData = ref({
   doublingFactor: 2,
   growthFactor: 0.1,
 }) as any
+
 const emit = defineEmits(['setFormData'])
 
+watch(
+  () => [
+    props.formDataProp.needMintableWork,
+    props.formDataProp.passesQuantity,
+    props.formDataProp.daoTokenMode,
+    props.formDataProp.daoFloorPrice,
+    props.formDataProp.unifiedPriceMode,
+    props.formDataProp.unifiedPrice,
+    props.formDataProp.fluctuationMethod,
+    props.formDataProp.doublingFactor,
+    props.formDataProp.growthFactor,
+  ],
+  ([
+    needMintableWork,
+    passesQuantity,
+    daoTokenMode,
+    daoFloorPrice,
+    unifiedPriceMode,
+    unifiedPrice,
+    fluctuationMethod,
+    doublingFactor,
+    growthFactor,
+  ]) => {
+    formData.value.needMintableWork = needMintableWork
+    formData.value.passesQuantity = passesQuantity
+    formData.value.daoTokenMode = daoTokenMode
+    formData.value.daoFloorPrice = daoFloorPrice
+    formData.value.unifiedPriceMode = unifiedPriceMode
+    formData.value.unifiedPrice = unifiedPrice
+    formData.value.fluctuationMethod = fluctuationMethod
+    formData.value.doublingFactor = doublingFactor
+    formData.value.growthFactor = growthFactor
+  },
+  { deep: true }
+)
+
 const validateForm = async (value: any) => {
+  if (!formRef.value) return
+
   const { valid } = await formRef.value.validate()
   emit('setFormData', {
     formVal: value,

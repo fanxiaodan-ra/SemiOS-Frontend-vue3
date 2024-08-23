@@ -17,7 +17,6 @@ window.$onboard = initWeb3
 const { notifyErr } = useToastNotify()
 
 export default function useAccount() {
-  const router = useRouter()
   const isLoading = ref(true)
   let unsubscribeFc = null as any
 
@@ -80,6 +79,7 @@ export default function useAccount() {
 
   const setLogOut = async () => {
     const store = useUserStore()
+    const router = useRouter()
     logout()
     store.setUserInfo({
       token: '',

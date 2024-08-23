@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import DialogFormAddress from '@/components/nodeStrategies/DialogFormAddress.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -59,8 +59,20 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{ address: string }>,
+    default: () => [],
+  },
 })
-const workWhitelistAddress = ref<any>([])
+const workWhitelistAddress = ref<Array<{ address: string }>>(props.list)
+
+watch(
+  () => props.list,
+  (val) => {
+    workWhitelistAddress.value = val
+  },
+  { deep: true }
+)
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

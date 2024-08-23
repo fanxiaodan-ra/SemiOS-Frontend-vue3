@@ -1,20 +1,20 @@
 <template>
   <SlotDialog
-      :title="t('setupDaoSuc.title')"
-      :isDialog="newValue"
-      @cancelDialog="cancelDialog"
-      width="544px"
-    >
-      <div class="flex justify-center flex-col px-12 pt-8">
-        <v-img
-          :src="nft0Info.imgUrl"
-          :height="400"
-          :width="448"
-          :style="{
-            background: nft0Info.bgColor,
-          }"
-          class="rounded-[2px] mb-6"
-        ></v-img>
+    :title="t('setupDaoSuc.title')"
+    :isDialog="newValue"
+    @cancelDialog="cancelDialog"
+    width="544px"
+  >
+    <div class="flex justify-center flex-col px-12 pt-8">
+      <v-img
+        :src="nft0Info.imgUrl"
+        :height="400"
+        :width="448"
+        :style="{
+          background: nft0Info.bgColor,
+        }"
+        class="rounded-[2px] mb-6"
+      ></v-img>
       <p class="text-sm text-white mb-10">
         {{ t('setupDaoSuc.desc') }}
       </p>
@@ -34,9 +34,8 @@
           >{{ t('setupDaoSuc.nftDetail') }}</v-btn
         >
       </div>
-      </div>
-      
-    </SlotDialog>
+    </div>
+  </SlotDialog>
 </template>
 <script setup lang="ts">
 import SlotDialog from '@/components/SlotDialog.vue'

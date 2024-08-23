@@ -64,15 +64,15 @@ const formData = ref<any>({
   ETHOtherNodesList: [],
   daoPriceReserveRatio: {
     builder: 0,
-    mainDAO: 97.5,
+    mainDao: 97.5,
     pDao: 0,
-    subDAO: 2.5,
+    subDao: 2.5,
   },
   fixedPriceReserveRatio: {
     builder: 0,
-    mainDAO: 97.5,
+    mainDao: 97.5,
     pDao: 0,
-    subDAO: 2.5,
+    subDao: 2.5,
   },
   royalty: {
     pDao: 0,

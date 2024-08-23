@@ -5,41 +5,49 @@
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingBlacklistAddress"
     />
     <MinterWhitelistAddressWithMaxMinting
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingWithMaxlistAddress"
     />
     <MinterWhitelistAddressWithUnlimitedMinting
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingWithUnlimitedlistAddress"
     />
     <MinterWhitelistedNFTWithMaxMinting
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingNftWithMaxlistAddress"
     />
     <MinterWhitelistedNFTWithUnlimitedMinting
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingNftWithUnlimitedlistAddress"
     />
     <MinterWhitelistedERC721WithMaxMinting
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingErcWithMaxlistAddress"
     />
     <MinterWhitelistERC721WithUnlimitedMinting
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingErcWithUnlimitedlistAddress"
     />
     <MinterUnifiedMintingCapForNode
       @set-form-data="setFormData"
       :isEdit="props.isEdit"
       :initData="props.initData"
+      :list="formData.mintingCapForDaolistAmount"
     />
   </v-form>
 </template>
@@ -54,7 +62,7 @@ import MinterUnifiedMintingCapForNode from './MinterUnifiedMintingCapForNode.vue
 import MinterWhitelistedNFTWithMaxMinting from './MinterWhitelistedNFTWithMaxMinting.vue'
 import MinterWhitelistedNFTWithUnlimitedMinting from './MinterWhitelistedNFTWithUnlimitedMinting.vue'
 
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -64,17 +72,62 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  formDataProp: {
+    type: Object,
+    default: () => {},
+  },
 })
+
+const {
+  mintingBlacklistAddress = [],
+  mintingWithMaxlistAddress = [],
+  mintingWithUnlimitedlistAddress = [],
+  mintingErcWithMaxlistAddress = [],
+  mintingErcWithUnlimitedlistAddress = [],
+  mintingCapForDaolistAmount = [],
+  mintingNftWithMaxlistAddress = [],
+  mintingNftWithUnlimitedlistAddress = [],
+} = props.formDataProp
+
 const formData: any = reactive({
-  mintingBlacklistAddress: [],
-  mintingWithMaxlistAddress: [],
-  mintingWithUnlimitedlistAddress: [],
-  mintingErcWithMaxlistAddress: [],
-  mintingErcWithUnlimitedlistAddress: [],
-  mintingCapForDaolistAmount: [],
-  mintingNftWithMaxlistAddress: [],
-  mintingNftWithUnlimitedlistAddress: [],
+  mintingBlacklistAddress,
+  mintingWithMaxlistAddress,
+  mintingWithUnlimitedlistAddress,
+  mintingErcWithMaxlistAddress,
+  mintingErcWithUnlimitedlistAddress,
+  mintingCapForDaolistAmount,
+  mintingNftWithMaxlistAddress,
+  mintingNftWithUnlimitedlistAddress,
 })
+
+watch(() => [
+  props.formDataProp.mintingBlacklistAddress,
+  props.formDataProp.mintingWithMaxlistAddress,
+  props.formDataProp.mintingWithUnlimitedlistAddress,
+  props.formDataProp.mintingErcWithMaxlistAddress,
+  props.formDataProp.mintingErcWithUnlimitedlistAddress,
+  props.formDataProp.mintingCapForDaolistAmount,
+  props.formDataProp.mintingNftWithMaxlistAddress,
+  props.formDataProp.mintingNftWithUnlimitedlistAddress,
+], ([
+  mintingBlacklistAddress,
+  mintingWithMaxlistAddress,
+  mintingWithUnlimitedlistAddress,
+  mintingErcWithMaxlistAddress,
+  mintingErcWithUnlimitedlistAddress,
+  mintingCapForDaolistAmount,
+  mintingNftWithMaxlistAddress,
+  mintingNftWithUnlimitedlistAddress,
+]) => {
+  formData.mintingBlacklistAddress = mintingBlacklistAddress
+  formData.mintingWithMaxlistAddress = mintingWithMaxlistAddress
+  formData.mintingWithUnlimitedlistAddress = mintingWithUnlimitedlistAddress
+  formData.mintingErcWithMaxlistAddress = mintingErcWithMaxlistAddress
+  formData.mintingErcWithUnlimitedlistAddress = mintingErcWithUnlimitedlistAddress
+  formData.mintingCapForDaolistAmount = mintingCapForDaolistAmount
+  formData.mintingNftWithMaxlistAddress = mintingNftWithMaxlistAddress
+  formData.mintingNftWithUnlimitedlistAddress = mintingNftWithUnlimitedlistAddress
+}, { deep: true })
 
 const emit = defineEmits(['setFormData'])
 const setFormData = (value: any[], type: string) => {

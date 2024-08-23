@@ -45,7 +45,7 @@
           {{ bigNumFormat(info?.blockRewardToken, 5, 0.000001) }}
           <TokenIcon mgl="6px" :daoToken="true" :daoSymbol="dataObj.daoSymbol"
             :daoErc20Address="dataObj.daoErc20Address" />
-          <span v-if="!props.topupMode" class="my-flexaj">
+          <span v-if="!info?.topupMode" class="my-flexaj">
             + {{ bigNumFormat(info?.blockRewardEth, 5, 0.000001) }}
             <TokenIcon mgl="6px" :payCurrencyType="dataObj.payCurrencyType"
               :inputTokenAddress="dataObj.inputTokenAddress" />
@@ -53,11 +53,14 @@
         </v-col>
         <v-col class="my-flexaj" cols="4">
           {{ bigNumFormat(info?.internalRewardToken, 5, 0.000001) }}
-          <TokenIcon mgl="6px" :daoToken="true" :daoSymbol="dataObj.daoSymbol"
+          <TokenIcon
+            mgl="6px"
+            :daoToken="true"
+            :daoSymbol="dataObj.daoSymbol"
             :daoErc20Address="dataObj.daoErc20Address" />
-          <span v-if="!props.topupMode" class="my-flexaj">
+          <span v-if="!info?.topupMode" class="my-flexaj">
             +
-            {{ bigNumFormat(dataObj.internalRewardEth, 5, 0.000001) }}
+            {{ bigNumFormat(info?.internalRewardEth, 5, 0.000001) }}
             <TokenIcon mgl="6px" :payCurrencyType="dataObj.payCurrencyType"
               :inputTokenAddress="dataObj.inputTokenAddress" />
           </span>
@@ -69,8 +72,11 @@
           <span v-if="!props.topupMode" class="my-flexaj">
             +
             {{ bigNumFormat(dataObj.mintersMaxRewardEth, 5, 0.000001) }}
-            <TokenIcon mgl="6px" :payCurrencyType="dataObj.payCurrencyType"
-              :inputTokenAddress="dataObj.inputTokenAddress" />
+            <TokenIcon
+              mgl="6px"
+              :payCurrencyType="dataObj.payCurrencyType"
+              :inputTokenAddress="dataObj.inputTokenAddress"
+            />
           </span>
         </v-col>
       </v-row>
@@ -114,6 +120,7 @@ const info = ref({
   minters: 0,
   workStatus: 0,
   daoToken: false,
+  topupMode: false,
 });
 const loading = ref(false)
 const collectionDaoStore = useCollectionDaoStore()

@@ -2,7 +2,7 @@
   <div>
     <v-app-bar flat class="initbgc init-hader w-screen">
       <div class="logoclass" @click="goIndex">
-        <i class="iconfont icon-a-SEMIOSlogozuhe"></i>
+        <i class="iconfont icon-logozuhe"></i>
       </div>
 
       <v-responsive width="320">

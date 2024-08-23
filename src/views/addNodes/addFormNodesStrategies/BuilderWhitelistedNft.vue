@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import DialogFormNft from '@/components/nodeStrategies/DialogFormNft.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -60,8 +60,23 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{
+      erc721Address: string
+      tokenId: string
+    }>,
+    default: () => [],
+  }
 })
-const workNftlistAddress = ref<any>([])
+const workNftlistAddress = ref(props.list)
+
+watch(
+  () => props.list,
+  (val) => {
+    workNftlistAddress.value = val
+  }, 
+  { deep: true }
+)
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

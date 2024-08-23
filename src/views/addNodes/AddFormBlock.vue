@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="mx-auto my-pd24 max-w-[1200px] my-mgt24 my-mgb24"
+    class="mx-auto my-pd24 max-w-[1200px]"
     elevation="12"
   >
     <h3 class="node-name" v-if="store.addNodeType === 6">
@@ -105,7 +105,7 @@
           density="comfortable"
           v-model="formData.dailyMintCap"
           type="number"
-          :rules="[(v:any) => !!v || $t('common.dontOver', { num: '10000' })]"
+          :rules="[(v:string) => !!v || $t('common.dontOver', { num: '10000' })]"
           @update:modelValue="
             setInput(formData.dailyMintCap, 'dailyMintCap', 0, 1, 10000)
           "
@@ -163,15 +163,46 @@ const castings = [
   { label: t('common.fiftyK'), value: 3 },
   { label: t('common.oneHundredK'), value: 4 },
 ]
+
 const formData = ref({
-  daoStartDate: '',
-  topUpMode: false,
-  infiniteMode: false,
-  daoMintWindow: 60,
-  daoMintWindowDuration: 24,
-  totalNftCasting: 2,
-  dailyMintCap: 10000,
+  daoStartDate: props.formDataProp.daoStartDate,
+  topUpMode: props.formDataProp.topUpMode,
+  infiniteMode: props.formDataProp.infiniteMode,
+  daoMintWindow: props.formDataProp.daoMintWindow,
+  daoMintWindowDuration: props.formDataProp.daoMintWindowDuration,
+  totalNftCasting: props.formDataProp.totalNftCasting,
+  dailyMintCap: props.formDataProp.dailyMintCap,
 }) as any
+
+watch (
+  () => [
+    props.formDataProp.daoStartDate,
+    props.formDataProp.topUpMode,
+    props.formDataProp.infiniteMode,
+    props.formDataProp.daoMintWindow,
+    props.formDataProp.daoMintWindowDuration,
+    props.formDataProp.totalNftCasting,
+    props.formDataProp.dailyMintCap,
+  ],
+  ([
+    daoStartDate,
+    topUpMode,
+    infiniteMode,
+    daoMintWindow,
+    daoMintWindowDuration,
+    totalNftCasting,
+    dailyMintCap,
+  ]) => {
+    formData.value.daoStartDate = daoStartDate
+    formData.value.topUpMode = topUpMode
+    formData.value.infiniteMode = infiniteMode
+    formData.value.daoMintWindow = daoMintWindow
+    formData.value.daoMintWindowDuration = daoMintWindowDuration
+    formData.value.totalNftCasting = totalNftCasting
+    formData.value.dailyMintCap = dailyMintCap
+  },
+  { deep: true }
+)
 
 const initDate = async () => {
   const daoTime = await getDaoTime()
@@ -183,6 +214,7 @@ onMounted(() => {
 })
 
 const validateForm = async (value: any) => {
+  if (!formRef.value) return
   const { valid } = await formRef.value.validate()
   emit('setFormData', {
     formVal: value,
@@ -227,5 +259,3 @@ const setAddType = async (val: number) => {
   window.scrollTo(0, 0)
 }
 </script>
-
-<style lang="scss" scoped></style>

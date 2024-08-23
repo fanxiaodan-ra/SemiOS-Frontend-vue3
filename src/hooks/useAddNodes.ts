@@ -341,17 +341,17 @@ const getAllRatioParam = (formData: any) => {
     canvasCreatorMintFeeRatio: bigNumTimes(
       formData.daoPriceReserveRatio.builder
     ),
-    assetPoolMintFeeRatio: bigNumTimes(formData.daoPriceReserveRatio.subDAO),
-    redeemPoolMintFeeRatio: bigNumTimes(formData.daoPriceReserveRatio.mainDAO),
+    assetPoolMintFeeRatio: bigNumTimes(formData.daoPriceReserveRatio.subDao),
+    redeemPoolMintFeeRatio: bigNumTimes(formData.daoPriceReserveRatio.mainDao),
     treasuryMintFeeRatio: 0,
     canvasCreatorMintFeeRatioFiatPrice: bigNumTimes(
       formData.fixedPriceReserveRatio.builder
     ),
     assetPoolMintFeeRatioFiatPrice: bigNumTimes(
-      formData.fixedPriceReserveRatio.subDAO
+      formData.fixedPriceReserveRatio.subDao
     ),
     redeemPoolMintFeeRatioFiatPrice: bigNumTimes(
-      formData.fixedPriceReserveRatio.mainDAO
+      formData.fixedPriceReserveRatio.mainDao
     ),
     treasuryMintFeeRatioFiatPrice: 0,
     minterOutputRewardRatio: bigNumTimes(formData.royalty.minter),
@@ -500,6 +500,7 @@ export default function useAddNodes(seedNodeId?:string) {
         allRatioParam,
         actionType: 20,
       }
+      console.log('reqData', reqData)
       const tx = await createDaoForFunding(reqData)
       const res = await tx.wait()
       const setupDaoStore = useSetupDaoStore()
@@ -601,20 +602,20 @@ export default function useAddNodes(seedNodeId?:string) {
             formData.daoPriceReserveRatio.builder
           ),
           assetPoolMintFeeRatio: bigNumTimes(
-            formData.daoPriceReserveRatio.subDAO
+            formData.daoPriceReserveRatio.subDao
           ),
           redeemPoolMintFeeRatio: bigNumTimes(
-            formData.daoPriceReserveRatio.mainDAO
+            formData.daoPriceReserveRatio.mainDao
           ),
           treasuryMintFeeRatio: 0,
           canvasCreatorMintFeeRatioFiatPrice: bigNumTimes(
             formData.fixedPriceReserveRatio.builder
           ),
           assetPoolMintFeeRatioFiatPrice: bigNumTimes(
-            formData.fixedPriceReserveRatio.subDAO
+            formData.fixedPriceReserveRatio.subDao
           ),
           redeemPoolMintFeeRatioFiatPrice: bigNumTimes(
-            formData.fixedPriceReserveRatio.mainDAO
+            formData.fixedPriceReserveRatio.mainDao
           ),
           treasuryMintFeeRatioFiatPrice: 0,
           minterOutputRewardRatio: bigNumTimes(formData.royalty.minter),

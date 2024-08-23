@@ -84,36 +84,37 @@ const props = defineProps({
     default: () => {},
   },
 })
+const {
+  lotteryMode,
+  selfRewardRatioERC20,
+  nodesReservesRatioERC20,
+  ERC20OtherNodes,
+  redeemPoolRatioETH,
+  selfRewardRatioETH,
+  nodesReservesRatioETH,
+  ETHOtherNodes,
+  ERCOtherNodeslist,
+  ETHOtherNodesList,
+  daoPriceReserveRatio,
+  fixedPriceReserveRatio,
+  royalty,
+  eth,
+} = props.formDataProp
 const formData = ref<any>({
-  lotteryMode: false,
-  selfRewardRatioERC20: 0,
-  nodesReservesRatioERC20: 0,
-  ERC20OtherNodes: 0,
-  redeemPoolRatioETH: 0,
-  selfRewardRatioETH: 0,
-  nodesReservesRatioETH: 0,
-  ETHOtherNodes: 0,
-  ERCOtherNodeslist: [],
-  ETHOtherNodesList: [],
-  daoPriceReserveRatio: {
-    builder: 0,
-    mainDAO: 97.5,
-    pDao: 0,
-    subDAO: 2.5,
-  },
-  fixedPriceReserveRatio: {
-    builder: 0,
-    mainDAO: 97.5,
-    pDao: 0,
-    subDAO: 2.5,
-  },
-  royalty: {
-    pDao: 0,
-    subDao: 50,
-    builder: 25,
-    minter: 25,
-  },
-  eth: { pDao: 0, subDao: 50, builder: 25, minter: 25 },
+  lotteryMode,
+  selfRewardRatioERC20,
+  nodesReservesRatioERC20,
+  ERC20OtherNodes,
+  redeemPoolRatioETH,
+  selfRewardRatioETH,
+  nodesReservesRatioETH,
+  ETHOtherNodes,
+  ERCOtherNodeslist,
+  ETHOtherNodesList,
+  daoPriceReserveRatio,
+  fixedPriceReserveRatio,
+  royalty,
+  eth
 })
 
 const emit = defineEmits(['setFormData'])
@@ -121,6 +122,8 @@ const formRef = ref()
 const FormStructureThisNodesInternalIncentivesRef = ref()
 
 const validateForm = async (value: any) => {
+  if (!formRef.value) return
+
   const { valid } = await formRef.value.validate()
   const childValid = FormStructureThisNodesInternalIncentivesRef.value
     ? await FormStructureThisNodesInternalIncentivesRef.value.inputErr()
@@ -133,6 +136,55 @@ const validateForm = async (value: any) => {
     },
   })
 }
+
+watch(() => [
+  props.formDataProp.lotteryMode,
+  props.formDataProp.selfRewardRatioERC20,
+  props.formDataProp.nodesReservesRatioERC20,
+  props.formDataProp.ERC20OtherNodes,
+  props.formDataProp.redeemPoolRatioETH,
+  props.formDataProp.selfRewardRatioETH,
+  props.formDataProp.nodesReservesRatioETH,
+  props.formDataProp.ETHOtherNodes,
+  props.formDataProp.ERCOtherNodeslist,
+  props.formDataProp.ETHOtherNodesList,
+  props.formDataProp.daoPriceReserveRatio,
+  props.formDataProp.fixedPriceReserveRatio,
+  props.formDataProp.royalty,
+  props.formDataProp.eth,
+],
+([
+  lotteryMode,
+  selfRewardRatioERC20,
+  nodesReservesRatioERC20,
+  ERC20OtherNodes,
+  redeemPoolRatioETH,
+  selfRewardRatioETH,
+  nodesReservesRatioETH,
+  ETHOtherNodes,
+  ERCOtherNodeslist,
+  ETHOtherNodesList,
+  daoPriceReserveRatio,
+  fixedPriceReserveRatio,
+  royalty,
+  eth,
+]) => {
+  formData.value.lotteryMode = lotteryMode
+  formData.value.selfRewardRatioERC20 = selfRewardRatioERC20
+  formData.value.nodesReservesRatioERC20 = nodesReservesRatioERC20
+  formData.value.ERC20OtherNodes = ERC20OtherNodes
+  formData.value.redeemPoolRatioETH = redeemPoolRatioETH
+  formData.value.selfRewardRatioETH = selfRewardRatioETH
+  formData.value.nodesReservesRatioETH = nodesReservesRatioETH
+  formData.value.ETHOtherNodes = ETHOtherNodes
+  formData.value.ERCOtherNodeslist = ERCOtherNodeslist
+  formData.value.ETHOtherNodesList = ETHOtherNodesList
+  formData.value.daoPriceReserveRatio = daoPriceReserveRatio
+  formData.value.fixedPriceReserveRatio = fixedPriceReserveRatio
+  formData.value.royalty = royalty
+  formData.value.eth = eth
+},
+{ deep: true })
 
 watch(
   () => formData,

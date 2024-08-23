@@ -62,7 +62,7 @@
 import FormRow from '@/components/FormRow.vue'
 import DialogFormMinterWhitelistERCWithMax from '@/components/nodeStrategies/DialogFormMinterWhitelistERCWithMax.vue'
 import { t } from '@/lang'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -72,8 +72,23 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{
+      nftAddress: string
+      nftMintCap: number
+    }>,
+    default: () => [],
+  },
 })
-const mintingErcWithMaxlistAddress = ref<any>([])
+const mintingErcWithMaxlistAddress = ref(props.list)
+watch(
+  () => props.list,
+  (val) => {
+    mintingErcWithMaxlistAddress.value = val
+  },
+  { deep: true }
+)
+
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

@@ -34,6 +34,10 @@
             </v-list>
           </v-menu>
         </div>
+        <ForkNode
+          :daoName="props.dataObj.daoName"
+          v-if="!props.dataObj.isAncestorDao"
+        />
       </h4>
       <p class="flex !items-center">
         {{ $t('NodeTitle.permissionsNftLabel') }} :
@@ -96,6 +100,7 @@ import { truncateString } from '@/utils'
 import { useRouter } from 'vue-router'
 import { APP_OPEN_URL } from '@/config'
 import { ref } from 'vue'
+import ForkNode from './components/ForkNode/Index.vue'
 import useAccount from '@/hooks/useAccount'
 const { getTrading } = useAccount()
 const props = defineProps({

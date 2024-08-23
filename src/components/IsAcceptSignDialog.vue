@@ -12,7 +12,7 @@
         </v-btn>
       </span>
       <div class="dialog-icon">
-        <i class="iconfont icon-a-SEMIOSlogodange ft36"></i>
+        <i class="iconfont icon-logoicon ft36"></i>
       </div>
       <v-card-text>
         <p class="dialog-text">

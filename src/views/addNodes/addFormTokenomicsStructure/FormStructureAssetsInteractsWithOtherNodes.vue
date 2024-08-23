@@ -125,7 +125,8 @@
 import FormRow from '@/components/FormRow.vue'
 import DialogETHFormStructureAssetsInteracts from './DialogETHFormStructureAssetsInteracts.vue'
 import DialogERCFormStructureAssetsInteracts from './DialogERCFormStructureAssetsInteracts.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+
 const props = defineProps({
   formDataProp: {
     type: Object,
@@ -150,7 +151,7 @@ const cancelEthDialog = () => {
   isAddEthDialog.value = false
 }
 const emit = defineEmits(['setETHOtherFormData', 'setERCOtherFormData'])
-const ETHOtherNodesList = ref<any>([])
+const ETHOtherNodesList = ref<any>(props.formDataProp.ETHOtherNodesList)
 const addEthData = (val: any) => {
   ETHOtherNodesList.value.push({ ...val })
   emit('setETHOtherFormData', ETHOtherNodesList.value)
@@ -167,7 +168,7 @@ const addERCOtherNodesDialog = () => {
 const cancelErcDialog = () => {
   isAddErcDialog.value = false
 }
-const ERCOtherNodeslist = ref<any>([])
+const ERCOtherNodeslist = ref<any>(props.formDataProp.ERCOtherNodeslist)
 const addERCData = (val: any) => {
   ERCOtherNodeslist.value.push({ ...val })
   emit('setERCOtherFormData', ERCOtherNodeslist.value)
@@ -212,6 +213,14 @@ onMounted(() => {
   }
   emit('setERCOtherFormData', ERCOtherNodeslist.value)
   emit('setETHOtherFormData', ETHOtherNodesList.value)
+})
+
+watch(() => [
+  props.formDataProp.ERCOtherNodeslist,
+  props.formDataProp.ETHOtherNodesList,
+], ([erc, eth]) => {
+  ERCOtherNodeslist.value = erc
+  ETHOtherNodesList.value = eth
 })
 </script>
 

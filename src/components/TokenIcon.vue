@@ -2,43 +2,38 @@
   <span>
     <!-- Token -->
     <a class="token-icon" :href="aPush()" target="_blank" v-if="props.daoToken" @click.stop>
-      <v-btn
-        class="text-none"
-        variant="text"
-        :size="props.btnsize"
-        :style="{
+      <Link class="text-none" variant="text" :size="props.btnsize" :style="{
           'font-size': props.size,
           color: props.color,
-        }"
-      >
-        <v-tooltip activator="parent" location="top" max-width="300">
-          {{ props.daoSymbol }}
-        </v-tooltip>
+        }">
+        <template v-slot:default>
+          <v-tooltip activator="parent" location="top" max-width="300">
+            {{ props.daoSymbol }}
+          </v-tooltip>
 
-        {{ truncateStringCenter(props.daoSymbol) }}
-      </v-btn>
+          {{ truncateStringCenter(props.daoSymbol) }}
+        </template>
+      </Link>
     </a>
     <!-- ETH -->
     <a class="token-icon" :href="aPush()" target="_blank" v-else @click.stop>
-      <v-btn
-        class="text-none"
-        variant="text"
-        :size="props.btnsize"
-        :style="{
+      <Link class="text-none" variant="text" :size="props.btnsize" :style="{
           'font-size': props.size,
           color: props.color,
-        }"
-      >
-        <v-tooltip activator="parent" location="top" max-width="300">
-          {{ props.payCurrencyType }}
-        </v-tooltip>
-        {{ truncateStringCenter(props.payCurrencyType) }}
-      </v-btn>
+        }">
+        <template v-slot:default>
+          <v-tooltip activator="parent" location="top" max-width="300">
+            {{ props.payCurrencyType }}
+          </v-tooltip>
+          {{ truncateStringCenter(props.payCurrencyType) }}
+        </template>
+      </Link>
     </a>
   </span>
 </template>
 
 <script lang="ts" setup>
+import Link from './Link.vue';
 const props = defineProps({
   daoToken: {
     type: Boolean,

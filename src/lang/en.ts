@@ -1,6 +1,7 @@
 export default {
   common: {
     submit: 'Submit',
+    cancel: 'Cancel',
     back: 'Back',
     next: 'Next',
     edit: 'Edit',
@@ -530,5 +531,19 @@ export default {
     makers: 'Makers',
     totalUnspentInputTokens: 'Total Unspent Input Tokens',
     totalLockedOutputTokens: 'Total Locked Output Tokens',
+  },
+  fork: {
+    forkText: 'Fork This Nodes',
+    modalTitle: 'Add New Template',
+    modalDesc: 'You have the following way to fork this nodes.',
+    forkSubNode: 'Fork This Nodes As SubNodes',
+    exportNode: 'Expore This Nodes Parameters Template'
+  },
+  importTemplate: {
+    dialogTitle: 'Import Nodes Template',
+    importBtn: 'Click Here to Import Nodes Template',
+    dropFileText: 'Drag and Drop file here or',
+    chooseFile: 'Choose File',
+    fileInputError: 'Incorrect Parameter Template, failed to import.',
   },
 }

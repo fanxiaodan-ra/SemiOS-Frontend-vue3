@@ -29,6 +29,7 @@
     "echarts": "^5.5.0",
     "ethers": "5.7",
     "jquery": "^3.7.1",
+    "js-base64": "^3.7.7",
     "lodash": "^4.17.21",
     "markdown-it-link-attributes": "^4.0.1",
     "md-editor-v3": "^4.13.3",

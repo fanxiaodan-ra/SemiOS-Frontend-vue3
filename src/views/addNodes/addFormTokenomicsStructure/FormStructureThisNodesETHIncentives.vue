@@ -78,6 +78,9 @@
 import FormRow from '@/components/FormRow.vue'
 import { reactive, onMounted, watch } from 'vue'
 import { t } from '@/lang'
+
+const DEFAULT_ETH = { pDao: 0, subDao: 50, builder: 25, minter: 25 }
+
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -89,13 +92,21 @@ const props = defineProps({
   },
 })
 const formData = reactive({
-  eth: { pDao: 0, subDao: 50, builder: 25, minter: 25 },
+  eth: props.formDataProp.eth || DEFAULT_ETH
 })
 const emit = defineEmits(['setFormData'])
 watch(
   () => formData,
   (value) => {
     emit('setFormData', value)
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.formDataProp.eth,
+  (value) => {
+    formData.eth = value
   },
   { deep: true }
 )

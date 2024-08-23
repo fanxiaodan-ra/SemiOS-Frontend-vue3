@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import FormNodesBuilder from './FormNodesBuilder.vue'
 import FormNodesMinter from './FormNodesMinter.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import useUserStore from '@/store'
 import { t } from '@/lang'
 const store = useUserStore()
@@ -50,19 +50,72 @@ const props = defineProps({
     default: () => {},
   },
 })
+const {
+  workBlacklistAddress,
+  workWhitelistAddress,
+  workErclistAddress,
+  workNftlistAddress,
+  mintingBlacklistAddress,
+  mintingWithMaxlistAddress,
+  mintingWithUnlimitedlistAddress,
+  mintingErcWithMaxlistAddress,
+  mintingErcWithUnlimitedlistAddress,
+  mintingCapForDaolistAmount,
+  mintingNftWithMaxlistAddress,
+} = props.formDataProp
 const formData = ref<any>({
-  workBlacklistAddress: [],
-  workWhitelistAddress: [],
-  workErclistAddress: [],
-  workNftlistAddress: [],
-  mintingBlacklistAddress: [],
-  mintingWithMaxlistAddress: [],
-  mintingWithUnlimitedlistAddress: [],
-  mintingErcWithMaxlistAddress: [],
-  mintingErcWithUnlimitedlistAddress: [],
-  mintingCapForDaolistAmount: [],
-  mintingNftWithMaxlistAddress: [],
+  workBlacklistAddress,
+  workWhitelistAddress,
+  workErclistAddress,
+  workNftlistAddress,
+  mintingBlacklistAddress,
+  mintingWithMaxlistAddress,
+  mintingWithUnlimitedlistAddress,
+  mintingErcWithMaxlistAddress,
+  mintingErcWithUnlimitedlistAddress,
+  mintingCapForDaolistAmount,
+  mintingNftWithMaxlistAddress,
 })
+
+watch(() => [
+  props.formDataProp.workBlacklistAddress,
+  props.formDataProp.workWhitelistAddress,
+  props.formDataProp.workErclistAddress,
+  props.formDataProp.workNftlistAddress,
+  props.formDataProp.mintingBlacklistAddress,
+  props.formDataProp.mintingWithMaxlistAddress,
+  props.formDataProp.mintingWithUnlimitedlistAddress,
+  props.formDataProp.mintingErcWithMaxlistAddress,
+  props.formDataProp.mintingErcWithUnlimitedlistAddress,
+  props.formDataProp.mintingCapForDaolistAmount,
+  props.formDataProp.mintingNftWithMaxlistAddress,
+], ([
+  workBlacklistAddress,
+  workWhitelistAddress,
+  workErclistAddress,
+  workNftlistAddress,
+  mintingBlacklistAddress,
+  mintingWithMaxlistAddress,
+  mintingWithUnlimitedlistAddress,
+  mintingErcWithMaxlistAddress,
+  mintingErcWithUnlimitedlistAddress,
+  mintingCapForDaolistAmount,
+  mintingNftWithMaxlistAddress,
+]) => {
+  formData.value = {
+    workBlacklistAddress,
+    workWhitelistAddress,
+    workErclistAddress,
+    workNftlistAddress,
+    mintingBlacklistAddress,
+    mintingWithMaxlistAddress,
+    mintingWithUnlimitedlistAddress,
+    mintingErcWithMaxlistAddress,
+    mintingErcWithUnlimitedlistAddress,
+    mintingCapForDaolistAmount,
+    mintingNftWithMaxlistAddress,
+  }
+}, { deep: true })
 
 const emit = defineEmits(['setFormData'])
 const setFormData = (val: any) => {

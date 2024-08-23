@@ -1,14 +1,8 @@
 <template>
-  <v-card
-    class="mx-auto my-8 !bg-transparent"
-    width="500"
-    min-height="360"
-    elevation="12"
-    v-show="props.addType === 0"
-  >
+  <v-card class="mx-auto my-8 !bg-transparent" width="500" min-height="360" elevation="12" v-show="props.addType === 0">
     <v-card-item>
       <div class="card-img">
-        <i class="iconfont icon-a-SEMIOSlogozuhe ft42 fc8"></i>
+        <i class="iconfont icon-logozuhe ft42 fc8"></i>
       </div>
       <v-card-title class="my-mgt24 ft40 ftr my-mgb24">
         <!-- Name your Nodes -->
@@ -19,82 +13,61 @@
         {{ $t('AddNodeName.info') }}
       </v-card-subtitle>
       <div class="my-mgb24">
-        <v-form ref="formRef" @submit.prevent="submit">
-          <v-text-field
-            v-model="formData.daoName"
-            label="Name"
-            :rules="rules"
-            :error-messages="errorMessage"
-            hide-details="auto"
-          ></v-text-field>
-        </v-form>
+        <node-name
+          ref="nodeNameRef"
+          v-model="daoName"
+          :submit="submit"
+          :errorMessage="errorMessage"
+        />
       </div>
-      <v-btn
-        block
-        class="btnmo btnz text-none"
-        size="large"
-        type="submit"
-        :loading="btnLoading"
-        @click="submit"
-        >{{ $t('AddNodeName.sub') }}</v-btn
-      >
+      <v-btn block class="btnmo btnz text-none" size="large" type="submit" :loading="btnLoading" @click="submit">{{
+        $t('AddNodeName.sub') }}</v-btn>
     </v-card-item>
   </v-card>
 </template>
 <script setup lang="ts">
-import { checkName } from '@/api/daos'
-import { ref, reactive } from 'vue'
-import useAccount from '@/hooks/useAccount'
+import { ref, watch, computed } from 'vue'
+import NodeName from './components/NodeName.vue'
+import useNameSubmit from './hooks/useNameSubmit'
 const props = defineProps({
   addType: {
     type: Number,
     default: 0,
   },
 })
-const formData = reactive({
-  daoName: '',
+
+const daoName = ref('')
+const nodeNameRef = ref()
+const nameSubmitRes = ref()
+
+const submit = computed(() => {
+  return nameSubmitRes.value.submit
 })
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
-const rules = [
-  (value: any) => !!value || t('AddNodeName.err.name_no'),
-  (value: any) =>
-    (value && value.length <= 45) ||
-    t('AddNodeName.err.name_len', [value.length]),
-  // `Ensure this value has at most 45 characters ( it has ${value.length} ).`,
-]
+const errorMessage = computed(() => {
+  return nameSubmitRes.value.errorMessage
+})
+const btnLoading = computed(() => {
+  return nameSubmitRes.value.btnLoading
+})
 
-const errorMessage = ref<string[]>([])
-const formRef = ref()
-const btnLoading = ref(false)
-
-const { getTrading } = useAccount()
 
 const emit = defineEmits(['setDaoName', 'setIsModeSelection'])
-const submit = async () => {
-  const isTrad = await getTrading()
-  if (!isTrad) return
-  btnLoading.value = true
-  const { valid } = await formRef.value.validate()
-  if (!valid) return (btnLoading.value = false)
-  const data = {
-    name: formData.daoName,
-    type: 0,
-  }
-  try {
-    await checkName(data)
-    emit('setDaoName', formData.daoName)
-    emit('setIsModeSelection', true)
-    errorMessage.value = []
-  } catch (e: any) {
-    errorMessage.value = [e.resultDesc]
-  }
-  btnLoading.value = false
-}
+
+watch(
+  () => [nodeNameRef.value, daoName.value],
+  () => {
+    nameSubmitRes.value = useNameSubmit(
+      emit,
+      daoName.value,
+      nodeNameRef.value?.formRef
+    )
+  },
+  { immediate: true }
+)
+
 </script>
 <style lang="scss" scoped>
 .v-card {
-  /* background-color: #151925 !important; */
   box-shadow: none !important;
 }
 :deep(.v-field__input) {

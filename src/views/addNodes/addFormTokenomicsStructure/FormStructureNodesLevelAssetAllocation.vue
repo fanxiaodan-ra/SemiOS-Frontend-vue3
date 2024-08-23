@@ -218,16 +218,45 @@ const props = defineProps({
     default: false,
   },
 })
+const {
+  selfRewardRatioERC20,
+  nodesReservesRatioERC20,
+  ERC20OtherNodes,
+  redeemPoolRatioETH,
+  selfRewardRatioETH,
+  nodesReservesRatioETH,
+  ETHOtherNodes,
+} = props.formDataProp
 const formData = reactive({
-  selfRewardRatioERC20: 0,
-  nodesReservesRatioERC20: 100,
-  ERC20OtherNodes: 0,
-  redeemPoolRatioETH: 100,
-  selfRewardRatioETH: 0,
-  nodesReservesRatioETH: 0,
-  ETHOtherNodes: 0,
+  selfRewardRatioERC20,
+  nodesReservesRatioERC20,
+  ERC20OtherNodes,
+  redeemPoolRatioETH,
+  selfRewardRatioETH,
+  nodesReservesRatioETH,
+  ETHOtherNodes,
 })
+
 import { oninputNum, minusOthers } from '@/utils'
+
+watch(() => [
+  props.formDataProp.redeemPoolRatioETH,
+  props.formDataProp.selfRewardRatioETH,
+  props.formDataProp.nodesReservesRatioETH,
+  props.formDataProp.ETHOtherNodes,
+  props.formDataProp.selfRewardRatioERC20,
+  props.formDataProp.nodesReservesRatioERC20,
+  props.formDataProp.ERC20OtherNodes,
+], ([redeemPoolRatioETH, selfRewardRatioETH, nodesReservesRatioETH, ETHOtherNodes, selfRewardRatioERC20, nodesReservesRatioERC20, ERC20OtherNodes]) => {
+  formData.redeemPoolRatioETH = redeemPoolRatioETH
+  formData.selfRewardRatioETH = selfRewardRatioETH
+  formData.nodesReservesRatioETH = nodesReservesRatioETH
+  formData.ETHOtherNodes = ETHOtherNodes
+  formData.selfRewardRatioERC20 = selfRewardRatioERC20
+  formData.nodesReservesRatioERC20 = nodesReservesRatioERC20
+  formData.ERC20OtherNodes = ERC20OtherNodes
+})
+
 watch(
   () => props.formDataProp.thirdParty,
   (value) => {

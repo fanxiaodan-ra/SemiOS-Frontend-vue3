@@ -2,7 +2,11 @@
   <v-row no-gutters v-for="item in mintFeeList" :key="item.key">
     <v-col cols="6" class="text-sm text-grey-1 flex items-center">{{ t(item.title) }}</v-col>
     <v-col cols="6" class="text-sm text-grey-1 flex items-center justify-end">
-      {{ item.value }}%
+      {{ item.value }}
+      <span v-if="item.key === 'd4aMintFee'">
+        &nbsp;<span class="line-through">2.5</span>
+      </span>
+      %
     </v-col>
   </v-row>
 </template>

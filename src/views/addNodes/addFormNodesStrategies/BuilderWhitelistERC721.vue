@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import DialogFormBuilderERC from '@/components/nodeStrategies/DialogFormBuilderERC.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -59,8 +59,21 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{ address: string }>,
+    default: () => [],
+  }
 })
-const workErclistAddress = ref<any>([])
+const workErclistAddress = ref(props.list)
+
+watch(
+  () => props.list,
+  (val) => {
+    workErclistAddress.value = val
+  },
+  { deep: true }
+)
+
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

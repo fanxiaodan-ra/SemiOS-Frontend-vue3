@@ -2,6 +2,12 @@ import { acceptHMRUpdate, defineStore } from "pinia";
 import {
   inquireNft0AndDaoId,
 } from "@/api/works";
+import {
+  maincreator,
+  exportDaoInfo,
+} from '@/api/daos'
+import type { ForkedParams } from '@/types/SetupDao'
+
 export const useSetupDaoStore = defineStore({
   id: 'setupDao',
   state: () => ({
@@ -11,7 +17,9 @@ export const useSetupDaoStore = defineStore({
       imgUrl: '',
       height: 0,
       bgColor: '',
-    }
+    },
+    initData: {},
+    forkedDaoParams: {} as ForkedParams,
   }),
   actions: {
     async inquireNft0AndDaoId({ transactionHash }: { transactionHash: string } ) {
@@ -39,6 +47,33 @@ export const useSetupDaoStore = defineStore({
           reject(error)
         }
       })
+    },
+    async initDaoParams({ daoId }: { daoId: string }) {
+      try {
+        const res = await maincreator({
+          daoId
+        })
+        this.initData = res.data
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getForkedDaoParams({ daoId, type }: { daoId: string; type: number }) {
+      try {
+        const res = await exportDaoInfo({
+          daoId,
+          type
+        })
+        return res.data
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    clearInitData() {
+      this.initData = {}
+    },
+    setForkedDaoParams(params: ForkedParams) {
+      this.forkedDaoParams = params
     }
   }
 })

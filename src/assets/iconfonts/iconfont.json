@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "41574550",
+      "name": "logoicon",
+      "font_class": "logoicon",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "41574435",
+      "name": "logo组合",
+      "font_class": "logozuhe",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "41454448",
+      "name": "file",
+      "font_class": "file",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "41454447",
+      "name": "attach",
+      "font_class": "attach",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
       "icon_id": "41364142",
       "name": "Total Locked Output Tokens",
       "font_class": "a-TotalLockedOutputTokens",

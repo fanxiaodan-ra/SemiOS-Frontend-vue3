@@ -61,8 +61,8 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue'
 import DialogFormMinterWhitelistWithMax from '@/components/nodeStrategies/DialogFormMinterWhitelistWithMax.vue'
+import { ref, onMounted, watch } from 'vue'
 
-import { ref, onMounted } from 'vue'
 const props = defineProps({
   isEdit: {
     type: Boolean,
@@ -72,8 +72,24 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  list: {
+    type: Array<{
+      address: string
+      amount: string
+    }>,
+    default: () => [],
+  },
 })
-const mintingWithMaxlistAddress = ref<any>([])
+const mintingWithMaxlistAddress = ref(props.list)
+
+watch(
+  () => props.list,
+  (val) => {
+    mintingWithMaxlistAddress.value = val
+  },
+  { deep: true }
+)
+
 const isDialog = ref(false)
 const setDialog = () => {
   isDialog.value = true

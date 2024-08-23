@@ -20,12 +20,14 @@
             @setFormData="setFormData"
             :isEdit="true"
             :initData="initData"
+            :form-data-prop="formData"
           />
           <FormNodesMinter
             :form-input="formData"
             @setFormData="setFormData"
             :isEdit="true"
             :initData="initData"
+            :form-data-prop="formData"
           />
         </div>
       </v-card>

@@ -28,6 +28,6 @@ describe('FloorPriceVue', () => {
         plugins: [vuetify]
       }
     });
-    expect(wrapper.text()).toBe('Floor Price  DAO');
+    expect(wrapper.text()).toBe('Floor Price   DAO');
   });
 });

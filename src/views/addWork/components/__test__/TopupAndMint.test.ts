@@ -29,7 +29,7 @@ describe('TopupAndMintVue', () => {
         plugins: [vuetify]
       } 
     });
-    expect(wrapper.text()).toBe('Subnodes Fee0%Builder Fee0%Semios Fee0%');
+    expect(wrapper.text()).toBe('Subnodes Fee0  %Builder Fee0  %Semios Fee0   2.5 %');
   })
   it('render with topupMode === 1', () => {
     const wrapper = mount(TopupAndMintVue, {

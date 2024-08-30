@@ -5,7 +5,6 @@ import { randomCoding, addressToLowerCase } from '@/utils'
 import { APP_NETWORK, APP_LOCAL_NAME } from '@/config'
 import { sig } from '@/common/web3service'
 import { initWeb3 } from '@/common/walletService/wallet'
-import { useRouter } from 'vue-router'
 import useToastNotify from '@/hooks/useToastNotify'
 declare global {
   const $onboard: typeof initWeb3
@@ -79,7 +78,6 @@ export default function useAccount() {
 
   const setLogOut = async () => {
     const store = useUserStore()
-    const router = useRouter()
     logout()
     store.setUserInfo({
       token: '',
@@ -99,9 +97,7 @@ export default function useAccount() {
       unsubscribeFc()
       unsubscribeFc = null
     }
-    router.push({
-      path: '/',
-    })
+    window.location.href = '/'
   }
 
   const getCookieUser = () => {

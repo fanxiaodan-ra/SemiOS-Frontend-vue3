@@ -28,6 +28,6 @@ describe('FloatPriceVue', () => {
         plugins: [vuetify]
       } 
     });
-    expect(wrapper.text()).toBe('Current Price0  DAO');
+    expect(wrapper.text()).toBe('Current Price0   DAO');
   });
 });

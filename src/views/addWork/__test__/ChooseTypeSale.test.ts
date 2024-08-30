@@ -40,6 +40,6 @@ describe('ChooseTypeSaleVue', () => {
         plugins: [vuetify]
       } 
     });
-    expect(wrapper.text()).toBe('Choose a Type of Sale Floating PriceFixed PriceThe price of work will be dynamically adjusted based on the sales of works under the same Builder.Current Price0  DAOFloor Price  DAOSubnodes Fee0% Builder Fee0% Semios Fee0%');
+    expect(wrapper.text()).toBe('Choose a Type of Sale Floating PriceFixed PriceThe price of work will be dynamically adjusted based on the sales of works under the same Builder.Current Price0   DAOFloor Price   DAOSubnodes Fee0  % Builder Fee0  % Semios Fee0   2.5 %');
   });
 });

@@ -30,6 +30,6 @@ describe('MakerInfoVue', () => {
         plugins: [vuetify]
       }
     })
-    expect(wrapper.text()).toBe('1.002.00 ETH3.00 SE...316')
+    expect(wrapper.text()).toBe('1.002.00  ETH3.00  SE...316')
   })
 })

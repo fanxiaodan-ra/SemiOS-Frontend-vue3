@@ -25,6 +25,6 @@ describe('FloorPriceVue', () => {
         plugins: [vuetify]
       }
     });
-    expect(wrapper.text()).toBe('Subnodes Fee0%Builder Fee0%Semios Fee0%');
+    expect(wrapper.text()).toBe('Subnodes Fee0  %Builder Fee0  %Semios Fee0   2.5 %');
   });
 });

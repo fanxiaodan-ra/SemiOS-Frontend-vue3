@@ -29,6 +29,6 @@ describe('UnifiedPriceVue', () => {
         plugins: [vuetify]
       } 
     });
-    expect(wrapper.text()).toBe('Unified Price0  DAO');
+    expect(wrapper.text()).toBe('Unified Price0   DAO');
   });
 });
